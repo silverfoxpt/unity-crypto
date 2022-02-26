@@ -7,9 +7,9 @@ public class LetterBoxController : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI letterText;
 
-    public string GetLetter()
+    public char GetLetter()
     {
-        return letterText.text;
+        return letterText.text[0];
     }
 
     public void SetLetter(char x)
