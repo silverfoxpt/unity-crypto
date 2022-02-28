@@ -23,8 +23,8 @@ public class ConnectorController : MonoBehaviour
         StartCoroutine(RedrawConnectors());
 
         //test
-        LightUpConnector(1);
-        LightUpReverseConnector(4);
+        //LightUpConnector(1);
+        //LightUpReverseConnector(4);
     }
 
     private void InitializeVars()
@@ -36,7 +36,7 @@ public class ConnectorController : MonoBehaviour
         normalColor = leftLetterBoxes[0].GetComponent<LineRenderer>().startColor;
     }
 
-    IEnumerator RedrawConnectors()
+    public IEnumerator RedrawConnectors()
     {
         yield return new WaitForEndOfFrame();
         RefreshConnectDict();
