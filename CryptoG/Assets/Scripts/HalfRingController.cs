@@ -16,9 +16,6 @@ public class HalfRingController : MonoBehaviour
             letterBoxes.Add(box.gameObject);
         }
         InitializeColumn();
-
-        //test
-        PushBackwardTimes(3);
     }
 
     private void InitializeColumn()
@@ -62,4 +59,6 @@ public class HalfRingController : MonoBehaviour
     {
         for (int i = 0; i < numTimes; i++) { PushBackwardOnce(); }
     }
+
+    public List<GameObject> GetLetterBoxes() { return letterBoxes;}
 }
