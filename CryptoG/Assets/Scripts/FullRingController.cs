@@ -19,7 +19,7 @@ public class FullRingController : MonoBehaviour
     {
         for (int i = 0; i < EnigmaInfo.defaultLength; i++)
         {
-            connectDict.Add(i, connectorSetup[i] - 'A');
+            connectDict.Add(i, (int) (connectorSetup[i] - 'A'));
         }
     }
 
