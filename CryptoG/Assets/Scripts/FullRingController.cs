@@ -13,13 +13,13 @@ public class FullRingController : MonoBehaviour
     public Dictionary<int, int> connectDict = new Dictionary<int, int>();
     void Start()
     {
-        InitializeConnectionDict();
+        RefreshConnectDict();
 
         //test
-        PushForwardAll();
+        //PushForwardAll();
     }
 
-    private void InitializeConnectionDict()
+    private void RefreshConnectDict()
     {
         for (int i = 0; i < EnigmaInfo.defaultLength; i++)
         {
@@ -47,6 +47,12 @@ public class FullRingController : MonoBehaviour
             tmpDict[key] = val;
         }
         connectDict = tmpDict;
+        StartCoroutine(connectorParent.GetComponent<ConnectorController>().RedrawConnectors());
+    }
+
+    public void RefreshWithNewSetup(string setup)
+    {
+        RefreshConnectDict();
         StartCoroutine(connectorParent.GetComponent<ConnectorController>().RedrawConnectors());
     }
 }
