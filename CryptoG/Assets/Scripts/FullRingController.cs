@@ -8,7 +8,10 @@ public class FullRingController : MonoBehaviour
     [SerializeField] private GameObject leftRing;
     [SerializeField] private GameObject rightRing;
     [SerializeField] private GameObject connectorParent;
+
+    [Header("Setup")]
     [SerializeField] private string connectorSetup;
+    [SerializeField] private List<char> notches;
 
     public Dictionary<int, int> connectDict = new Dictionary<int, int>();
     void Start()
@@ -29,6 +32,7 @@ public class FullRingController : MonoBehaviour
 
     public GameObject GetLeftRing()     {return leftRing;}
     public GameObject GetRightRing()    {return rightRing;}
+    public List<char> GetTurnover() {return notches;}
 
     public void PushForwardAll()
     {

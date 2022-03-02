@@ -326,6 +326,17 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &712717153 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6368876359438426724, guid: 5d71f24690e2f0845b050437184728bd, type: 3}
+  m_PrefabInstance: {fileID: 1626434096}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &846546792
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -333,6 +344,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 4627612}
     m_Modifications:
+    - target: {fileID: 566048049738911089, guid: 5d71f24690e2f0845b050437184728bd, type: 3}
+      propertyPath: letterText
+      value: 
+      objectReference: {fileID: 1743687371}
     - target: {fileID: 6821182046706581229, guid: 5d71f24690e2f0845b050437184728bd, type: 3}
       propertyPath: m_Name
       value: Full Ring
@@ -432,6 +447,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 6821182046706581230, guid: 5d71f24690e2f0845b050437184728bd, type: 3}
   m_PrefabInstance: {fileID: 846546792}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &868185822 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6368876360693435328, guid: 5d71f24690e2f0845b050437184728bd, type: 3}
+  m_PrefabInstance: {fileID: 1626434096}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &894249976
 GameObject:
   m_ObjectHideFlags: 0
@@ -657,6 +683,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 894249977}
     m_Modifications:
+    - target: {fileID: 566048049738911089, guid: 5d71f24690e2f0845b050437184728bd, type: 3}
+      propertyPath: letterText
+      value: 
+      objectReference: {fileID: 712717153}
     - target: {fileID: 6821182046706581229, guid: 5d71f24690e2f0845b050437184728bd, type: 3}
       propertyPath: m_Name
       value: Full Ring
@@ -794,6 +824,17 @@ RectTransform:
   m_AnchoredPosition: {x: 553, y: -25}
   m_SizeDelta: {x: 140.96, y: 803.5}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1743687371 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6368876359438426724, guid: 5d71f24690e2f0845b050437184728bd, type: 3}
+  m_PrefabInstance: {fileID: 846546792}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1908317339
 GameObject:
   m_ObjectHideFlags: 0
@@ -1160,6 +1201,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2143492917}
     m_Modifications:
+    - target: {fileID: 566048049738911089, guid: 5d71f24690e2f0845b050437184728bd, type: 3}
+      propertyPath: letterText
+      value: 
+      objectReference: {fileID: 868185822}
     - target: {fileID: 6821182046706581229, guid: 5d71f24690e2f0845b050437184728bd, type: 3}
       propertyPath: m_Name
       value: Full Ring

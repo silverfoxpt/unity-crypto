@@ -21,7 +21,7 @@ public class UKWExtraController : MonoBehaviour
         rightLetterBoxes = rightHalf.GetComponent<HalfRingController>().GetLetterBoxes();
 
         //test
-        StartCoroutine(TestPlug());
+        //StartCoroutine(TestPlug());
     }
 
     //debug only

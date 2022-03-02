@@ -20,7 +20,7 @@ public class HalfRingController : MonoBehaviour
 
     private void InitializeColumn()
     {
-        for (int i = 0; i < EnigmaInfo.defaultLength; i++)
+        for (int i = 0; i < EnigmaInfo.defaultLength-1; i++)
         {
             letterBoxes[i].GetComponent<LetterBoxController>().SetLetter(EnigmaInfo.defaultAlphabet[i]);
         }
