@@ -10,7 +10,7 @@ public class TurnoverController : MonoBehaviour
     [SerializeField] private Color notchColor;
     [SerializeField] private float notchWidth = 0.05f;
     private List<int> notchIndexes = new List<int>();
-    private List<GameObject> notchObjs = new List<GameObject>();
+    private List<GameObject> notchObjs = new List<GameObject>(); //WILL NOT CHANGED. FETCHED ONCE, MANUALLY
     private List<GameObject> leftBox, rightBox;
 
     void Start()
@@ -41,7 +41,6 @@ public class TurnoverController : MonoBehaviour
             notchIndexes.Add((int) (notch - 'A'));
         }
         DrawNotches();
-        PushNotchesForwardOnce();
     }
 
     private void DrawNotches()

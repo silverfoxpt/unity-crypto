@@ -61,4 +61,11 @@ public class HalfRingController : MonoBehaviour
     }
 
     public List<GameObject> GetLetterBoxes() { return letterBoxes;}
+    public void LightDownAllBox()
+    {
+        foreach(GameObject box in letterBoxes)
+        {
+            box.GetComponent<LetterBoxController>().LightDown();
+        }
+    }
 }

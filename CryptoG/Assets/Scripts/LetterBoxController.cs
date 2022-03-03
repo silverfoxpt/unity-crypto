@@ -2,27 +2,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 using System;
 
 public class LetterBoxController : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI letterText;
+    [SerializeField] private Image background;
     [SerializeField] private bool isLeftLetterBox;
     [SerializeField] private float lineWidth = 0.025f;
     [SerializeField] private float lineLength = 0.1f;
-
-    public char GetLetter()
-    {
-        return letterText.text[0];
-    }
-
-    public void SetLetter(char x)
-    {
-        letterText.text = x.ToString();
-    }
+    [SerializeField] private Color lightUpColor, reverseLightUpColor;
+    private Color normalColor;
 
     private void Start()
     {
+        normalColor = background.color;
         StartCoroutine(DrawPlug());
     }
 
@@ -61,4 +56,10 @@ public class LetterBoxController : MonoBehaviour
     {
         return GetComponent<LineRenderer>().GetPosition(1);
     }
+    public char GetLetter() { return letterText.text[0]; }
+    public void SetLetter(char x) { letterText.text = x.ToString();}
+
+    public void LightUpBox()            { background.color = lightUpColor;}
+    public void LightUpBoxReverse()     { background.color = reverseLightUpColor;}
+    public void LightDown()             { background.color = normalColor;}
 }

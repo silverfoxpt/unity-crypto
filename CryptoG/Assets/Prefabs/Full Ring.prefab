@@ -404,9 +404,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fullRing: {fileID: 6821182046706581229}
-  lineWidth: 0.025
-  lightUpColor: {r: 1, g: 0.4122849, b: 0, a: 1}
-  lightUpReverseColor: {r: 0, g: 1, b: 0.16732669, a: 1}
+  lineWidth: 0.01
+  lightUpColor: {r: 0.37254903, g: 1, b: 0.92156863, a: 1}
+  lightUpReverseColor: {r: 0.47058824, g: 1, b: 0.44705883, a: 1}
 --- !u!1 &6821182046706581229
 GameObject:
   m_ObjectHideFlags: 0

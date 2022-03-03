@@ -188,9 +188,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   letterText: {fileID: 8457618783026742198}
+  background: {fileID: 4462418317797462481}
   isLeftLetterBox: 1
   lineWidth: 0.025
   lineLength: 0.25
+  lightUpColor: {r: 0.37254903, g: 1, b: 0.92156863, a: 0.7607843}
+  reverseLightUpColor: {r: 0.47058824, g: 1, b: 0.44705883, a: 0.7607843}
 --- !u!120 &323368716
 LineRenderer:
   m_ObjectHideFlags: 0

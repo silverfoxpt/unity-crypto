@@ -13,7 +13,7 @@ public class ConnectorController : MonoBehaviour
     private FullRingController fullRingController;
     private HalfRingController halfControlLeft, halfControlRight;
     private List<GameObject> leftLetterBoxes, rightLetterBoxes;
-    private List<GameObject> connectors = new List<GameObject>();
+    private List<GameObject> connectors = new List<GameObject>(); // all connectors gameObjects
     private Dictionary<int, int> connectDict, reverseConnectDict;
 
     private void Start()
@@ -86,6 +86,7 @@ public class ConnectorController : MonoBehaviour
         RefreshConnectDict();
         connectors[idx].GetComponent<LineRenderer>().startColor     = lightUpColor;
         connectors[idx].GetComponent<LineRenderer>().endColor       = lightUpColor;
+        connectors[idx].GetComponent<LineRenderer>().sortingOrder   = 1;
     }
 
     public void LightUpReverseConnector(int idx)
@@ -93,5 +94,18 @@ public class ConnectorController : MonoBehaviour
         RefreshConnectDict();
         connectors[reverseConnectDict[idx]].GetComponent<LineRenderer>().startColor     = lightUpReverseColor;
         connectors[reverseConnectDict[idx]].GetComponent<LineRenderer>().endColor       = lightUpReverseColor;
+        connectors[reverseConnectDict[idx]].GetComponent<LineRenderer>().sortingOrder   = 1;
+    }
+
+    //need to do
+    public void AllLightDown()
+    {
+        RefreshConnectDict();
+        foreach(GameObject con in connectors)
+        {
+            con.GetComponent<LineRenderer>().startColor     = normalColor;
+            con.GetComponent<LineRenderer>().endColor       = normalColor;
+            con.GetComponent<LineRenderer>().sortingOrder   = 0;
+        }
     }
 }
