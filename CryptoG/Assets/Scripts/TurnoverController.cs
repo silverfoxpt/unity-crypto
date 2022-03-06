@@ -81,4 +81,23 @@ public class TurnoverController : MonoBehaviour
             cnt++;
         }
     }
+
+    public void PushNotchesBackwardOnce()
+    {
+        for (int i = 0; i < notchIndexes.Count; i++) { notchIndexes[i]--; if (notchIndexes[i] <= 0) {notchIndexes[i] = 25;}}
+
+        int cnt = 0;
+        foreach(int notchIdx in notchIndexes)        
+        {
+            //Debug.Log("ranned");
+            Vector2 pos1 = leftBox[notchIdx].GetComponent<LetterBoxController>().GetPlugPoint();
+            Vector2 pos2 = rightBox[notchIdx].GetComponent<LetterBoxController>().GetPlugPoint();
+
+            //draw notch
+            LineRenderer line = notchObjs[cnt].GetComponent<LineRenderer>();
+            line.SetPosition(0, pos1); line.SetPosition(1, pos2);
+            //up
+            cnt++;
+        }
+    }
 }

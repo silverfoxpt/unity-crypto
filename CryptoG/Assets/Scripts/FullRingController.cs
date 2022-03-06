@@ -8,6 +8,7 @@ public class FullRingController : MonoBehaviour
     [SerializeField] private GameObject leftRing;
     [SerializeField] private GameObject rightRing;
     [SerializeField] private GameObject connectorParent;
+    [SerializeField] private GameObject turnoverParent;
 
     [Header("Setup")]
     [SerializeField] private string connectorSetup;
@@ -17,6 +18,8 @@ public class FullRingController : MonoBehaviour
 
     public Dictionary<int, int> connectDict = new Dictionary<int, int>();
     private Dictionary<int, int> reverseConnectDict = new Dictionary<int, int>();
+
+    #region setupControls
     void Start()
     {
         GetNeededComponents();
@@ -42,7 +45,50 @@ public class FullRingController : MonoBehaviour
         leftBoxes   = leftRing.GetComponent<HalfRingController>().GetLetterBoxes();
         rightBoxes  = rightRing.GetComponent<HalfRingController>().GetLetterBoxes();
     }
+    #endregion
 
+    #region getters
+    public GameObject GetLeftRing()     {return leftRing;}
+    public GameObject GetRightRing()    {return rightRing;}
+    public List<char> GetTurnover() {return notches;}
+    public string GetSetup() {return connectorSetup; }
+    #endregion
+
+    public void PushForwardAll()
+    {
+        leftRing.GetComponent<HalfRingController>().PushForwardOnce();
+        rightRing.GetComponent<HalfRingController>().PushForwardOnce();
+        turnoverParent.GetComponent<TurnoverController>().PushNotchesForwardOnce();
+
+        char lastChar = connectorSetup[EnigmaInfo.defaultLength-1];
+        connectorSetup = connectorSetup.Remove(EnigmaInfo.defaultLength-1);
+        connectorSetup = connectorSetup.Insert(0, lastChar.ToString());
+        RefreshConnectDict();
+
+        StartCoroutine(connectorParent.GetComponent<ConnectorController>().RedrawConnectors());
+    }
+
+    public void PushBackwardAll()
+    {
+        leftRing.GetComponent<HalfRingController>().PushBackwardOnce();
+        rightRing.GetComponent<HalfRingController>().PushBackwardOnce();
+        turnoverParent.GetComponent<TurnoverController>().PushNotchesBackwardOnce();
+
+        char lastChar = connectorSetup[0];
+        connectorSetup = connectorSetup.Remove(0, 1);
+        connectorSetup += lastChar;
+        RefreshConnectDict();
+
+        StartCoroutine(connectorParent.GetComponent<ConnectorController>().RedrawConnectors());
+    }
+
+    #region refreshControls
+    public void RefreshWithNewSetup(string setup)
+    {
+        connectorSetup = setup;
+        RefreshConnectDict();
+        StartCoroutine(connectorParent.GetComponent<ConnectorController>().RedrawConnectors());
+    }
     private void RefreshConnectDict()
     {
         //refresh everything - potential bug later.
@@ -55,38 +101,10 @@ public class FullRingController : MonoBehaviour
             reverseConnectDict.Add((int) (connectorSetup[i] - 'A'), i);
         }
     }
-
-    public GameObject GetLeftRing()     {return leftRing;}
-    public GameObject GetRightRing()    {return rightRing;}
-    public List<char> GetTurnover() {return notches;}
-
-    public void PushForwardAll()
-    {
-        leftRing.GetComponent<HalfRingController>().PushForwardOnce();
-        rightRing.GetComponent<HalfRingController>().PushForwardOnce();
-
-        //reform dict
-        Dictionary<int, int> tmpDict = new Dictionary<int, int>();        
-        for (int i = 0; i < EnigmaInfo.defaultLength; i++)
-        {
-            int key = i;
-            int val = connectDict[i];
-            if (key == EnigmaInfo.defaultLength - 1) {key = 0;} else {key++;}
-            if (val == EnigmaInfo.defaultLength - 1) {val = 0;} else {val++;}
-
-            tmpDict[key] = val;
-        }
-        connectDict = tmpDict;
-        StartCoroutine(connectorParent.GetComponent<ConnectorController>().RedrawConnectors());
-    }
-
-    public void RefreshWithNewSetup(string setup)
-    {
-        RefreshConnectDict();
-        StartCoroutine(connectorParent.GetComponent<ConnectorController>().RedrawConnectors());
-    }
+    #endregion    
 
     //light controls - probably bugs
+    #region lightControls
     public void LightUpConnection(int idx)
     {
         //get everything - safety purposes
@@ -117,4 +135,5 @@ public class FullRingController : MonoBehaviour
         rightRing.GetComponent<HalfRingController>().LightDownAllBox();
         connectorParent.GetComponent<ConnectorController>().AllLightDown();
     }
+    #endregion
 }
