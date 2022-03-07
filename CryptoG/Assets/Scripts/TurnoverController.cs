@@ -30,7 +30,7 @@ public class TurnoverController : MonoBehaviour
     }
 
     //NOTE: refresh EVERYTHING
-    IEnumerator RefreshNotches()
+    public IEnumerator RefreshNotches()
     {
         yield return new WaitForEndOfFrame();
 
@@ -40,7 +40,24 @@ public class TurnoverController : MonoBehaviour
         {
             notchIndexes.Add((int) (notch - 'A'));
         }
+        ResetNotches();
         DrawNotches();
+    }
+
+    private void ResetNotches()
+    {
+        foreach(GameObject notchObj in notchObjs)        
+        {
+            //draw notch
+            LineRenderer line = notchObj.GetComponent<LineRenderer>();
+            line.positionCount = 0;
+            /*
+            line.SetPosition(0, pos1); line.SetPosition(1, pos2);
+            line.endWidth = notchWidth; line.startWidth = notchWidth;
+            line.endColor = notchColor; line.startColor = notchColor;
+            //up
+            cnt++;*/
+        }
     }
 
     private void DrawNotches()
@@ -48,7 +65,6 @@ public class TurnoverController : MonoBehaviour
         int cnt = 0;
         foreach(int notchIdx in notchIndexes)        
         {
-            //Debug.Log("ranned");
             Vector2 pos1 = leftBox[notchIdx].GetComponent<LetterBoxController>().GetPlugPoint();
             Vector2 pos2 = rightBox[notchIdx].GetComponent<LetterBoxController>().GetPlugPoint();
 

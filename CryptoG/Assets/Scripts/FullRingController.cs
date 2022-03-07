@@ -11,7 +11,7 @@ public class FullRingController : MonoBehaviour
     [SerializeField] private GameObject turnoverParent;
 
     [Header("Setup")]
-    [SerializeField] private string connectorSetup;
+    [SerializeField] private string connectSetup;
     [SerializeField] private List<char> notches;
 
     private List<GameObject> leftBoxes, rightBoxes;
@@ -51,55 +51,89 @@ public class FullRingController : MonoBehaviour
     public GameObject GetLeftRing()     {return leftRing;}
     public GameObject GetRightRing()    {return rightRing;}
     public List<char> GetTurnover() {return notches;}
-    public string GetSetup() {return connectorSetup; }
+    public string GetSetup() {return connectSetup; }
     #endregion
 
-    public void PushForwardAll()
+    #region pusher
+    public void PushForwardAll(bool ring)
     {
         leftRing.GetComponent<HalfRingController>().PushForwardOnce();
         rightRing.GetComponent<HalfRingController>().PushForwardOnce();
-        turnoverParent.GetComponent<TurnoverController>().PushNotchesForwardOnce();
+        if (!ring) { turnoverParent.GetComponent<TurnoverController>().PushNotchesForwardOnce(); }
 
-        char lastChar = connectorSetup[EnigmaInfo.defaultLength-1];
-        connectorSetup = connectorSetup.Remove(EnigmaInfo.defaultLength-1);
-        connectorSetup = connectorSetup.Insert(0, lastChar.ToString());
+        Dictionary<int, int> tmpDict = new Dictionary<int, int>();
+        for (int i = 0; i < EnigmaInfo.defaultLength; i++)
+        {
+            int otherIdx = connectDict[i]+1;
+            int curIdx = i+1;
+            if (otherIdx >= 26) {otherIdx = 0;}
+            if (curIdx >= 26) {curIdx = 0;}
+            tmpDict[curIdx] = otherIdx;
+        }        
+        connectDict = tmpDict;
+        ReverseConstructConnectSetup();
         RefreshConnectDict();
 
         StartCoroutine(connectorParent.GetComponent<ConnectorController>().RedrawConnectors());
     }
 
-    public void PushBackwardAll()
+    public void PushBackwardAll(bool ring)
     {
         leftRing.GetComponent<HalfRingController>().PushBackwardOnce();
         rightRing.GetComponent<HalfRingController>().PushBackwardOnce();
-        turnoverParent.GetComponent<TurnoverController>().PushNotchesBackwardOnce();
+        if (!ring) { turnoverParent.GetComponent<TurnoverController>().PushNotchesBackwardOnce(); }
 
-        char lastChar = connectorSetup[0];
-        connectorSetup = connectorSetup.Remove(0, 1);
-        connectorSetup += lastChar;
+        Dictionary<int, int> tmpDict = new Dictionary<int, int>();
+        for (int i = 0; i < EnigmaInfo.defaultLength; i++)
+        {
+            int otherIdx = connectDict[i]-1;
+            int curIdx = i-1;
+            if (otherIdx < 0) {otherIdx = 25;}
+            if (curIdx < 0) {curIdx = 25;}
+            tmpDict[curIdx] = otherIdx;
+        }        
+        connectDict = tmpDict;
+        ReverseConstructConnectSetup();
         RefreshConnectDict();
 
         StartCoroutine(connectorParent.GetComponent<ConnectorController>().RedrawConnectors());
     }
+    #endregion
 
     #region refreshControls
-    public void RefreshWithNewSetup(string setup)
+    public void RefreshWithNewSetup(string setup, List<char> newNotches = null)
     {
-        connectorSetup = setup;
+        connectSetup = setup;
         RefreshConnectDict();
+        LightDownEverything();
+
+        if (newNotches != null && turnoverParent != null) //in case of EKW
+        {
+            notches = newNotches;
+            StartCoroutine(turnoverParent.GetComponent<TurnoverController>().RefreshNotches());
+        }
         StartCoroutine(connectorParent.GetComponent<ConnectorController>().RedrawConnectors());
     }
     private void RefreshConnectDict()
     {
-        //refresh everything - potential bug later.
         connectDict = new Dictionary<int, int>();
         reverseConnectDict = new Dictionary<int, int>();
 
         for (int i = 0; i < EnigmaInfo.defaultLength; i++)
         {
-            connectDict.Add(i, (int) (connectorSetup[i] - 'A'));
-            reverseConnectDict.Add((int) (connectorSetup[i] - 'A'), i);
+            connectDict.Add(i, (int) (connectSetup[i] - 'A'));
+            reverseConnectDict.Add((int) (connectSetup[i] - 'A'), i);
         }
+    }
+
+    private void ReverseConstructConnectSetup()
+    {
+        string newSetup = "";
+        for (int i = 0; i < EnigmaInfo.defaultLength; i++)
+        {
+            newSetup += (char) (connectDict[i] + 'A');
+        }
+        connectSetup = newSetup;
     }
     #endregion    
 
