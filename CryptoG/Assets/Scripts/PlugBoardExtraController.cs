@@ -8,6 +8,7 @@ public class PlugBoardExtraController : MonoBehaviour
     [SerializeField] private GameObject leftRing, rightRing;
     [SerializeField] private GameObject fullRing;
     [SerializeField] private int maxPair = 10;
+    [SerializeField] private GameObject plugboardDisplay;
 
     private GameObject leftObject = null, rightObject = null;
     private List<GameObject> leftBoxes, rightBoxes;
@@ -17,6 +18,16 @@ public class PlugBoardExtraController : MonoBehaviour
     {
         GetNeededComponents();
     }
+
+    public void ResetPlugboard()
+    {
+        setupString = EnigmaInfo.defaultAlphabet;
+
+        fullRing.GetComponent<FullRingController>().RefreshWithNewSetup(setupString);
+        plugboardDisplay.GetComponent<PlugboardDisplayer>().UpdatePlugboardDisplay(setupString);
+    }
+
+    public string getPlugboardSetup() {return setupString;}
 
     private void GetNeededComponents()
     {
@@ -92,5 +103,6 @@ public class PlugBoardExtraController : MonoBehaviour
             }
         }
         fullRing.GetComponent<FullRingController>().RefreshWithNewSetup(setupString);
+        plugboardDisplay.GetComponent<PlugboardDisplayer>().UpdatePlugboardDisplay(setupString);
     }
 }

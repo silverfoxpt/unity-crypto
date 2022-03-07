@@ -32,4 +32,18 @@ public class WheelSwitchController : MonoBehaviour
         increaser.GetComponent<IncreaserController>().ResetText();
         ringIncreaser.GetComponent<IncreaserController>().ResetText();
     }
+
+    public void ResetWheel(string wheel)
+    {
+        int newIdx = EnigmaInfo.convertText[wheel];
+
+        string newSetup = EnigmaInfo.wheels[newIdx];
+        List<char> newTurnover = EnigmaInfo.turnovers[newIdx];
+
+        //reset stuff
+        curText.text = EnigmaInfo.convertTextReverse[newIdx];
+        fullRing.GetComponent<FullRingController>().RefreshWithNewSetup(newSetup, newTurnover);
+        increaser.GetComponent<IncreaserController>().ResetText();
+        ringIncreaser.GetComponent<IncreaserController>().ResetText();
+    }
 }

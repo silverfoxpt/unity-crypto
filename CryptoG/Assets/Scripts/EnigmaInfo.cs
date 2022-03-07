@@ -6,6 +6,7 @@ public class EnigmaInfo : MonoBehaviour
 {
     public static int defaultLength = 26;
     public static int numWheel = 8;
+    public static int maxPlugboard = 10;
     public static string defaultAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     public static string reflectorB = "YRUHQSLDPXNGOKMIEBFZCWVJAT";
     public static string reflectorC = "FVPJIAOYEDRZXWGCTKUQSBNMHL";

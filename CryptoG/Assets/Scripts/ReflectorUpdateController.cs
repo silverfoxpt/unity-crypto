@@ -16,4 +16,12 @@ public class ReflectorUpdateController : MonoBehaviour
         reflectorFullRing.GetComponent<UKWExtraController>().RefreshWithnewSetup((cur == 'B') ? EnigmaInfo.reflectorC : EnigmaInfo.reflectorB);
     }
 
+    public void ResetReflector()
+    {
+        char cur = 'B';
+        curText.text = cur.ToString();
+
+        reflectorFullRing.GetComponent<UKWExtraController>().RefreshWithnewSetup(EnigmaInfo.reflectorB);
+    }
+
 }
