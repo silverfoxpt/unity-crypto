@@ -11,7 +11,7 @@ public class UKWExtraController : MonoBehaviour
     [SerializeField] private float connectWidth = 0.025f;
     [SerializeField] private Color reflectColor;
     private List<GameObject> rightLetterBoxes;
-    private Dictionary<int, int> ukwConnectDict = new Dictionary<int, int>();
+    public Dictionary<int, int> ukwConnectDict = new Dictionary<int, int>();
 
     private void Start()
     {
@@ -67,5 +67,7 @@ public class UKWExtraController : MonoBehaviour
     {
         UKWSetup = setup;
         RefreshDict();
+        DisconnectReflector();
+        GetComponent<FullRingController>().LightDownEverything();
     }
 }

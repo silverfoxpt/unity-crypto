@@ -46,4 +46,9 @@ public class WheelSwitchController : MonoBehaviour
         increaser.GetComponent<IncreaserController>().ResetText();
         ringIncreaser.GetComponent<IncreaserController>().ResetText();
     }
+
+    public int GetWheelIndex()
+    {
+        return EnigmaInfo.convertText[curText.text];
+    }
 }

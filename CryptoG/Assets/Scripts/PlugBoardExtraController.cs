@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 
 public class PlugBoardExtraController : MonoBehaviour
 {
@@ -104,5 +106,31 @@ public class PlugBoardExtraController : MonoBehaviour
         }
         fullRing.GetComponent<FullRingController>().RefreshWithNewSetup(setupString);
         plugboardDisplay.GetComponent<PlugboardDisplayer>().UpdatePlugboardDisplay(setupString);
+    }
+
+    public void DisablePlugboard()
+    {
+        foreach(GameObject box in leftBoxes)
+        {
+            box.GetComponent<Button>().enabled = false;
+        }
+
+        foreach(GameObject box in rightBoxes)
+        {
+            box.GetComponent<Button>().enabled = false;
+        }
+    }
+
+    public void EnablePlugboard()
+    {
+        foreach(GameObject box in leftBoxes)
+        {
+            box.GetComponent<Button>().enabled = true;
+        }
+
+        foreach(GameObject box in rightBoxes)
+        {
+            box.GetComponent<Button>().enabled = true;
+        }
     }
 }

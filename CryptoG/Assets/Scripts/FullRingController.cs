@@ -17,7 +17,7 @@ public class FullRingController : MonoBehaviour
     private List<GameObject> leftBoxes, rightBoxes;
 
     public Dictionary<int, int> connectDict = new Dictionary<int, int>();
-    private Dictionary<int, int> reverseConnectDict = new Dictionary<int, int>();
+    public Dictionary<int, int> reverseConnectDict = new Dictionary<int, int>();
 
     #region setupControls
     void Start()
@@ -57,9 +57,12 @@ public class FullRingController : MonoBehaviour
     #region pusher
     public void PushForwardAll(bool ring)
     {
-        leftRing.GetComponent<HalfRingController>().PushForwardOnce();
-        rightRing.GetComponent<HalfRingController>().PushForwardOnce();
-        if (!ring) { turnoverParent.GetComponent<TurnoverController>().PushNotchesForwardOnce(); }
+        if (!ring) 
+        { 
+            leftRing.GetComponent<HalfRingController>().PushForwardOnce();
+            rightRing.GetComponent<HalfRingController>().PushForwardOnce();
+            turnoverParent.GetComponent<TurnoverController>().PushNotchesForwardOnce(); 
+        }
 
         Dictionary<int, int> tmpDict = new Dictionary<int, int>();
         for (int i = 0; i < EnigmaInfo.defaultLength; i++)
@@ -79,9 +82,12 @@ public class FullRingController : MonoBehaviour
 
     public void PushBackwardAll(bool ring)
     {
-        leftRing.GetComponent<HalfRingController>().PushBackwardOnce();
-        rightRing.GetComponent<HalfRingController>().PushBackwardOnce();
-        if (!ring) { turnoverParent.GetComponent<TurnoverController>().PushNotchesBackwardOnce(); }
+        if (!ring) 
+        { 
+            leftRing.GetComponent<HalfRingController>().PushBackwardOnce();
+            rightRing.GetComponent<HalfRingController>().PushBackwardOnce();
+            turnoverParent.GetComponent<TurnoverController>().PushNotchesBackwardOnce(); 
+        }
 
         Dictionary<int, int> tmpDict = new Dictionary<int, int>();
         for (int i = 0; i < EnigmaInfo.defaultLength; i++)
