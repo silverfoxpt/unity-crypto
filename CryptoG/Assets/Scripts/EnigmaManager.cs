@@ -14,6 +14,16 @@ public class EnigmaManager : MonoBehaviour
     [Header("Controls")]
     [SerializeField] private GameObject ukwChanger;
     [SerializeField] private List<GameObject> wheelChangers;
+
+    [Header("Others")]
+    [SerializeField] private GameObject keyInputManager;
+
+    public static EnigmaManager instance;
+
+    private void Awake() 
+    {
+        instance = this;    
+    }
     
     public void RestartEnigmaMachine()
     {
@@ -30,5 +40,10 @@ public class EnigmaManager : MonoBehaviour
 
         //reset plugboard
         plugboard.GetComponent<PlugBoardExtraController>().ResetPlugboard();
+    }
+
+    public void KeyInputClicked(char charClicked)
+    {
+        Debug.Log("Clicked : " + charClicked);
     }
 }
