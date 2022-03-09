@@ -26,7 +26,9 @@ public class EnigmaManager : MonoBehaviour
 
     public static EnigmaManager instance;
 
-    private List<int> notch1, notch2, notch3;
+    [Header("Debug")]
+    [SerializeField] List<int> notch1;
+    private List<int> notch2, notch3;
     private bool fresh = true;
     private bool doubleStep = false;
 
@@ -126,13 +128,15 @@ public class EnigmaManager : MonoBehaviour
             fresh = false;
         }
 
-        bool jump1 = false;;
+        bool jump1 = false;
         //update first ring
+        
         ring1.GetComponent<FullRingController>().PushBackwardAll(false);
         for (int i = 0; i < notch1.Count; i++)
         {
-            notch1[i]--; if (notch1[i] < 0) { Debug.Log("hi"); notch1[i] = EnigmaInfo.defaultLength-1; jump1 = true;}
+            notch1[i]--; if (notch1[i] < 0) { notch1[i] = EnigmaInfo.defaultLength-1; jump1 = true;}
         }
+        EnigmaInfo.PrintList(notch1, false);
 
         //update second ring
         if (jump1)
@@ -165,6 +169,15 @@ public class EnigmaManager : MonoBehaviour
                     notch2[i]--; if (notch2[i] < 0) {notch2[i] = EnigmaInfo.defaultLength-1; }
                 }
             }
+            //forgot this shit - just push once
+            else
+            {
+                ring2.GetComponent<FullRingController>().PushBackwardAll(false);
+                for (int i = 0; i < notch2.Count; i++)
+                {
+                    notch2[i]--; if (notch2[i] < 0) {notch2[i] = EnigmaInfo.defaultLength-1; }
+                }
+            }
         }
 
         //double step ring 3
@@ -174,24 +187,16 @@ public class EnigmaManager : MonoBehaviour
             ring3.GetComponent<FullRingController>().PushBackwardAll(false);
             for (int i = 0; i < notch3.Count; i++)
             {
-                notch3[i]++; if (notch3[i] < 0) {notch3[i] = EnigmaInfo.defaultLength-1; }
+                notch3[i]--; if (notch3[i] < 0) {notch3[i] = EnigmaInfo.defaultLength-1; }
             }
         }
     }
 
     private void UpdateNewNotch()
     {
-        List<char> tmp = EnigmaInfo.turnovers[wheelChangers[0].GetComponent<WheelSwitchController>().GetWheelIndex()];
-        notch1 = new List<int>();
-        foreach (char c in tmp) { notch1.Add((int)(c - 'A')); }
-
-        tmp = EnigmaInfo.turnovers[wheelChangers[1].GetComponent<WheelSwitchController>().GetWheelIndex()];
-        notch2 = new List<int>();
-        foreach (char c in tmp) { notch2.Add((int)(c - 'A')); }
-
-        tmp = EnigmaInfo.turnovers[wheelChangers[2].GetComponent<WheelSwitchController>().GetWheelIndex()];
-        notch3 = new List<int>();
-        foreach (char c in tmp) { notch3.Add((int)(c - 'A')); }
+        notch1 = ring1.GetComponent<FullRingController>().GetNotchIndexes();
+        notch2 = ring2.GetComponent<FullRingController>().GetNotchIndexes();
+        notch3 = ring3.GetComponent<FullRingController>().GetNotchIndexes();
     }
 
     public void PowerDownControls()

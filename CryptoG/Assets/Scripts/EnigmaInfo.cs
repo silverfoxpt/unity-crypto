@@ -54,4 +54,15 @@ public class EnigmaInfo : MonoBehaviour
         {6, "VII"},
         {7, "VIII"},
     };
+
+    public static void PrintList(List<int> a, bool asWarning)
+    {
+        string s = "";
+        foreach(int x in a)
+        {
+            s += x.ToString(); s += ' ';
+        }
+        if (!asWarning) { Debug.Log(s);}
+        else {Debug.LogWarning(s);}
+    }
 }

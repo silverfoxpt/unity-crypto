@@ -52,6 +52,7 @@ public class FullRingController : MonoBehaviour
     public GameObject GetRightRing()    {return rightRing;}
     public List<char> GetTurnover() {return notches;}
     public string GetSetup() {return connectSetup; }
+    public List<int> GetNotchIndexes() {return new List<int>(turnoverParent.GetComponent<TurnoverController>().notchIndexes); } //PASS BY VALUE YOU DICKHEAD
     #endregion
 
     #region pusher
