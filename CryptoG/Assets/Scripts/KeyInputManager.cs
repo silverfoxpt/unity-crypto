@@ -80,4 +80,16 @@ public class KeyInputManager : MonoBehaviour
             key.GetComponent<KeyboardInputController>().LightDown();
         }
     }
+
+    public void LightUpSingleKey(char curChar)
+    {
+        foreach (GameObject key in keys)
+        {
+            if (key.GetComponent<KeyboardInputController>().GetKeyChar() == curChar)
+            {
+                key.GetComponent<KeyboardInputController>().LightUp();
+                return;
+            }
+        }
+    }
 }

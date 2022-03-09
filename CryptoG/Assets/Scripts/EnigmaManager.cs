@@ -22,6 +22,7 @@ public class EnigmaManager : MonoBehaviour
 
     [Header("Others")]
     [SerializeField] private GameObject keyInputManager;
+    [SerializeField] private GameObject keyOutputManager;
     [SerializeField] private List<Button> controlButtons;
 
     public static EnigmaManager instance;
@@ -62,13 +63,17 @@ public class EnigmaManager : MonoBehaviour
 
     public void KeyInputClicked(char charClicked)
     {
+        //Pre settings
+        ResetColorScheme();
         PowerDownControls();
-        Debug.Log("Clicked : " + charClicked);
         PushWheels();
+
+        //calculations
         char curChar = charClicked;
 
         //connection: keyboard -> plugboard
         keyInputManager.GetComponent<KeyInputManager>().LightUpPlugline(charClicked);
+        keyInputManager.GetComponent<KeyInputManager>().LightUpSingleKey(charClicked);
 
         //connection: plugboard
         plugboard.GetComponent<FullRingController>().LightUpConnection((int) (curChar - 'A'));
@@ -116,7 +121,9 @@ public class EnigmaManager : MonoBehaviour
         plugboard.GetComponent<FullRingController>().LightUpReverseConnection((int) (curChar - 'A'));
         curChar = (char) (plugboard.GetComponent<FullRingController>().reverseConnectDict[(int) (curChar - 'A')] + 'A');
 
-        //output keyboard pending
+        //output keyboard 
+        keyOutputManager.GetComponent<KeyInputManager>().LightUpPlugline(curChar);
+        keyOutputManager.GetComponent<KeyInputManager>().LightUpSingleKey(curChar);
 
     }
 
@@ -215,5 +222,23 @@ public class EnigmaManager : MonoBehaviour
             but.enabled = true;
         }
         plugboard.GetComponent<PlugBoardExtraController>().EnablePlugboard();
+    }
+
+    private void ResetColorScheme()
+    {
+        //keyboard
+        keyInputManager.GetComponent<KeyInputManager>().LightDownKey();
+        keyInputManager.GetComponent<KeyInputManager>().LightDownPlugline();
+
+        keyOutputManager.GetComponent<KeyInputManager>().LightDownKey();
+        keyOutputManager.GetComponent<KeyInputManager>().LightDownPlugline();
+
+        //rings
+        plugboard.GetComponent<FullRingController>().LightDownEverything();
+        ekw.GetComponent<FullRingController>().LightDownEverything();
+        ring1.GetComponent<FullRingController>().LightDownEverything();
+        ring2.GetComponent<FullRingController>().LightDownEverything();
+        ring3.GetComponent<FullRingController>().LightDownEverything();
+        ukw.GetComponent<FullRingController>().LightDownEverything();
     }
 }

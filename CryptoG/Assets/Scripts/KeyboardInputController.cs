@@ -15,7 +15,7 @@ public class KeyboardInputController : MonoBehaviour
     {
         normalColor = GetComponent<Image>().color;
         keyButton.onClick.AddListener(() => {
-            GetComponent<Image>().color = lightUpColor;
+            //LightUp(); //not going to work
             EnigmaManager.instance.KeyInputClicked(keyText.text[0]);
         });
     }
@@ -24,5 +24,15 @@ public class KeyboardInputController : MonoBehaviour
     public void LightDown()
     {
         GetComponent<Image>().color = normalColor;
+    }
+
+    public char GetKeyChar()
+    {
+        return keyText.text[0];
+    }
+
+    public void LightUp()
+    {
+        GetComponent<Image>().color = lightUpColor;
     }
 }
