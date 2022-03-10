@@ -24,6 +24,7 @@ public class EnigmaManager : MonoBehaviour
     [SerializeField] private GameObject keyInputManager;
     [SerializeField] private GameObject keyOutputManager;
     [SerializeField] private List<Button> controlButtons;
+    [SerializeField] private GameObject addTextController;
 
     public static EnigmaManager instance;
 
@@ -32,10 +33,16 @@ public class EnigmaManager : MonoBehaviour
     private List<int> notch2, notch3;
     private bool fresh = true;
     private bool doubleStep = false;
+    private PlaySound playSound;
 
     private void Awake() 
     {
         instance = this;    
+    }
+
+    private void Start() 
+    {
+        playSound = FindObjectOfType<PlaySound>();
     }
     
     public void RestartEnigmaMachine()
@@ -56,12 +63,18 @@ public class EnigmaManager : MonoBehaviour
         //reset plugboard
         plugboard.GetComponent<PlugBoardExtraController>().ResetPlugboard();
 
+        //reset ekw
+        ekw.GetComponent<FullRingController>().LightDownEverything();
+
         //reset keyboard
         keyInputManager.GetComponent<KeyInputManager>().LightDownKey();
         keyInputManager.GetComponent<KeyInputManager>().LightDownPlugline();
+
+        keyOutputManager.GetComponent<KeyInputManager>().LightDownKey();
+        keyOutputManager.GetComponent<KeyInputManager>().LightDownPlugline();
     }
 
-    public void KeyInputClicked(char charClicked)
+    public void KeyInputClicked(char charClicked, bool fromTextField = false)
     {
         //Pre settings
         ResetColorScheme();
@@ -70,6 +83,10 @@ public class EnigmaManager : MonoBehaviour
 
         //calculations
         char curChar = charClicked;
+
+        //add to input text field
+        if (!fromTextField) { addTextController.GetComponent<AdditionalTextFieldsController>().AddToInputTextField(curChar);}
+        playSound.PlayKeyboardSound();
 
         //connection: keyboard -> plugboard
         keyInputManager.GetComponent<KeyInputManager>().LightUpPlugline(charClicked);
@@ -125,6 +142,8 @@ public class EnigmaManager : MonoBehaviour
         keyOutputManager.GetComponent<KeyInputManager>().LightUpPlugline(curChar);
         keyOutputManager.GetComponent<KeyInputManager>().LightUpSingleKey(curChar);
 
+        //add to output text field
+        addTextController.GetComponent<AdditionalTextFieldsController>().AddToOutputTextField(curChar);
     }
 
     private void PushWheels()
@@ -135,7 +154,7 @@ public class EnigmaManager : MonoBehaviour
             fresh = false;
         }
 
-        bool jump1 = false;
+        bool jump1 = false, jump2 = false;
         //update first ring
         
         ring1.GetComponent<FullRingController>().PushBackwardAll(false);
@@ -143,60 +162,52 @@ public class EnigmaManager : MonoBehaviour
         {
             notch1[i]--; if (notch1[i] < 0) { notch1[i] = EnigmaInfo.defaultLength-1; jump1 = true;}
         }
-        EnigmaInfo.PrintList(notch1, false);
 
-        //update second ring
+        //if ring 1 jumped (!)
         if (jump1)
         {
-            int maxNotch2 = notch2.Max();
-            //double step immidiately
-            if (maxNotch2 == EnigmaInfo.defaultLength-1)
+            int minNotch2 = notch2.Min();
+            if (minNotch2 == 1) 
             {
-                //jump2 = true; //not needed anyway
+                doubleStep = true; 
                 ring2.GetComponent<FullRingController>().PushBackwardAll(false);
                 for (int i = 0; i < notch2.Count; i++)
                 {
-                    notch2[i]--; if (notch2[i] < 0) {notch2[i] = EnigmaInfo.defaultLength-1; }
-                }
-
-                ring3.GetComponent<FullRingController>().PushBackwardAll(false);
-                for (int i = 0; i < notch3.Count; i++)
-                {
-                    notch3[i]--; if (notch3[i] < 0) {notch3[i] = EnigmaInfo.defaultLength-1; }
-                }
-                return; //stop any shit
-            }
-            //double step in next step
-            else if (maxNotch2 == EnigmaInfo.defaultLength-2)
-            {
-                doubleStep = true;
-                ring2.GetComponent<FullRingController>().PushBackwardAll(false);
-                for (int i = 0; i < notch2.Count; i++)
-                {
-                    notch2[i]--; if (notch2[i] < 0) {notch2[i] = EnigmaInfo.defaultLength-1; }
+                    notch2[i]--; if (notch2[i] < 0) { notch2[i] = EnigmaInfo.defaultLength-1; jump2 = true; } //abnormal cases
                 }
             }
-            //forgot this shit - just push once
-            else
+            else //just push back
             {
                 ring2.GetComponent<FullRingController>().PushBackwardAll(false);
                 for (int i = 0; i < notch2.Count; i++)
                 {
-                    notch2[i]--; if (notch2[i] < 0) {notch2[i] = EnigmaInfo.defaultLength-1; }
+                    notch2[i]--; if (notch2[i] < 0) { notch2[i] = EnigmaInfo.defaultLength-1; jump2 = true; } //abnormal cases
+                }
+            }
+        }
+        else //if ring 1 DON'T JUMP BUT THERE IS A DOUBLE STEP MF
+        {
+            if (doubleStep)
+            {
+                doubleStep = false;
+                ring2.GetComponent<FullRingController>().PushBackwardAll(false); jump2 = true;
+                for (int i = 0; i < notch2.Count; i++)
+                {
+                    notch2[i]--; if (notch2[i] < 0) { notch2[i] = EnigmaInfo.defaultLength-1; }
                 }
             }
         }
 
-        //double step ring 3
-        if (doubleStep)
+        //converge ring 3
+        if (jump2)
         {
-            doubleStep = false;
             ring3.GetComponent<FullRingController>().PushBackwardAll(false);
             for (int i = 0; i < notch3.Count; i++)
             {
                 notch3[i]--; if (notch3[i] < 0) {notch3[i] = EnigmaInfo.defaultLength-1; }
             }
         }
+        
     }
 
     private void UpdateNewNotch()

@@ -28,7 +28,7 @@ RectTransform:
   m_GameObject: {fileID: 146726374178052277}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.1, y: 1.1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 146726374399778725}
@@ -93,6 +93,7 @@ MonoBehaviour:
   keyButton: {fileID: 146726374399778724}
   keyText: {fileID: 146726374581617460}
   lightUpColor: {r: 0.37254903, g: 1, b: 0.92156863, a: 1}
+  isOutputKey: 0
 --- !u!1 &146726374399778722
 GameObject:
   m_ObjectHideFlags: 0
