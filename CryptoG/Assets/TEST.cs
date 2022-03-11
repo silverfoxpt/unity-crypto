@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class TEST : MonoBehaviour
 {
+    char x = 'Š';
     void Start()
     {
-        Debug.Log(GetComponent<RectTransform>().TransformPoint(GetComponent<RectTransform>().rect.center));    
+        Debug.Log(x);  
     }
 }
