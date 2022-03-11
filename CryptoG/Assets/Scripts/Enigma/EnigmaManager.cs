@@ -72,6 +72,10 @@ public class EnigmaManager : MonoBehaviour
 
         keyOutputManager.GetComponent<KeyInputManager>().LightDownKey();
         keyOutputManager.GetComponent<KeyInputManager>().LightDownPlugline();
+
+        //reset input field
+        addTextController.GetComponent<AdditionalTextFieldsController>().DeleteEverythingFromInputTextField();
+        addTextController.GetComponent<AdditionalTextFieldsController>().DeleteEverythingFromOutputTextField();
     }
 
     public void KeyInputClicked(char charClicked, bool fromTextField = false)

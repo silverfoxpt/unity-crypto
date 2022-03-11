@@ -24,26 +24,47 @@ public class AdditionalTextFieldsController : MonoBehaviour
         previousField += newChar;
     }
 
+    public void DeleteOnceFromOutputTextField()
+    {
+        string curText = outputTextField.GetComponent<TMP_InputField>().text;
+        if (curText.Length < 1) {return;}
+        curText = curText.Remove(curText.Length-1);
+        outputTextField.GetComponent<TMP_InputField>().text = curText;
+    }
+
+    public void DeleteEverythingFromOutputTextField() { outputTextField.GetComponent<TMP_InputField>().text = "";}
+    public void DeleteEverythingFromInputTextField() { inputTextField.GetComponent<TMP_InputField>().SetTextWithoutNotify("");} //for safety
+
     public void InputTextFieldChanged(string text)
     {
+        //case of increase
         int numChanged = text.Length - previousField.Length;
-        string changed = "";
-        for (int i = text.Length - numChanged; i < text.Length; i++)
+        if (numChanged > 0)
         {
-            changed += text[i];
-        }
+            string changed = "";
+            for (int i = text.Length - numChanged; i < text.Length; i++)
+            {
+                changed += text[i];
+            }
 
-        foreach(char c in changed)
+            foreach(char c in changed)
+            {
+                char cur = (c.ToString()).ToUpper()[0];
+                if (EnigmaInfo.defaultAlphabet.Contains(cur))
+                {
+                    EnigmaManager.instance.KeyInputClicked(cur, true);
+                }
+                else
+                {
+                    AddToOutputTextField(cur);
+                }
+            }
+        }
+        else
         {
-            char cur = (c.ToString()).ToUpper()[0];
-            if (EnigmaInfo.defaultAlphabet.Contains(cur))
-            {
-                EnigmaManager.instance.KeyInputClicked(cur, true);
-            }
-            else
-            {
-                AddToOutputTextField(cur);
-            }
+            //Debug.Log("Del");
+            numChanged = -numChanged;
+            for (int i = 0; i < numChanged; i++) {DeleteOnceFromOutputTextField(); }
         }
         previousField = text;
     }
