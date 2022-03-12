@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class TEST : MonoBehaviour
 {
-    char x = 'Š';
+    string x = "ÅnD";
     void Start()
     {
-        Debug.Log(x);  
+        //Debug.Log(x.ToLower());  
     }
 }
