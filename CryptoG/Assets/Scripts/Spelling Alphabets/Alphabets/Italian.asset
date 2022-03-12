@@ -1,0 +1,43 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b7c3556bc857a03448a74c8fc402b43c, type: 3}
+  m_Name: Italian
+  m_EditorClassIdentifier: 
+  mainAlphabet:
+  - Ancona
+  - Bologna
+  - Como
+  - Domodossola
+  - Empoli
+  - Firenze
+  - Genova
+  - Hotel
+  - Imola
+  - Jolly
+  - Kappa
+  - Livorno
+  - Milano
+  - Napoli
+  - Otranto
+  - Padova
+  - Quadro
+  - Roma
+  - Savona
+  - Torino
+  - Udine
+  - Verona
+  - Whiskey
+  - Ics
+  - York
+  - Zara
+  weirdAlphabet: []
+  multiAlphabet: []

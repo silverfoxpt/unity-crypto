@@ -9,7 +9,7 @@ EditorBuildSettings:
     path: Assets/Scenes/TEST.unity
     guid: f2238ff19a93e8848a1642c8ad7f27c1
   - enabled: 1
-    path: Assets/Scenes/Spelling Alphbets.unity
+    path: Assets/Scenes/Spelling Alphabets.unity
     guid: 17211411e2fe01d47957748d50d5231f
   - enabled: 1
     path: Assets/Scenes/Enigma.unity

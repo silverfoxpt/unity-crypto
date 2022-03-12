@@ -44,7 +44,7 @@ public class SpellingAlphabetManager : MonoBehaviour
             foreach(var mul in multiAlphabet)
             {
                 string norm = mul.encodeString.ToLower();
-                if (plainText.Length - norm.Length < i) {break;} //if length larger
+                if (plainText.Length - norm.Length < i) {continue;} //if length larger
 
                 string cutout = plainText.Substring(i, norm.Length);
                 if (cutout == norm)//if correct
@@ -55,6 +55,7 @@ public class SpellingAlphabetManager : MonoBehaviour
                 }
             }
             if (i >= plainText.Length) {break;}
+            if (goOn) {continue;}
 
             //check for weird char
             foreach (var weird in weirdAlphabet)
@@ -67,6 +68,7 @@ public class SpellingAlphabetManager : MonoBehaviour
                 }
             }
             if (i >= plainText.Length) {break;}
+            if (goOn) {continue;}
 
             //finally, check for normal shit
             for (int j = 0; j < mainAlphabet.Count; j++)
@@ -78,6 +80,8 @@ public class SpellingAlphabetManager : MonoBehaviour
                     i++; break;
                 }
             }
+            if (i >= plainText.Length) {break;}
+            if (goOn) {continue;}
 
             //if nothing match then...
             if (!goOn)

@@ -1,0 +1,73 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b7c3556bc857a03448a74c8fc402b43c, type: 3}
+  m_Name: Swedish (Swedish Armed Forces)
+  m_EditorClassIdentifier: 
+  mainAlphabet:
+  - Adam
+  - Bertil
+  - Caesar
+  - David
+  - Erik
+  - Filip
+  - Gustav
+  - Helge
+  - Ivar
+  - Johan
+  - Kalle
+  - Ludvig
+  - Martin
+  - Niklas
+  - Olof
+  - Petter
+  - Quintus
+  - Rudolf
+  - Sigurd
+  - Tore
+  - Urban
+  - Viktor
+  - Wilhelm
+  - Xerxes
+  - Yngve
+  - "Z\xE4ta"
+  weirdAlphabet:
+  - encodeChar: 197
+    decodeString: "\xC5ke"
+  - encodeChar: 196
+    decodeString: "\xC4rlig"
+  - encodeChar: 214
+    decodeString: "\xD6sten"
+  - encodeChar: 220
+    decodeString: "\xDCber"
+  - encodeChar: 46
+    decodeString: Komma
+  - encodeChar: 49
+    decodeString: Ett
+  - encodeChar: 50
+    decodeString: "Tv\xE5a"
+  - encodeChar: 51
+    decodeString: Trea
+  - encodeChar: 52
+    decodeString: Fyra
+  - encodeChar: 53
+    decodeString: Femma
+  - encodeChar: 54
+    decodeString: Sexa
+  - encodeChar: 55
+    decodeString: Sju
+  - encodeChar: 56
+    decodeString: "\xC5tta"
+  - encodeChar: 57
+    decodeString: Nia
+  - encodeChar: 48
+    decodeString: Nolla
+  multiAlphabet: []

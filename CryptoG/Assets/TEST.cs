@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class TEST : MonoBehaviour
 {
-    string x = "ÅnD";
+    //string x = "ÅnD";
     void Start()
     {
         //Debug.Log(x.ToLower());  
