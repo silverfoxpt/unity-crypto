@@ -36,7 +36,7 @@ public class EquationResolve : MonoBehaviour
 
         string output = "";
         int idx = 0;
-        Stack<char> st = new Stack<char>(); st.Push('.'); //antioverflow
+        Stack<char> st = new Stack<char>(); st.Push('#'); //antioverflow
 
         while(idx < inp.Length)
         {
@@ -102,24 +102,26 @@ public class EquationResolve : MonoBehaviour
     {
         string[] sp = rpn.Split(' ');
         List<string> raw = new List<string>(sp);
-        while (raw.Count > 0 && (raw[raw.Count-1] == " " || raw[raw.Count-1] == "" || raw[raw.Count-1] == ".")) {raw.RemoveAt(raw.Count-1);}
+        while (raw.Count > 0 && (raw[raw.Count-1] == " " || raw[raw.Count-1] == "" || raw[raw.Count-1] == "#")) {raw.RemoveAt(raw.Count-1);}
 
         //process
         Stack<string> st = new Stack<string>();
         foreach(string curStr in raw)
         {
             //is a num/var
-            if (alphanum.Contains(curStr[0])) { st.Push(curStr); }
+            if (alphanum.Contains(curStr[0])) 
+            { 
+                string newCurStr = curStr;
+                if (alpha.Contains(curStr[0])) { newCurStr = (sub[curStr[0]]).ToString(); }
+                st.Push(newCurStr);                
+            }
 
             //not
             else
             {
                 string x1 = st.Pop(); string x2 = st.Pop();
 
-                if (alpha.Contains(x1[0])) { x1 = (sub[x1[0]]).ToString();}
                 float first = float.Parse(x1, CultureInfo.InvariantCulture.NumberFormat);
-
-                if (alpha.Contains(x2[0])) { x2 = (sub[x2[0]]).ToString();}
                 float sec = float.Parse(x2, CultureInfo.InvariantCulture.NumberFormat);
 
                 st.Push(GetFinalvalue(sec, first, curStr).ToString());

@@ -7,11 +7,7 @@ public class TEST : MonoBehaviour
     //string x = "ÅnD";
     void Start()
     {
-        string x = "5 6 7";
-        string[] a = x.Split(' ');
-        foreach(string m in a)
-        {
-            //Debug.Log(m);
-        }
+        //Debug.Log(Camera.main.ScreenToWorldPoint(new Vector3(0f, 0f, 0f)));
+        //Debug.Log(Camera.main.ScreenToWorldPoint(new Vector3(1f, 1f, 0f)));
     }
 }

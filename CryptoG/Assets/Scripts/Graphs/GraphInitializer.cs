@@ -6,11 +6,9 @@ using UnityEngine;
 public class GraphInitializer : MonoBehaviour
 {
     [Header("Graph Settings")]
-    [Range(0f, 15f)] [SerializeField] private float sideLength = 6f;
     [Range(0f, 1f)] [SerializeField] private float extraTipLength = 0.2f;
 
     [Header("Markings settings")]
-    [SerializeField] private int portionNum = 5;
     [Range(0f, 15f)] [SerializeField] private float portionLength = 1f;
     [SerializeField] private float halfLengthMarking = 0.05f;
 
@@ -20,6 +18,10 @@ public class GraphInitializer : MonoBehaviour
 
     public static GraphInitializer instance;
 
+    private float sideLength = -1;
+    private int portionNum = -1;
+
+    #region unityMain
     private void Awake()
     {
         instance = this;
@@ -29,9 +31,16 @@ public class GraphInitializer : MonoBehaviour
     {
         InitializeGraph();   
     }
+    #endregion
 
     private void InitializeGraph()
     {
+        //calculate sideLength & portionNum
+        Vector3 len = Camera.main.ScreenToWorldPoint(new Vector3(0f, 0f, 0f));
+        sideLength = Mathf.Max(Mathf.Abs(len.x), Mathf.Abs(len.y));
+
+        portionNum = (int) (sideLength/portionLength);
+
         //axes
         SpawnLine(0f, 0f, 0f, sideLength + extraTipLength);
         SpawnLine(0f, 0f, 0f, -sideLength - extraTipLength);
@@ -78,5 +87,8 @@ public class GraphInitializer : MonoBehaviour
         InitializeGraph();
     }
 
+    #region getters
     public float GetBaseLength() {return sideLength; }
+    public float GetPortionLength() {return portionLength;}
+    #endregion
 }
