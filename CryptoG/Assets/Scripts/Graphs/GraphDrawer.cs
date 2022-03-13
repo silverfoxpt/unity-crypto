@@ -39,7 +39,7 @@ public class GraphDrawer : MonoBehaviour
 
     private float Function(float x)
     {
-        return x;
+        return Mathf.Sin(x);
     }
 
     public void ResetGraph()
