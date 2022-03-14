@@ -1028,9 +1028,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   portionServing: 1
-  spacingBetweenMarking: 0.001
-  point: {fileID: 8538793428298790670, guid: 6881dd13598ca6b4aa485c5e6f1d3b34, type: 3}
-  pointScale: 0.03
+  spacingBetweenMarking: 0.01
+  linePrefab: {fileID: 4295019377776730381, guid: 999a6f8c1e53ae7448143c37502de2ec, type: 3}
+  lineWidth: 0.01
+  maxPoint: 2000
 --- !u!1 &1716219976
 GameObject:
   m_ObjectHideFlags: 0
