@@ -9,7 +9,7 @@ public class EquationResolve : MonoBehaviour
     private const string alphanum = "abcdefghijklmnopqrstuvwxyzxyz0123456789.";
     private const string allowed = "abcdefghijklmnopqrstuvwxyz0123456789/*-+^().";
     private const string regularOperators = "+-*/^";
-    private const string irregularOperators = "ABCDEFGHI";
+    private const string irregularOperators = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     private Dictionary<string, string> replacementFunctions = new Dictionary<string, string>(){
         {"sqrt", "A"},
         {"cbrt", "B"},
@@ -20,6 +20,7 @@ public class EquationResolve : MonoBehaviour
         {"cos", "G"},
         {"tan", "H"}, {"tang", "H"},
         {"cot", "I"}, {"cotang", "I"},
+        {"abs", "J"},
     };
     
     void Start()
@@ -128,6 +129,7 @@ public class EquationResolve : MonoBehaviour
         if (exp == "G") {return Mathf.Cos(b);}
         if (exp == "H") {return Mathf.Tan(b);}
         if (exp == "I") {return 1/Mathf.Tan(b);}
+        if (exp == "J") {return Mathf.Abs(b);}
         return -1f;
     }
 

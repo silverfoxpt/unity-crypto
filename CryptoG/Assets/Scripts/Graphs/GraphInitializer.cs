@@ -54,19 +54,25 @@ public class GraphInitializer : MonoBehaviour
         //x axis markings
         for (int i = -portionNum; i <= portionNum; i++)
         {
-            LineRenderer rend = SpawnLine(i*portionLength, halfLengthMarking, i*portionLength, -halfLengthMarking);
+            string markText = (i == 0) ? "" : i.ToString();
+            LineRenderer rend = SpawnLine(i*portionLength, halfLengthMarking, i*portionLength, -halfLengthMarking, markText, true);
         }
 
         //y axis markings
         for (int i = -portionNum; i <= portionNum; i++)
         {
-            LineRenderer rend = SpawnLine(-halfLengthMarking, i*portionLength, halfLengthMarking, i*portionLength);
+            string markText = (i == 0) ? "" : i.ToString();
+            LineRenderer rend = SpawnLine(-halfLengthMarking, i*portionLength, halfLengthMarking, i*portionLength, markText);
         }
     }
 
-    private LineRenderer SpawnLine(float x1, float y1, float x2, float y2)
+    private LineRenderer SpawnLine(float x1, float y1, float x2, float y2, string textToFill = "", bool isX = false)
     {
-        GameObject newLine = Instantiate(line, new Vector3(0f, 0f, 0f), Quaternion.identity, this.transform);
+        Vector3 newPos;
+        if (isX) { newPos = new Vector3(x1, 0f, 0f);}
+        else { newPos = new Vector3(0f, y1, 0f); }
+
+        GameObject newLine = Instantiate(line, newPos, Quaternion.identity, this.transform);
         LineRenderer rend = newLine.GetComponent<LineRenderer>();
         rend.positionCount = 2;
         rend.startWidth = lineWidth;
@@ -74,6 +80,8 @@ public class GraphInitializer : MonoBehaviour
 
         rend.SetPosition(0, new Vector2(x1, y1));
         rend.SetPosition(1, new Vector2(x2, y2));
+
+        newLine.GetComponent<MarkerController>().SetMarkerText(textToFill, isX);
         return rend;
     }
 
