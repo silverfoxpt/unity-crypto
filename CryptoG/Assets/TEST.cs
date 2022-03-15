@@ -7,7 +7,16 @@ public class TEST : MonoBehaviour
     //string x = "ÅnD";
     void Start()
     {
-        //Debug.Log(Camera.main.ScreenToWorldPoint(new Vector3(0f, 0f, 0f)));
-        //Debug.Log(Camera.main.ScreenToWorldPoint(new Vector3(1f, 1f, 0f)));
+        /*LineRenderer rend = GetComponent<LineRenderer>();
+        MeshCollider meshCol = GetComponent<MeshCollider>();
+
+        Mesh mesh = new Mesh();
+        rend.BakeMesh(mesh, true);
+        meshCol.sharedMesh = mesh;*/
+    }
+
+    private void OnMouseDown() 
+    {
+        Debug.Log("Bruv");
     }
 }

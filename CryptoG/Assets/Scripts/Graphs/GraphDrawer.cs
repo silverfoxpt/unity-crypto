@@ -46,6 +46,7 @@ public class GraphDrawer : MonoBehaviour
             mini += step; idx++;
         }
         newLine.GetComponent<LineRenderer>().positionCount -= 2; 
+        newLine.GetComponent<FunctionLineColliderController>().CreateMeshCollider();
     }
 
     private float GetPortionScale()
@@ -55,9 +56,6 @@ public class GraphDrawer : MonoBehaviour
 
     private void SpawnPoint(float x, float y, LineRenderer rend, int idx)
     {
-        //GameObject newPoint = Instantiate(point, new Vector3(x, y, 0f), Quaternion.identity, transform);
-        //newPoint.transform.localScale = new Vector3(pointScale, pointScale, 1f);
-
         rend.positionCount = rend.positionCount+1;
         if (float.IsNaN(y)) {y = 0;}
         rend.SetPosition(idx, new Vector3(x, y, 0f));
