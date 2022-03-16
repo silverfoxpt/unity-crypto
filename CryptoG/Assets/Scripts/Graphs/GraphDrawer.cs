@@ -6,7 +6,7 @@ using UnityEngine;
 public class GraphDrawer : MonoBehaviour
 {
     [Header("Graph Settings")]
-    [Range(0f, 100f)] [SerializeField] private float portionServing;
+    [Range(0f, 100f)] [SerializeField] public float portionServing;
     [Range(0f, 1f)] [SerializeField] private float spacingBetweenMarking;
 
     [Header("Line Settings")]
@@ -25,7 +25,7 @@ public class GraphDrawer : MonoBehaviour
     private void DrawGraph()
     {
         //space
-        float mini = -graphInitializer.GetBaseLength() * (1/GetPortionScale()); float maxi = -mini;
+        float mini = -graphInitializer.GetSideLength() * (1/GetPortionScale()); float maxi = -mini;
         float step = (maxi-mini)/maxPoint;
 
         //line

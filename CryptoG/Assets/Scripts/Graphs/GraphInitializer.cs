@@ -2,9 +2,12 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Globalization;
 
 public class GraphInitializer : MonoBehaviour
 {
+    #region variables
+    #region serializedVars
     [Header("Graph Settings")]
     [Range(0f, 1000f)] [SerializeField] private float extraTipLength = 0.2f;
 
@@ -17,11 +20,18 @@ public class GraphInitializer : MonoBehaviour
     [SerializeField] private float lineWidth;
     [SerializeField] private float gridTransparency = 0.5f;
     [SerializeField] private float gridWidth = 0.015f;
+    #endregion
 
     public static GraphInitializer instance;
 
+    #region privateVars
     private float sideLength = -1;
     private int portionNum = -1;
+    private GraphDrawer graphDrawer;
+    private List<GameObject> xAxisMark = new List<GameObject>();
+    private List<GameObject> yAxisMark = new List<GameObject>();
+    #endregion
+    #endregion
 
     #region unityMain
     private void Awake()
@@ -31,45 +41,61 @@ public class GraphInitializer : MonoBehaviour
 
     void Start()
     {
-        InitializeGraph();   
+        graphDrawer = FindObjectOfType<GraphDrawer>();
+        InitializeGraph(true);   
     }
     #endregion
 
-    private void InitializeGraph()
+    private void InitializeGraph(bool calculateSide)
     {
         //calculate sideLength & portionNum
-        Vector3 len = Camera.main.ScreenToWorldPoint(new Vector3(0f, 0f, 0f));
-        sideLength = Mathf.Max(Mathf.Abs(len.x), Mathf.Abs(len.y));
+        if (calculateSide)
+        {
+            Vector3 len = Camera.main.ScreenToWorldPoint(new Vector3(0f, 0f, 0f));
+            sideLength = Mathf.Max(Mathf.Abs(len.x), Mathf.Abs(len.y));
+        }
+        portionNum = (int)((sideLength + extraTipLength) / portionLength);
 
-        portionNum = (int) (sideLength/portionLength);
+        //spawn
+        SpawnAxis();
+        SpawnMarkings();
+    }
 
-        //axes
-        SpawnLine(0f, 0f, 0f, sideLength + extraTipLength);
-        SpawnLine(0f, 0f, 0f, -sideLength - extraTipLength);
-        SpawnLine(0f, 0f, sideLength + extraTipLength, 0f);
-        SpawnLine(0f, 0f, -sideLength - extraTipLength, 0f);
-
+    #region spawns
+    private void SpawnMarkings()
+    {
         //markings
         float totalLength = sideLength + extraTipLength;
-        if (portionNum * portionLength > totalLength) {Debug.LogError("Error: not enough spacing"); return;}
+        if (portionNum * portionLength > totalLength) { Debug.LogError("Error: not enough spacing"); return; }
 
         //x axis markings
         for (int i = -portionNum; i <= portionNum; i++)
         {
-            string markText = (i == 0) ? "" : i.ToString();
-            LineRenderer rend = SpawnLine(i*portionLength, halfLengthMarking, i*portionLength, -halfLengthMarking, markText, true);
+            string markText = (i == 0) ? "" : (i * graphDrawer.portionServing).ToString();
+            LineRenderer rend = SpawnLine(i * portionLength, halfLengthMarking, i * portionLength, -halfLengthMarking, markText, true);
+            xAxisMark.Add(rend.gameObject);
 
-            SpawnGridLine(i*portionLength, sideLength + extraTipLength, i*portionLength, -(sideLength + extraTipLength), true);
+            SpawnGridLine(i * portionLength, sideLength + extraTipLength, i * portionLength, -(sideLength + extraTipLength), true);
         }
 
         //y axis markings
         for (int i = -portionNum; i <= portionNum; i++)
         {
-            string markText = (i == 0) ? "" : i.ToString();
-            LineRenderer rend = SpawnLine(-halfLengthMarking, i*portionLength, halfLengthMarking, i*portionLength, markText, false);
+            string markText = (i == 0) ? "" : (i * graphDrawer.portionServing).ToString();
+            LineRenderer rend = SpawnLine(-halfLengthMarking, i * portionLength, halfLengthMarking, i * portionLength, markText, false);
+            yAxisMark.Add(rend.gameObject);
 
-            SpawnGridLine(-(sideLength + extraTipLength), i*portionLength, (sideLength + extraTipLength), i*portionLength, false);
+            SpawnGridLine(-(sideLength + extraTipLength), i * portionLength, (sideLength + extraTipLength), i * portionLength, false);
         }
+    }
+
+    private void SpawnAxis()
+    {
+        //axes
+        SpawnLine(0f, 0f, 0f, sideLength + extraTipLength);
+        SpawnLine(0f, 0f, 0f, -sideLength - extraTipLength);
+        SpawnLine(0f, 0f, sideLength + extraTipLength, 0f);
+        SpawnLine(0f, 0f, -sideLength - extraTipLength, 0f);
     }
 
     private LineRenderer SpawnLine(float x1, float y1, float x2, float y2, string textToFill = "", bool isX = false)
@@ -112,19 +138,52 @@ public class GraphInitializer : MonoBehaviour
         newLine.GetComponent<MarkerController>().SetMarkerText("", isX);
         return rend;
     }
+    #endregion
 
+    #region resetFunc
     public void ResetBaseGraph()
     {
         foreach(Transform child in transform)
         {
             Destroy(child.gameObject);
         }
+        xAxisMark = new List<GameObject>();
+        yAxisMark = new List<GameObject>();
 
-        InitializeGraph();
+        InitializeGraph(false);
     }
 
+    public void ResetMarker(float multiplier)
+    {
+        foreach(GameObject mark in xAxisMark)
+        {
+            string markerText = mark.GetComponent<MarkerController>().GetMarkerText();
+            if (markerText == "") {continue;}
+            float newVal = float.Parse(markerText) * multiplier; //may need to change
+
+            mark.GetComponent<MarkerController>().SetMarkerText(newVal.ToString());
+        }
+
+        foreach(GameObject mark in yAxisMark)
+        {
+            string markerText = mark.GetComponent<MarkerController>().GetMarkerText();
+            if (markerText == "") {continue;}
+            float newVal = float.Parse(markerText) * multiplier; //may need to change
+
+            mark.GetComponent<MarkerController>().SetMarkerText(newVal.ToString());
+        }
+    }
+    #endregion
+
     #region getters
-    public float GetBaseLength() {return sideLength; }
+    public float GetSideLength() {return sideLength; }
     public float GetPortionLength() {return portionLength;}
+    #endregion
+
+    #region setters
+    public void SetSideLength(float len)
+    {
+        sideLength = len;
+    }
     #endregion
 }

@@ -21,4 +21,6 @@ public class MarkerController : MonoBehaviour
 
         textField.text = tex;
     }
+
+    public string GetMarkerText() { return textField.text;}
 }

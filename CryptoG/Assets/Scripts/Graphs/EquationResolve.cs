@@ -139,8 +139,6 @@ public class EquationResolve : MonoBehaviour
         List<string> raw = new List<string>(sp);
         while (raw.Count > 0 && (raw[raw.Count-1] == " " || raw[raw.Count-1] == "" || raw[raw.Count-1] == "#")) {raw.RemoveAt(raw.Count-1);}
 
-        Debug.Log(rpn);
-
         //process
         Stack<string> st = new Stack<string>();
         foreach(string curStr in raw)
