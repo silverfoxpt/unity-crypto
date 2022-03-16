@@ -54,7 +54,7 @@ public class GraphZoomController : MonoBehaviour
             }
 
             camValueBeforeCalibration = zoomVal; //set to new
-            graphDrawer.ResetGraph();
+            graphDrawer.RefreshAllGraph();
         }
     }
 }

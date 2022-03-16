@@ -19,6 +19,13 @@ public class FunctionLineColliderController : MonoBehaviour
         myMeshCol.sharedMesh = mesh;
     }
 
+    public void RefreshMeshCollider()
+    {
+        Mesh mesh = new Mesh();
+        myRend.BakeMesh(mesh, true);
+        myMeshCol.sharedMesh = mesh;
+    }
+
     public void OnMouseDown()
     {
         myRend.startColor   = glowColor;

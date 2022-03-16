@@ -14,16 +14,33 @@ public class GraphDrawer : MonoBehaviour
     [SerializeField] private float lineWidth = 0.01f;
     [SerializeField] private int maxPoint = 30000;
 
+    [Header("References")]
+    [SerializeField] private GraphCalculatorEquation graphCalculator;
+
     private GraphInitializer graphInitializer;
+    public List<GameObject> graphs = new List<GameObject>();
  
     void Start()
     {
         graphInitializer = GraphInitializer.instance;
-        DrawGraph();   
+
+        //test
+        DrawNewGraph("x^2+1");   
+        //StartCoroutine(test());
     }
 
-    private void DrawGraph()
+    IEnumerator test()
     {
+        DrawNewGraph("x^2+1");   
+        yield return new WaitForSeconds(3);
+        ModifyGraph(0, "x^3");
+    }
+    
+    private void DrawNewGraph(string equation)
+    {
+        //ensure new equation
+        graphCalculator.SetNewEquation(equation);
+
         //space
         float mini = -graphInitializer.GetSideLength() * (1/GetPortionScale()); float maxi = -mini;
         float step = (maxi-mini)/maxPoint;
@@ -38,7 +55,7 @@ public class GraphDrawer : MonoBehaviour
         {
             SpawnPoint(
                 mini * GetPortionScale(), 
-                FindObjectOfType<GraphCalculatorEquation>().Function(mini) * GetPortionScale(),
+                graphCalculator.Function(mini) * GetPortionScale(),
                 newLine.GetComponent<LineRenderer>(), 
                 idx
             ); 
@@ -46,7 +63,43 @@ public class GraphDrawer : MonoBehaviour
             mini += step; idx++;
         }
         newLine.GetComponent<LineRenderer>().positionCount -= 2; 
+
+        //other nodules
         newLine.GetComponent<FunctionLineColliderController>().CreateMeshCollider();
+        newLine.GetComponent<GraphController>().graphEquation = equation;
+
+        graphs.Add(newLine);
+    }
+
+    private void ModifyGraph(int funcIdx, string newEquation)
+    {
+        GameObject graphToMod = graphs[funcIdx];
+        graphToMod.GetComponent<GraphController>().graphEquation = newEquation;
+
+        //ensure new equation
+        graphCalculator.SetNewEquation(newEquation);
+
+        //space
+        float mini = -graphInitializer.GetSideLength() * (1/GetPortionScale()); float maxi = -mini;
+        float step = (maxi-mini)/maxPoint;
+
+        //line
+        int idx = 0;
+        while(mini <= maxi)
+        {
+            ModifyPoint(
+                mini * GetPortionScale(), 
+                graphCalculator.Function(mini) * GetPortionScale(),
+                graphToMod.GetComponent<LineRenderer>(), 
+                idx
+            ); 
+            
+            mini += step; idx++;
+        }
+        graphToMod.GetComponent<LineRenderer>().positionCount -= 2; 
+
+        //other nodules
+        graphToMod.GetComponent<FunctionLineColliderController>().RefreshMeshCollider();
     }
 
     private float GetPortionScale()
@@ -61,13 +114,18 @@ public class GraphDrawer : MonoBehaviour
         rend.SetPosition(idx, new Vector3(x, y, 0f));
     }
 
-    public void ResetGraph()
+    private void ModifyPoint(float x, float y, LineRenderer rend, int idx)
     {
-        foreach(Transform child in transform)
-        {
-            Destroy(child.gameObject);
-        }
+        while (rend.positionCount-1 < idx) {rend.positionCount++;}
+        if (float.IsNaN(y)) {y = 0;}
+        rend.SetPosition(idx, new Vector3(x, y, 0f));
+    }
 
-        DrawGraph();
+    public void RefreshAllGraph()
+    {
+        for (int idx = 0; idx < graphs.Count; idx++)
+        {
+            ModifyGraph(idx, graphs[idx].GetComponent<GraphController>().graphEquation);//set to exact same
+        }
     }
 }

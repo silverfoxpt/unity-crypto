@@ -28,7 +28,7 @@ public class SliderController : MonoBehaviour
         slider.value = originalValue * multiplier;
         slider.onValueChanged.AddListener((float value) => {SliderValueChanged(value); });
 
-        valueText.text = originalValue.ToString();
+        valueText.text = (originalValue*multiplier).ToString();
     }
 
     private void SliderValueChanged(float val)
