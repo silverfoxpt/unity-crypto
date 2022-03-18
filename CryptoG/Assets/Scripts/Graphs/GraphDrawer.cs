@@ -16,6 +16,7 @@ public class GraphDrawer : MonoBehaviour
 
     [Header("References")]
     [SerializeField] private GraphCalculatorEquation graphCalculator;
+    [SerializeField] private GraphDisplayerUIController graphDisplayControl;
 
     private GraphInitializer graphInitializer;
     public List<GameObject> graphs = new List<GameObject>();
@@ -25,15 +26,19 @@ public class GraphDrawer : MonoBehaviour
         graphInitializer = GraphInitializer.instance;
 
         //test
-        DrawNewGraph("x^2+1");   
-        //StartCoroutine(test());
+        //DrawNewGraph("x^2+1");   
+        StartCoroutine(test());
     }
 
     IEnumerator test()
     {
         DrawNewGraph("x^2+1");   
         yield return new WaitForSeconds(3);
-        ModifyGraph(0, "x^3");
+        DrawNewGraph("3.61*x-0.226*x^2+0.00605*x^3-0.0000665*x^4+(0.000000253)*x^5");
+        yield return new WaitForSeconds(3f);
+        DrawNewGraph("sin(x)");
+        //yield return new WaitForSeconds(5f);
+        //DeleteSingleGraph(1);
     }
     
     private void DrawNewGraph(string equation)
@@ -67,11 +72,13 @@ public class GraphDrawer : MonoBehaviour
         //other nodules
         newLine.GetComponent<FunctionLineColliderController>().CreateMeshCollider();
         newLine.GetComponent<GraphController>().graphEquation = equation;
+        newLine.GetComponent<GraphController>().graphIdx = graphs.Count;
 
         graphs.Add(newLine);
+        graphDisplayControl.AddNewGraphDisplay(newLine);
     }
 
-    private void ModifyGraph(int funcIdx, string newEquation)
+    public void ModifyGraph(int funcIdx, string newEquation)
     {
         GameObject graphToMod = graphs[funcIdx];
         graphToMod.GetComponent<GraphController>().graphEquation = newEquation;
@@ -127,5 +134,23 @@ public class GraphDrawer : MonoBehaviour
         {
             ModifyGraph(idx, graphs[idx].GetComponent<GraphController>().graphEquation);//set to exact same
         }
+    }
+
+    public void DeleteSingleGraph(int idx)
+    {
+        if (idx >= graphs.Count) {Debug.LogError("Too much!"); return;}
+
+        //mod graphs
+        GameObject graphToBeKilled = graphs[idx];
+        graphs.RemoveAt(idx);
+        for (int c = idx; c < graphs.Count; c++) //modify idx of graph after
+        {
+            graphs[c].GetComponent<GraphController>().graphIdx--;
+        }
+
+        graphDisplayControl.DeleteExistingGraph(idx);
+
+        //Destroy
+        Destroy(graphToBeKilled);
     }
 }

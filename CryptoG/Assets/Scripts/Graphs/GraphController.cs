@@ -5,4 +5,5 @@ using UnityEngine;
 public class GraphController : MonoBehaviour
 {
     public string graphEquation = "---";
+    public int graphIdx = -1;
 }
