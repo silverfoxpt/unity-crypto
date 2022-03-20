@@ -8,6 +8,7 @@ public class SceneActivator : MonoBehaviour
     [SerializeField] private GameObject container;
     [SerializeField] private List<RectangleDrawer> fields;
     [SerializeField] private List<GameObject> sceneBehave;
+    [SerializeField] private List<MainSceneController> sceneControls;
     [SerializeField] private float offset = 0.1f;
 
     void Start()
@@ -30,7 +31,7 @@ public class SceneActivator : MonoBehaviour
         contain.GetComponent<ContainerController>().SetSceneBehaviourScripts(sceneBehave[idx]);
 
         BoxCollider2D col = contain.GetComponent<BoxCollider2D>();
-        col.offset = curRect.GetCenterRect();        
+        col.offset = curRect.GetCenterRect() + sceneControls[idx].offset;        
         col.size = new Vector2(curRect.GetWidth() - offset, curRect.GetHeight() - offset);
     }
 }

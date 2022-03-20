@@ -15,7 +15,7 @@ public class ObjectDrawer : DrawerBase
     [SerializeField] private List<singleLine> points;
     private List<LineRenderer> lineRends;
 
-    void Start()
+    void Awake()
     {
         DrawLines();   
     }

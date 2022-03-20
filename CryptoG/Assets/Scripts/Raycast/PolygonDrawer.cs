@@ -8,7 +8,7 @@ public class PolygonDrawer : DrawerBase
     [SerializeField] private List<Vector2> points;
     private LineRenderer myRend;
 
-    private void Start()
+    private void Awake()
     {
         DrawPolygon();
     }

@@ -10,8 +10,7 @@ public class RectangleDrawer : DrawerBase
     [SerializeField] private float height;
     private LineRenderer myRend;
 
-    void Start()
-    {
+    private void Awake() {
         DrawRect();   
     }
 
@@ -39,6 +38,7 @@ public class RectangleDrawer : DrawerBase
 
     public override List<LineRenderer> GetAllLineRend()
     {
+        if (!myRend) {Debug.Log("Why?");}
         return new List<LineRenderer>(){myRend};
     }
 }
