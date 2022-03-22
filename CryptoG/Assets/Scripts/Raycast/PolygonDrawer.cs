@@ -37,7 +37,7 @@ public class PolygonDrawer : DrawerBase
     public override List<singleLine> GetAllLineCoordinates()
     {
         List<singleLine> res = new List<singleLine>();
-        for (int idx = 0; idx < points.Count-1; idx++)
+        /*for (int idx = 0; idx < points.Count-1; idx++)
         {
             singleLine newLine = new singleLine();
             newLine.firstPoint = points[idx];
@@ -47,7 +47,14 @@ public class PolygonDrawer : DrawerBase
         singleLine per = new singleLine();
         per.firstPoint = points[points.Count-1];
         per.secPoint = points[0];
-        res.Add(per);
+        res.Add(per);*/
+        for (int idx = 0; idx < myRend.positionCount-1; idx++)
+        {
+            singleLine newLine = new singleLine(myRend.GetPosition(idx), myRend.GetPosition(idx+1));
+            res.Add(newLine);
+        }
+        singleLine lastLine = new singleLine(myRend.GetPosition(myRend.positionCount-1), myRend.GetPosition(0));
+        res.Add(lastLine);
         
         return res;
     }

@@ -45,15 +45,22 @@ public class RectangleDrawer : DrawerBase
     public override List<singleLine> GetAllLineCoordinates()
     {
         List<singleLine> res = new List<singleLine>();
-        
-        Vector2 topRight = topLeftCorner + new Vector2(width, 0f);
+
+        /*Vector2 topRight = topLeftCorner + new Vector2(width, 0f);
         Vector2 bottomRight = topLeftCorner + new Vector2(width, -height);
         Vector2 bottomLeft = topLeftCorner + new Vector2(0f, -height);
 
         res.Add(new singleLine(topLeftCorner, topRight));
         res.Add(new singleLine(topRight, bottomRight));
         res.Add(new singleLine(bottomRight, bottomLeft));
-        res.Add(new singleLine(bottomLeft, topLeftCorner));
+        res.Add(new singleLine(bottomLeft, topLeftCorner));*/
+        for (int idx = 0; idx < myRend.positionCount-1; idx++)
+        {
+            singleLine newLine = new singleLine(myRend.GetPosition(idx), myRend.GetPosition(idx+1));
+            res.Add(newLine);
+        }
+        singleLine lastLine = new singleLine(myRend.GetPosition(myRend.positionCount-1), myRend.GetPosition(0));
+        res.Add(lastLine);
         return res;
     }
     #endregion
