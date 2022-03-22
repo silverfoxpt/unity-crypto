@@ -33,4 +33,22 @@ public class PolygonDrawer : DrawerBase
     {
         return new List<LineRenderer>() {myRend};
     }
+
+    public override List<singleLine> GetAllLineCoordinates()
+    {
+        List<singleLine> res = new List<singleLine>();
+        for (int idx = 0; idx < points.Count-1; idx++)
+        {
+            singleLine newLine = new singleLine();
+            newLine.firstPoint = points[idx];
+            newLine.secPoint = points[idx+1];
+            res.Add(newLine);
+        }
+        singleLine per = new singleLine();
+        per.firstPoint = points[points.Count-1];
+        per.secPoint = points[0];
+        res.Add(per);
+        
+        return res;
+    }
 }

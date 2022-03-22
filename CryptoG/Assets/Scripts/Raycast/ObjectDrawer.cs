@@ -3,12 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[System.Serializable]
-public struct singleLine
-{
-    public Vector2 firstPoint, secPoint;
-}
-
 public class ObjectDrawer : DrawerBase
 {
     [SerializeField] private GameObject linePref;
@@ -37,5 +31,10 @@ public class ObjectDrawer : DrawerBase
     public override List<LineRenderer> GetAllLineRend()
     {
         return new List<LineRenderer>(lineRends);
+    }
+
+    public override List<singleLine> GetAllLineCoordinates()
+    {
+        return new List<singleLine>(points);
     }
 }

@@ -27,6 +27,7 @@ public class RectangleDrawer : DrawerBase
         rend.SetPosition(4, topLeftCorner);
     }
 
+    #region getters
     public Vector2 GetCenterRect()
     {
         Vector2 bottomRight = topLeftCorner + new Vector2(width, -height);
@@ -38,7 +39,22 @@ public class RectangleDrawer : DrawerBase
 
     public override List<LineRenderer> GetAllLineRend()
     {
-        if (!myRend) {Debug.Log("Why?");}
         return new List<LineRenderer>(){myRend};
     }
+
+    public override List<singleLine> GetAllLineCoordinates()
+    {
+        List<singleLine> res = new List<singleLine>();
+        
+        Vector2 topRight = topLeftCorner + new Vector2(width, 0f);
+        Vector2 bottomRight = topLeftCorner + new Vector2(width, -height);
+        Vector2 bottomLeft = topLeftCorner + new Vector2(0f, -height);
+
+        res.Add(new singleLine(topLeftCorner, topRight));
+        res.Add(new singleLine(topRight, bottomRight));
+        res.Add(new singleLine(bottomRight, bottomLeft));
+        res.Add(new singleLine(bottomLeft, topLeftCorner));
+        return res;
+    }
+    #endregion
 }

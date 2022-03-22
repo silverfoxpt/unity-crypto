@@ -10,7 +10,16 @@ public class MainSceneController : MonoBehaviour
 
     private void Awake()
     {
-        transform.position += (Vector3) offset;
+        List<LineRenderer> rends = GetAllSceneLineRenderers();
+        foreach (var rend in rends)
+        {
+            for (int idx = 0; idx < rend.positionCount; idx++)
+            {
+                Vector2 pos = rend.GetPosition(idx);
+                pos += offset;
+                rend.SetPosition(idx, pos);
+            }
+        }
     }
 
     public List<LineRenderer> GetAllSceneLineRenderers()
@@ -22,8 +31,18 @@ public class MainSceneController : MonoBehaviour
             foreach(var rend in lis)
             {
                 res.Add(rend);
-                Debug.Log(rend.gameObject.name);
             }
+        }
+        return res;
+    }
+
+    public List<singleLine> GetAllSingleLines()
+    {
+        List<singleLine> res = new List<singleLine>();
+        foreach(Transform child in transform)
+        {
+            var lis = child.gameObject.GetComponent<DrawerBase>().GetAllLineCoordinates();
+            foreach(var rend in lis) {res.Add(rend);}
         }
         return res;
     }
