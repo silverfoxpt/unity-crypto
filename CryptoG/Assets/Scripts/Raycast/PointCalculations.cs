@@ -34,4 +34,19 @@ public class PointCalculations : MonoBehaviour
     {
         return aB.x*aC.y - aC.x*aB.y;
     }
+
+    public static float carteToPolarAngle(Vector2 point)
+    {
+        if (point.x == 0f) {return 0f;}
+        float ang = Mathf.Atan(point.y / point.x) * Mathf.Rad2Deg;
+
+        //check quadrant
+        float x1 = point.x, y1 = point.y;
+        if (x1 > 0 && y1 >= 0) {return ang;}
+        if (x1 > 0 && y1 < 0) {return ang + 180;}
+        if (x1 < 0 && y1 < 0) {return ang + 180;}
+        if (x1 < 0 && y1 >= 0) {return ang + 360;}
+        return float.MaxValue; //error
+    }
 }
+
