@@ -169,7 +169,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   startX: 0
   startY: 0
-  delay: 0.001
+  delay: 0.01
   mazeCreator: {fileID: 1423789012}
 --- !u!1 &760363882
 GameObject:
@@ -299,6 +299,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0ad15a243048e745b7cdd875230098d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  delay: 0.01
+  mazeCreator: {fileID: 1423789012}
 --- !u!1 &1423789010
 GameObject:
   m_ObjectHideFlags: 0
@@ -345,4 +347,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   squarePref: {fileID: 7416870256321758826, guid: e72a943002f7c73419d6ebda6ac7db5e, type: 3}
   scaler: 0.2
-  side: 5
+  side: 20

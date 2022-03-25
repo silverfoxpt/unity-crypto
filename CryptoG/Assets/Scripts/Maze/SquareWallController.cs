@@ -15,7 +15,7 @@ public class SquareWallController : MonoBehaviour
     private Color normColor;
     private SpriteRenderer rend;
 
-    void Start()
+    void Awake()
     {
         InitializeSquare();
         EnableAllBorder();
