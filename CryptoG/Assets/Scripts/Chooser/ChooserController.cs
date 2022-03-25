@@ -7,7 +7,6 @@ using UnityEngine.SceneManagement;
 public class ChooserController : MonoBehaviour
 {
     [SerializeField] private TMP_Dropdown dropdown;
-    [SerializeField] private List<string> scenes;
     public void EnterProj()
     {
         int cur = dropdown.value;

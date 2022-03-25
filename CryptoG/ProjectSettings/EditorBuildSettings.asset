@@ -9,6 +9,9 @@ EditorBuildSettings:
     path: Assets/Scenes/TEST.unity
     guid: f2238ff19a93e8848a1642c8ad7f27c1
   - enabled: 1
+    path: Assets/Scenes/Maze.unity
+    guid: 3d121c66973de3245a25bb903bf8a04d
+  - enabled: 1
     path: Assets/Scenes/Raycast.unity
     guid: 42251acf0d0fafd4084a24c800205bab
   - enabled: 1
