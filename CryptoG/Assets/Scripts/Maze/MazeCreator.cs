@@ -18,7 +18,7 @@ public class MazeCreator : MonoBehaviour
     void Awake()
     {
         CalculateOffset();
-        InitializeBoard();        
+        InitializeBoard();
     }
 
     private void CalculateOffset()
@@ -61,4 +61,17 @@ public class MazeCreator : MonoBehaviour
 
     public GameObject GetSquare(int x, int y) {return squareBoard[x][y];}
     public int GetSize() {return side;}
+
+    public int CheckLightUpCell()
+    {
+        int cnt = 0;
+        foreach(var row in squareBoard)
+        {
+            foreach(var square in row)
+            {
+                if (square.GetComponent<SquareWallController>().IsLightUp()) {cnt++;}
+            }
+        }
+        return cnt;
+    }
 }

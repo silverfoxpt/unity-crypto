@@ -301,6 +301,54 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   delay: 0.01
   mazeCreator: {fileID: 1423789012}
+--- !u!1 &1370556565
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1370556566}
+  - component: {fileID: 1370556567}
+  m_Layer: 0
+  m_Name: Aldous-Broder Maze Generation
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1370556566
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1370556565}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1370556567
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1370556565}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de6d86613b7a4da4c96ad357165c95c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  startX: 0
+  startY: 0
+  delay: 0.01
+  mazeCreator: {fileID: 1423789012}
 --- !u!1 &1423789010
 GameObject:
   m_ObjectHideFlags: 0
@@ -347,7 +395,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   squarePref: {fileID: 7416870256321758826, guid: e72a943002f7c73419d6ebda6ac7db5e, type: 3}
   scaler: 0.2
-  side: 40
+  side: 10
 --- !u!1 &1679535789
 GameObject:
   m_ObjectHideFlags: 0
@@ -364,7 +412,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1679535790
 MonoBehaviour:
   m_ObjectHideFlags: 0

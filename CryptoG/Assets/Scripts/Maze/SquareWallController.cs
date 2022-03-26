@@ -64,4 +64,5 @@ public class SquareWallController : MonoBehaviour
     public void LightUpSquareTertiary() {rend.color = tertiaryColor;}
 
     public void LightDownSquare() {rend.color = normColor;}
+    public bool IsLightUp() {return rend.color != normColor;}
 }
