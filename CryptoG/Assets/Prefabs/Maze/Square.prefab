@@ -190,6 +190,8 @@ MonoBehaviour:
   topBorder: {fileID: 7416870256320140886}
   bottomBorder: {fileID: 7416870256395164013}
   lightUpColor: {r: 0.88332766, g: 0.4481132, b: 1, a: 1}
+  secondaryColor: {r: 1, g: 0.2971698, b: 0.2971698, a: 1}
+  tertiaryColor: {r: 0.35257137, g: 0.9339623, b: 0.3304112, a: 1}
 --- !u!1 &7416870256395164013
 GameObject:
   m_ObjectHideFlags: 0

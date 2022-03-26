@@ -12,6 +12,8 @@ public class SquareWallController : MonoBehaviour
 
     [Header("Other")]
     [SerializeField] private Color lightUpColor;
+    [SerializeField] private Color secondaryColor;
+    [SerializeField] private Color tertiaryColor;
     private Color normColor;
     private SpriteRenderer rend;
 
@@ -48,7 +50,6 @@ public class SquareWallController : MonoBehaviour
     }
     public void DisableSingleBorder(int idx) 
     {
-        Debug.Log("dis");
         switch(idx)
         {
             case 0: leftBorder.SetActive(false); break;
@@ -59,5 +60,8 @@ public class SquareWallController : MonoBehaviour
     }
 
     public void LightUpSquare() {rend.color = lightUpColor;}
+    public void LightUpSquareSecondary() {rend.color = secondaryColor;}
+    public void LightUpSquareTertiary() {rend.color = tertiaryColor;}
+
     public void LightDownSquare() {rend.color = normColor;}
 }
