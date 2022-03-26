@@ -32,6 +32,7 @@ public class MazeAldousBroderAlgorithm : MonoBehaviour
     };
     private List<int> shuffler = new List<int>() {0,1,2,3};
     private static System.Random rng;
+    
     void Start()
     {
         StartCoroutine(CreateNewMaze());
