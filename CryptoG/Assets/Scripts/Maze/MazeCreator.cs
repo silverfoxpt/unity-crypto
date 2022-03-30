@@ -17,8 +17,23 @@ public class MazeCreator : MonoBehaviour
 
     void Awake()
     {
+        RefreshMaze();
+    }
+
+    public void RefreshMaze()
+    {
+        DeleteEverything();
         CalculateOffset();
         InitializeBoard();
+        LightDownAllSquare();
+    }
+
+    private void DeleteEverything()
+    {
+        foreach(Transform child in transform)
+        {
+            Destroy(child.gameObject);
+        }
     }
 
     private void CalculateOffset()
@@ -30,6 +45,8 @@ public class MazeCreator : MonoBehaviour
 
     private void InitializeBoard()
     {
+        squareBoard = new List<List<GameObject>>();
+
         int i, j;
         for (i = 0; i < side; i++)
         {

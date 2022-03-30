@@ -43,7 +43,7 @@ public class MazePrimAlgorithm : MazeCreationBase
 
     private void Start()
     {
-        CreateNewMaze();
+        //CreateNewMaze();
     }
 
     public override void CreateNewMaze()

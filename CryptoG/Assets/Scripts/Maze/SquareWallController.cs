@@ -20,7 +20,7 @@ public class SquareWallController : MonoBehaviour
     void Awake()
     {
         InitializeSquare();
-        EnableAllBorder();
+        //EnableAllBorder();
     }
 
     private void InitializeSquare()

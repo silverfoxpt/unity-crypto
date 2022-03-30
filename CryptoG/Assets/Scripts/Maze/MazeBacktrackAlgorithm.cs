@@ -37,7 +37,7 @@ public class MazeBacktrackAlgorithm : MazeCreationBase
 
     private void Start()
     {
-        CreateNewMaze();
+        //CreateNewMaze();
     }
 
     public override void CreateNewMaze()
@@ -83,7 +83,6 @@ public class MazeBacktrackAlgorithm : MazeCreationBase
     IEnumerator ScoutMazeRandom(int curX, int curY)
     {
         yield return new WaitForSeconds(delay); //pause
-        Debug.Log("Cur cell: " + curX.ToString() + " " + curY.ToString());
         visited[curX][curY] = true;
         GameObject curSquare = mazeCreator.GetSquare(curX, curY); curSquare.GetComponent<SquareWallController>().LightUpSquare();
 
@@ -98,7 +97,6 @@ public class MazeBacktrackAlgorithm : MazeCreationBase
             if (!withinBorder(newX, newY) || visited[newX][newY]) {continue;}
 
             //remove border
-            Debug.Log(idx.ToString() + " " + oppositeWall[idx].ToString());
             GameObject neighbor = mazeCreator.GetSquare(newX, newY);
 
             curSquare.GetComponent<SquareWallController>().DisableSingleBorder(idx);

@@ -35,7 +35,7 @@ public class MazeAldousBroderAlgorithm : MazeCreationBase
     
     void Start()
     {
-        CreateNewMaze();
+        //CreateNewMaze();
     }
 
     public override void CreateNewMaze()

@@ -58,7 +58,7 @@ public class MazeKruskalAlgorithm : MazeCreationBase
 
     void Start()
     {
-        CreateNewMaze();
+        //CreateNewMaze();
     }
 
     public override void CreateNewMaze()
