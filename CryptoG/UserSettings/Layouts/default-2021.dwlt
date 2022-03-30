@@ -19,7 +19,7 @@ MonoBehaviour:
     width: 1920
     height: 997
   m_ShowMode: 4
-  m_Title: Hierarchy
+  m_Title: Game
   m_RootView: {fileID: 2}
   m_MinSize: {x: 875, y: 492}
   m_MaxSize: {x: 10000, y: 10000}
@@ -121,7 +121,7 @@ MonoBehaviour:
   m_MinSize: {x: 400, y: 200}
   m_MaxSize: {x: 32384, y: 16192}
   vertical: 0
-  controlID: 86913
+  controlID: 75
 --- !u!114 &6
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -146,7 +146,7 @@ MonoBehaviour:
   m_MinSize: {x: 100, y: 200}
   m_MaxSize: {x: 8096, y: 16192}
   vertical: 1
-  controlID: 86971
+  controlID: 46
 --- !u!114 &7
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -157,7 +157,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 1
   m_Script: {fileID: 12006, guid: 0000000000000000e000000000000000, type: 0}
-  m_Name: SceneView
+  m_Name: ConsoleWindow
   m_EditorClassIdentifier: 
   m_Children: []
   m_Position:
@@ -166,14 +166,14 @@ MonoBehaviour:
     y: 0
     width: 852
     height: 486
-  m_MinSize: {x: 201, y: 221}
+  m_MinSize: {x: 101, y: 121}
   m_MaxSize: {x: 4001, y: 4021}
-  m_ActualView: {fileID: 12}
+  m_ActualView: {fileID: 13}
   m_Panes:
   - {fileID: 12}
   - {fileID: 13}
-  m_Selected: 0
-  m_LastSelected: 1
+  m_Selected: 1
+  m_LastSelected: 0
 --- !u!114 &8
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -525,9 +525,9 @@ MonoBehaviour:
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: 0, y: 0, z: -10}
+    m_Target: {x: -5.161384, y: 0.7826669, z: -0.12623915}
     speed: 2
-    m_Value: {x: 0, y: 0, z: -10}
+    m_Value: {x: -5.161384, y: 0.7826669, z: -0.12623915}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -578,9 +578,9 @@ MonoBehaviour:
     speed: 2
     m_Value: {x: 0, y: 0, z: 0, w: 1}
   m_Size:
-    m_Target: 10
+    m_Target: 7.46709
     speed: 2
-    m_Value: 10
+    m_Value: 7.46709
   m_Ortho:
     m_Target: 1
     speed: 2
@@ -692,9 +692,9 @@ MonoBehaviour:
     m_VAllowExceedBaseRangeMax: 1
     m_ScaleWithWindow: 0
     m_HSlider: 0
-    m_VSlider: 1
+    m_VSlider: 0
     m_IgnoreScrollWheelUntilClicked: 0
-    m_EnableMouseInput: 1
+    m_EnableMouseInput: 0
     m_EnableSliderZoomHorizontal: 0
     m_EnableSliderZoomVertical: 0
     m_UniformScale: 1
@@ -756,9 +756,9 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: 
-      m_LastClickedID: 0
-      m_ExpandedIDs: be41ebffa44aebffe07eebffa07febff469eebff4c9eebff529eebffc2a6ebfffca7ebffdca8ebff76cbebff80cbebff18ccebffd6ccebffb0cdebff08e4ebff24ebebff5cecebff56edebff9e03ecffea03ecff8a05ecff50b3ecff90b3ecffaec8ecffeec8ecffaafeecff522bedff8e2bedff2e2dedffbe99edffeeb9edff9c06eeffe806eeff8608eeff861deeffd41deeff721feeff9e3eeeff6250eeff2c9beeffe49deeffdad2eeff0cd8eeff3cdbeeff48e0eeff2ee8eeff6ae8eeff7e17efffbc18efffb819efffbc19efffae64efff1469efffa01bf0ffaa1bf0ffb41bf0ffbc1bf0ff981ef0ff4221f0ff3ea5f1ff4ea5f1ff7627f2ff4659f2ff9259f2ffa488f2ffea89f2ff388af2ff3e7df5ff9ef8faffeaf8fafffa27fbff3c29fbff8e29fbff06a4fbff52f7fbffd2f8fbffb6f9fbff02fafbff1429fcff5a2afcff6a2afcffa242fcff6a53fcff4054feff8c54feff9c83feffe284fefff284feff569dfeff5e9dfeff729dfeff7a9dfeffc2a3feff0ea4feff1ed3feff64d4feff74d4feff4c47ffff8266ffff9e66ffff4ab1ffff36baffffc0c3ffffcacfffffd2cfffff2ee3ffff34e3ffff14fbffffce5e0000a0a6000020b000002ab0000022cc00005ccc000082ec00009eec0000f4ec00000ced0000304b0100484b0100564b0100684b0100804b0100f64b010066a2010080a201000ec2010036c2010054c2010060c20100bac70100c6c70100ccc70100d6c70100f4c7010006c801001ec8010024c801002ac80100befa0100f2fa01009e110200ae110200f6110200542a02005a2a0200822a02002a39020062390200
+      m_SelectedIDs: 7c5f0000
+      m_LastClickedID: 24444
+      m_ExpandedIDs: 14fbffff
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -823,22 +823,22 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/Scenes
+    - Assets/Scripts/ReactionDiffusion
     m_Globs: []
     m_OriginalText: 
   m_ViewMode: 1
   m_StartGridSize: 64
   m_LastFolders:
-  - Assets/Scenes
+  - Assets/Scripts/ReactionDiffusion
   m_LastFoldersGridSize: -1
   m_LastProjectPath: D:\Git Local Repos\unity-crypto\CryptoG
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: 965f0000
-    m_LastClickedID: 24470
-    m_ExpandedIDs: 00000000805f0000825f0000845f000000ca9a3b
+    m_SelectedIDs: f65f0000
+    m_LastClickedID: 24566
+    m_ExpandedIDs: 00000000b85f0000ba5f0000bc5f000000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -866,7 +866,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 00000000805f0000825f0000845f000000ca9a3b
+    m_ExpandedIDs: 00000000b85f0000ba5f0000bc5f0000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
