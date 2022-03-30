@@ -17,7 +17,7 @@ public class PoissonDiskSampler : MonoBehaviour
     [SerializeField] private float circleWidth;
 
     [SerializeField] private float r = 2f;
-    private float k = 30;
+    [SerializeField] private int k = 30;
     private float cellSize;
     private float xBound, yBound;
     private Dictionary<idxPair, Vector2> circles = new Dictionary<idxPair, Vector2>();
@@ -26,10 +26,15 @@ public class PoissonDiskSampler : MonoBehaviour
 
     private void Start()
     {
+        //StartPoisson();
+    }
+
+    public void StartPoisson()
+    {
         ClearOld();
         InitializeVars();
         RandomCircle();
-        
+
         StartCoroutine(Poisson());
     }
 
@@ -125,5 +130,11 @@ public class PoissonDiskSampler : MonoBehaviour
             }
         }
     }
+
+    public void SetWidth(float w) {halfWidth = (int) w;}
+    public void SetHeight(float h) {halfHeight = (int) h;}
+    public void SetRad(float r) {circleWidth = r;}
+    public void SetDist(float d) {r = d;}
+    public void SetSample(float s) {k = (int) s;}
 }
 
