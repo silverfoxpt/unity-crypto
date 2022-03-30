@@ -28,6 +28,11 @@ public class ScreenController : MonoBehaviour
         var sr = gameObject.AddComponent<SpriteRenderer>() as SpriteRenderer;
         mainTexture = new Texture2D(width, height);
 
+        RefreshScreen();
+    }
+
+    public void RefreshScreen()
+    {
         for (int y = 0; y < mainTexture.height; y++)
         {
             for (int x = 0; x < mainTexture.width; x++)

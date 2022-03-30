@@ -16,12 +16,20 @@ public class ReactionDiffusion : MonoBehaviour
     [SerializeField] private int offset = 1;
     [SerializeField] private float timeScale = 5f;
 
+    public bool shouldRun = false;
+
     void Awake()
     {
-        InitializeConditions();
+        //InitializeConditions();
     }
 
-    private void InitializeConditions()
+    public void ChangeOffset(float off) {offset = (int) off;}
+    public void ChangeFeed(float feed) {f = feed;}
+    public void ChangeKill(float kill) {k = kill;}
+    public void ChangeDA(float da) {dA = da;}
+    public void ChangeDB(float db) {dB = db;}
+
+    public void InitializeConditions()
     {
         width = screenController.GetWidth();
         height = screenController.GetHeight();
@@ -49,8 +57,7 @@ public class ReactionDiffusion : MonoBehaviour
 
     void Update()
     {
-        RenderCurrentReaction();
-        ReactDiffuse();
+        if (shouldRun) {RenderCurrentReaction(); ReactDiffuse();}
     }
 
     private void ReactDiffuse()
