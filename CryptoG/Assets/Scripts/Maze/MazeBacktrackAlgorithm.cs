@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
-public class MazeBacktrackAlgorithm : MonoBehaviour
+public class MazeBacktrackAlgorithm : MazeCreationBase
 {
     public struct cell
     {
@@ -36,6 +36,11 @@ public class MazeBacktrackAlgorithm : MonoBehaviour
     };
 
     private void Start()
+    {
+        CreateNewMaze();
+    }
+
+    public override void CreateNewMaze()
     {
         InitializeBoard();
         StartCoroutine(CreateMaze());

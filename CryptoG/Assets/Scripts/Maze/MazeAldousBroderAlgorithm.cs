@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
-public class MazeAldousBroderAlgorithm : MonoBehaviour
+public class MazeAldousBroderAlgorithm : MazeCreationBase
 {
     struct cell
     {
@@ -35,10 +35,15 @@ public class MazeAldousBroderAlgorithm : MonoBehaviour
     
     void Start()
     {
-        StartCoroutine(CreateNewMaze());
+        CreateNewMaze();
     }
 
-    IEnumerator CreateNewMaze()
+    public override void CreateNewMaze()
+    {
+        StartCoroutine(CreateMaze());
+    }
+
+    IEnumerator CreateMaze()
     {
         InitializeVars();
         yield return StartCoroutine(CreateMaze(startX, startY));

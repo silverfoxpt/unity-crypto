@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
-public class MazePrimAlgorithm : MonoBehaviour
+public class MazePrimAlgorithm : MazeCreationBase
 {
     struct cell
     {
@@ -42,6 +42,11 @@ public class MazePrimAlgorithm : MonoBehaviour
     };
 
     private void Start()
+    {
+        CreateNewMaze();
+    }
+
+    public override void CreateNewMaze()
     {
         InitializeVars();
         StartCoroutine(CreateMaze());

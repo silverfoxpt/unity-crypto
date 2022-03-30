@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
-public class MazeKruskalAlgorithm : MonoBehaviour
+public class MazeKruskalAlgorithm : MazeCreationBase
 {
     struct cell
     {
@@ -57,6 +57,11 @@ public class MazeKruskalAlgorithm : MonoBehaviour
     }
 
     void Start()
+    {
+        CreateNewMaze();
+    }
+
+    public override void CreateNewMaze()
     {
         InitializeArrays();
         StartCoroutine(CreateMaze());
