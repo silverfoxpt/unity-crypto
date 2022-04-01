@@ -38,4 +38,6 @@ public class SliderController : MonoBehaviour
     }
 
     public void SetValue(float val) {slider.value = val * multiplier;}
+
+    public float GetValue() {return slider.value; }
 }

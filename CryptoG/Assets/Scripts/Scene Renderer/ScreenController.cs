@@ -16,7 +16,7 @@ public class ScreenController : MonoBehaviour
     [SerializeField] private int height;
 
     private Sprite mySprite;    
-    private Texture2D mainTexture;
+    public Texture2D mainTexture;
 
     private void Awake() 
     {
@@ -26,19 +26,19 @@ public class ScreenController : MonoBehaviour
     private void CreateNewScreen()
     {
         var sr = gameObject.AddComponent<SpriteRenderer>() as SpriteRenderer;
-        mainTexture = new Texture2D(width, height);
 
         RefreshScreen();
     }
 
     public void RefreshScreen()
     {
+        mainTexture = new Texture2D(width, height);
         for (int y = 0; y < mainTexture.height; y++)
         {
             for (int x = 0; x < mainTexture.width; x++)
             {
-                //Color color = ((x & y) != 0 ? Color.white : Color.gray); //test
-                Color color = Color.white;
+                Color color = ((x & y) != 0 ? Color.white : Color.gray); //test
+                //Color color = Color.white;
                 mainTexture.SetPixel(x, y, color);
             }
         }
@@ -90,5 +90,8 @@ public class ScreenController : MonoBehaviour
 
     public int GetWidth() {return width;}
     public int GetHeight() {return height;}
+
+    public void SetWidth(int newWidth) { width = newWidth; }
+    public void SetHeight(int newHeight) { height = newHeight; }
 }
 

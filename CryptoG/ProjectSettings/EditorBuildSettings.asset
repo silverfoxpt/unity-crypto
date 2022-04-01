@@ -35,4 +35,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Poisson Disk Sampling.unity
     guid: 3c92333e5bf0a574e803f9bf65ee5b2d
+  - enabled: 1
+    path: Assets/Scenes/Mandelbrot.unity
+    guid: 7a68ac961c6f6004cbc1f6da78800bd5
   m_configObjects: {}
