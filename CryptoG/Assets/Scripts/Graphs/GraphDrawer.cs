@@ -27,18 +27,14 @@ public class GraphDrawer : MonoBehaviour
 
         //test
         //DrawNewGraph("x^2+1");   
-        StartCoroutine(test());
+        test();
     }
 
-    IEnumerator test()
+    private void test()
     {
         DrawNewGraph("x^2+1");   
-        yield return new WaitForSeconds(3);
         DrawNewGraph("3.61*x-0.226*x^2+0.00605*x^3-0.0000665*x^4+(0.000000253)*x^5");
-        yield return new WaitForSeconds(3f);
         DrawNewGraph("sin(x)");
-        //yield return new WaitForSeconds(5f);
-        //DeleteSingleGraph(1);
     }
     
     private void DrawNewGraph(string equation)

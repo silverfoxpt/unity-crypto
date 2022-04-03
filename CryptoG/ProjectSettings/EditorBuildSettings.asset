@@ -41,4 +41,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Mandelbrot.unity
     guid: 7a68ac961c6f6004cbc1f6da78800bd5
+  - enabled: 1
+    path: Assets/Scenes/Hilbert Curve.unity
+    guid: 8095e2ec70d69324f9c91293e4fcb874
   m_configObjects: {}

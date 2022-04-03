@@ -1540,6 +1540,8 @@ MonoBehaviour:
       m_Image: {fileID: 0}
     - m_Text: Marching Squares
       m_Image: {fileID: 0}
+    - m_Text: Hilbert Curve
+      m_Image: {fileID: 0}
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
