@@ -28,11 +28,21 @@ public class CubicBezierCurveDrawer : MonoBehaviour
     private GameObject guidePoint;
     private bool animated = false;
 
+    public void SetAnimationDelay(float an) {delay = an;}
+    public void SetIncrements(float inc) {interpolationIncrements = inc;}
+    public void SetLineWidth(float li) {lineWidth = li;}
+
     private void Start()
     {
-        InitializeDrawing();
+        RefreshCurve();
 
-        StartCoroutine(DrawBezierCurveVisualGuide());
+        //StartCoroutine(DrawBezierCurveVisualGuide());
+    }
+
+    public void RefreshCurve()
+    {
+        foreach(Transform child in transform) {Destroy(child.gameObject);}
+        InitializeDrawing();
     }
 
     private void DestroyCurve()
@@ -118,7 +128,7 @@ public class CubicBezierCurveDrawer : MonoBehaviour
         if (!animated) { RedrawBezierCurve(); }
     }
 
-    IEnumerator DrawBezierCurveVisualGuide()
+    public IEnumerator DrawBezierCurveVisualGuide()
     {
         DestroyCurve();
         mainGuide.enabled = true;

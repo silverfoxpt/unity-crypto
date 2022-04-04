@@ -26,11 +26,21 @@ public class QuadraticBezierCurveDrawer : MonoBehaviour
     private GameObject guidePoint;
     private bool animated = false;
 
+    public void SetAnimationDelay(float an) {delay = an;}
+    public void SetIncrements(float inc) {interpolationIncrements = inc;}
+    public void SetLineWidth(float li) {lineWidth = li;}
+
     private void Start()
     {
-        InitializeDrawing();
+        RefreshCurve();
 
         //StartCoroutine(DrawBezierCurveVisualGuide());
+    }
+
+    public void RefreshCurve()
+    {
+        foreach(Transform child in transform) {Destroy(child.gameObject);}
+        InitializeDrawing();
     }
 
     private void DestroyCurve()
@@ -88,7 +98,7 @@ public class QuadraticBezierCurveDrawer : MonoBehaviour
         if (!animated) { RedrawBezierCurve(); }
     }
 
-    IEnumerator DrawBezierCurveVisualGuide()
+    public IEnumerator DrawBezierCurveVisualGuide()
     {
         DestroyCurve();
         mainGuide.enabled = true;
@@ -98,7 +108,7 @@ public class QuadraticBezierCurveDrawer : MonoBehaviour
         point1.GetComponent<BezierPointController>().LockDrag();
         point2.GetComponent<BezierPointController>().LockDrag();
         point3.GetComponent<BezierPointController>().LockDrag();
-        
+
         Vector2 p1 = GetPointPos(point1), p2 = GetPointPos(point2), p3 = GetPointPos(point3);
         int counter = 0;
 
