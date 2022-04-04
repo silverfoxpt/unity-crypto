@@ -21,6 +21,9 @@ EditorBuildSettings:
     path: Assets/Scenes/Graph.unity
     guid: 16e2b177f6353b44ea375d8682fd1b31
   - enabled: 1
+    path: Assets/Scenes/Circle Packing.unity
+    guid: aab24759a7c684f449d3066762403743
+  - enabled: 1
     path: Assets/Scenes/Spelling Alphabets.unity
     guid: 17211411e2fe01d47957748d50d5231f
   - enabled: 1

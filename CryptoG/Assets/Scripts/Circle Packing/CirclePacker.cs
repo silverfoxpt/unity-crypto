@@ -24,13 +24,40 @@ public class CirclePacker : MonoBehaviour
     private Vector2 notFound = new Vector2(-100000f, -100000f);
     private Texture2D imgTexture; private int imgWidth, imgHeight;
 
+    public void SetCircleLimit(int circleLim) {circleLimit = circleLim;}
+    public void SetCircleGrowth(float gr) {circleGrowthRate = gr;}
+    public void SetCircleRefresh(float rf) {circleRefreshRate = rf;}
+    public void SetMaxCircle(float mx) {maxCircleSize = mx;}
+
+    public void SetUseImg(bool im) {useImage = im;}
+    public void SetImg(Sprite img) {image = img;}
+
+    public void SetFastFill(bool fast) {fastFill = fast;}
+    public void SetOverlap(bool lap) {allowOverlap = lap;}
+
+
     void Start()
     {
-        GetBounds();
-        SetupImage();
+        //CirclePack();
+    }
 
-        if (!fastFill) { StartCoroutine(GenerateAllCirclesSingle());}
-        else { GenerateAllRandomCircles();}
+    public void CirclePack()
+    {
+        DeleteEverything();
+        GetBounds();
+        if (image) {SetupImage();}
+
+        if (!fastFill) { StartCoroutine(GenerateAllCirclesSingle()); }
+        else { GenerateAllRandomCircles(); }
+    }
+
+    private void DeleteEverything()
+    {
+        circles = new List<CircleControllerPack>();
+        foreach(Transform child in transform)
+        {
+            Destroy(child.gameObject);
+        }
     }
 
     private void SetupImage()
@@ -44,7 +71,7 @@ public class CirclePacker : MonoBehaviour
     {
         for (int idx = 0; idx < circleLimit; idx++)
         {
-            GenerateSingleCircle(GetRandPos());
+            GenerateSingleCircle(UtilityFunc.GetRandPos(leftBound, rightBound, bottomBound, topBound));
         }
     }
 
@@ -109,7 +136,7 @@ public class CirclePacker : MonoBehaviour
         var cir = Instantiate(circlePref, pos, Quaternion.identity, transform).GetComponent<CircleControllerPack>();
         cir.SetSize(0f);
         cir.SetGrowthRate(circleGrowthRate);
-        if (!useImage) { cir.SetColor(GetRandColor());}
+        if (!useImage) { cir.SetColor(UtilityFunc.GetRandColor());}
         else {cir.SetColor(GetImageColor(pos));}
         cir.SetRefresh(circleRefreshRate);
 
@@ -140,7 +167,7 @@ public class CirclePacker : MonoBehaviour
         while(counter <= limit)
         {
             counter++;
-            pos = GetRandPos(); ok = true; 
+            pos = UtilityFunc.GetRandPos(leftBound, rightBound, bottomBound, topBound); ok = true; 
 
             for (int idx = 0; idx < circles.Count; idx++)
             {
@@ -148,31 +175,11 @@ public class CirclePacker : MonoBehaviour
                 Vector2 cent = circles[idx].GetCenter();
                 float size = circles[idx].GetSize()/2f; 
 
-                if (dist(pos, cent) <= size) { ok = false; break;}
+                if (UtilityFunc.dist(pos, cent) <= size) { ok = false; break;}
             }
             if (ok) {return pos;}
         }
         return notFound;
-    }
-
-    private float dist(Vector2 a, Vector2 b)
-    {
-        return Mathf.Sqrt((a.x-b.x) * (a.x-b.x) + (a.y-b.y)*(a.y-b.y));
-    }
-
-    private Vector2 GetRandPos()
-    {
-        float x = UnityEngine.Random.Range(leftBound, rightBound);
-        float y = UnityEngine.Random.Range(bottomBound, topBound);
-        return new Vector2(x, y);
-    }
-
-    private Color GetRandColor()
-    {
-        return new Color(UnityEngine.Random.Range(0f, 1f),
-            UnityEngine.Random.Range(0f, 1f),
-            UnityEngine.Random.Range(0f, 1f),
-            1f);
-    }
+    }    
 }
 
