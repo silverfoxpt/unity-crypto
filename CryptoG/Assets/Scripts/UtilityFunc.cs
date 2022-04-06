@@ -8,6 +8,8 @@ using SFB;
 public class UtilityFunc : MonoBehaviour
 {
     #region maths
+
+    public static Vector2 nullVec = new Vector2(-100000f, -100000f);
     public static float Remap(float value, float from1, float to1, float from2, float to2) 
     {
         return (value - from1) / (to1 - from1) * (to2 - from2) + from2;
@@ -31,6 +33,11 @@ public class UtilityFunc : MonoBehaviour
         float x = UnityEngine.Random.Range(leftBound, rightBound);
         float y = UnityEngine.Random.Range(bottomBound, topBound);
         return new Vector2(x, y);
+    }
+
+    public static Vector2 GetMidPoint(Vector2 a, Vector2 b)
+    {
+        return (a+b)/2f;
     }
     #endregion
 
