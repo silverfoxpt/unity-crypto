@@ -50,4 +50,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Hilbert Curve.unity
     guid: 8095e2ec70d69324f9c91293e4fcb874
+  - enabled: 1
+    path: Assets/Scenes/Elementary Cellular Automata.unity
+    guid: 72a0f4ab869b8d545b6e77902e27a335
   m_configObjects: {}
