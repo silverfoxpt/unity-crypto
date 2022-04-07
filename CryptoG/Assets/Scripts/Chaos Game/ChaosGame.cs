@@ -32,11 +32,37 @@ public class ChaosGame : MonoBehaviour
     private List<ChaosPointController> points;
     private float leftBound, rightBound, topBound, bottomBound;
 
+    public void SetNumSeeds(int nu) {numSeeds = nu;}
+    public void SetDistributeEven(bool dis) {distributeEven = dis;}
+    public void SetCenterDist(float dist) {centerDist = dist;}
+
+    public void SetPointSize(float sz) {pointSize = sz;}
+
+    public void SetDelay(float del) {delay = del;}
+    public void SetPointLimit(int pointLim) {pointLimit = pointLim;}
+    public void SetPointMul(int mul) {pointDropMultiplier = mul;}
+    public void SetJump(float jump) {jumper = jump;}
+
+    public void SetAvoidPrev(bool pr) {avoidPreviousVertice = pr;}
+    public void SetAllowMid(bool mid) {allowMidpointJumping = mid;}
+    public void SetAllowCenter(bool cent) {allowCenterJumping = cent;}
+
     private void Start()
     {
+        //StartGame();
+    }
+
+    public void StartGame()
+    {
+        DestroyEverything();
         GetBounds();
         DistributeSeeds();
         GenerateAllPoints();
+    }
+
+    private void DestroyEverything()
+    {
+        foreach(Transform p in transform) {Destroy(p.gameObject);}
     }
 
     private void GenerateAllPoints()
@@ -95,7 +121,7 @@ public class ChaosGame : MonoBehaviour
 
     private void DistributeSeeds()
     {
-        seeds = new List<ChaosPointController>();
+        seeds = new List<ChaosPointController>(); Debug.Log(numSeeds);
         for (int idx = 0; idx < numSeeds; idx++)
         {
             Vector2 pos;
