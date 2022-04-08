@@ -175,7 +175,7 @@ public class CirclePacker : MonoBehaviour
                 Vector2 cent = circles[idx].GetCenter();
                 float size = circles[idx].GetSize()/2f; 
 
-                if (UtilityFunc.dist(pos, cent) <= size) { ok = false; break;}
+                if (UtilityFunc.Dist(pos, cent) <= size) { ok = false; break;}
             }
             if (ok) {return pos;}
         }

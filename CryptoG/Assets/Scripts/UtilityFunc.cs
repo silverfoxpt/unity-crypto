@@ -5,11 +5,34 @@ using System.IO;
 using System.Text;
 using SFB;
 
+public struct IntVec2
+{
+    public int x,y;
+
+    public IntVec2(int a, int b) {this.x = a; this.y = b;}
+}
+
 public class UtilityFunc : MonoBehaviour
 {
     #region maths
 
     public static Vector2 nullVec = new Vector2(-100000f, -100000f);
+
+    public static Vector2 RotatePoint(Vector2 point, float angle)
+    {
+        return Quaternion.Euler(0f, 0f, 360f - angle) * point;
+    }
+
+    public static float VectorAngleFromY(Vector2 v)
+    {
+        Vector2 v2 = Vector2.up;
+        return Mathf.Acos(dotProduct(v, v2) / (v.magnitude * v2.magnitude)) * Mathf.Rad2Deg;
+    }
+
+    public static float dotProduct(Vector2 a, Vector2 b)
+    {
+        return a.x * b.x + a.y * b.y;
+    }
 
     public static float SqrDist(Vector2 a, Vector2 b)
     {
@@ -21,7 +44,7 @@ public class UtilityFunc : MonoBehaviour
         return (value - from1) / (to1 - from1) * (to2 - from2) + from2;
     }
 
-    public static float dist(Vector2 a, Vector2 b)
+    public static float Dist(Vector2 a, Vector2 b)
     {
         return Mathf.Sqrt((a.x-b.x) * (a.x-b.x) + (a.y-b.y)*(a.y-b.y));
     }
