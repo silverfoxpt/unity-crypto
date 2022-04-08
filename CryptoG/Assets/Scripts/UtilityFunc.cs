@@ -10,6 +10,12 @@ public class UtilityFunc : MonoBehaviour
     #region maths
 
     public static Vector2 nullVec = new Vector2(-100000f, -100000f);
+
+    public static float SqrDist(Vector2 a, Vector2 b)
+    {
+        return (a.x-b.x) * (a.x-b.x) + (a.y-b.y)*(a.y-b.y);
+    }
+
     public static float Remap(float value, float from1, float to1, float from2, float to2) 
     {
         return (value - from1) / (to1 - from1) * (to2 - from2) + from2;
