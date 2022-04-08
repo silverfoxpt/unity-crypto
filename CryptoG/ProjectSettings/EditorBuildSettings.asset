@@ -56,4 +56,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Elementary Cellular Automata.unity
     guid: 72a0f4ab869b8d545b6e77902e27a335
+  - enabled: 1
+    path: Assets/Scenes/Diffusion-Limited Aggregation.unity
+    guid: 34f57ea3c5292b64685bf5fb8b5d94c1
   m_configObjects: {}

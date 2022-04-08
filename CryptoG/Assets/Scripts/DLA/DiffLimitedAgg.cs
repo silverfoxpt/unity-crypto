@@ -36,12 +36,23 @@ public class DiffLimitedAgg : MonoBehaviour
     private Dictionary<intVec2, List<DLAPoint>> grid = new Dictionary<intVec2, List<DLAPoint>>();
     private float leftBound, rightBound, topBound, bottomBound;
 
+    public void SetPointSize(float sz) {pointSize = sz;}
+    public void SetNumWalker(int nu) {numWalker = nu;}
+    public void SetMoveMag(float mag) {moveMagnitude = mag;}
+
+    public void SetLeftSpawn(bool sp) {spawnLeftEdge = sp;}
+    public void SetRightSpawn(bool sp) {spawnRightEdge = sp;}
+    public void SetTopSpawn(bool sp) {spawnBottomEdge = sp;}
+    public void SetBottomSpawn(bool sp) {spawnLeftEdge = sp;}
+
+    public void SetDelay(float del) {delay = del;}
+
     private void Start()
     {
-        StartAggregation();
+        //StartAggregation();
     }
 
-    private void StartAggregation()
+    public void StartAggregation()
     {
         DeleteEverything();
         GetBounds();
