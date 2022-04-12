@@ -22,6 +22,23 @@ public class UtilityFunc : MonoBehaviour
     {
         return Quaternion.Euler(0f, 0f, 360f - angle) * point;
     }
+    
+    public static Vector2 RotatePointCenter(Vector2 pointToRotate, Vector2 centerPoint, float angleInDegrees)
+    {
+        angleInDegrees = 360f - angleInDegrees;
+        float angleInRadians = angleInDegrees * (Mathf.PI / 180f);
+        float cosTheta = Mathf.Cos(angleInRadians);
+        float sinTheta = Mathf.Sin(angleInRadians);
+
+        return new Vector2
+        (
+            (cosTheta * (pointToRotate.x - centerPoint.x) -
+                sinTheta * (pointToRotate.y - centerPoint.y) + centerPoint.x),
+
+            (sinTheta * (pointToRotate.x - centerPoint.x) +
+                cosTheta * (pointToRotate.y - centerPoint.y) + centerPoint.y)
+        );
+    }
 
     public static float VectorAngleFromY(Vector2 v)
     {

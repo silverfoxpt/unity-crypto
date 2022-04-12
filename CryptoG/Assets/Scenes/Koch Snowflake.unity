@@ -123,7 +123,7 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &1320692586
+--- !u!1 &83736995
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -131,9 +131,9 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 1320692589}
-  - component: {fileID: 1320692588}
-  - component: {fileID: 1320692587}
+  - component: {fileID: 83736998}
+  - component: {fileID: 83736997}
+  - component: {fileID: 83736996}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -141,25 +141,25 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!81 &1320692587
+--- !u!81 &83736996
 AudioListener:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1320692586}
+  m_GameObject: {fileID: 83736995}
   m_Enabled: 1
---- !u!20 &1320692588
+--- !u!20 &83736997
 Camera:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1320692586}
+  m_GameObject: {fileID: 83736995}
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.6415094, g: 0.6415094, b: 0.6415094, a: 0}
+  m_BackGroundColor: {r: 0.6509434, g: 0.6509434, b: 0.6509434, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -192,13 +192,13 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
---- !u!4 &1320692589
+--- !u!4 &83736998
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1320692586}
+  m_GameObject: {fileID: 83736995}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -207,7 +207,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1733386627
+--- !u!1 &1066265293
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -215,22 +215,22 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 1733386628}
-  - component: {fileID: 1733386629}
+  - component: {fileID: 1066265294}
+  - component: {fileID: 1066265295}
   m_Layer: 0
-  m_Name: SnowGen
+  m_Name: SnowGen2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &1733386628
+--- !u!4 &1066265294
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1733386627}
+  m_GameObject: {fileID: 1066265293}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -239,23 +239,21 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1733386629
+--- !u!114 &1066265295
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1733386627}
+  m_GameObject: {fileID: 1066265293}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 996feaf02371bc74a8d7ea9ec8044842, type: 3}
+  m_Script: {fileID: 11500000, guid: 475ab92670675b4449985df6b0171e5d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pointPref: {fileID: 5969096161158161761, guid: 774e13d10bfa95c4baf7d9ef377ac8e8, type: 3}
-  numWings: 12
-  numWalkerInd: 500
-  centerDist: 6
-  moveMagnitude: 0.1
-  pointColor: {r: 0, g: 0, b: 0, a: 1}
-  pointSize: 0.07
-  delay: 0
+  linePref: {fileID: 6890866447620920886, guid: 7c2ab59150b8ff54293cedde765277b8, type: 3}
+  depth: 7
+  centerDist: 4.5
+  useAnim: 1
+  delay: 0.5
+  lineWidth: 0.03
