@@ -29,12 +29,18 @@ public class KochSnowflakeGen : MonoBehaviour
     private List<line> currentLines;
     private LineRenderer rend;
 
+    public void SetDepth(int de) {depth = de;}
+    public void SetCenterDist(float ce) {centerDist = ce;}
+    public void SetUseAnim(bool us) {useAnim = us;}
+    public void SetDelay(float de) {delay = de;}
+    public void SetLineWidth(float li) {lineWidth = li;}
+
     void Start()
     {
-        GenerateKochSnowflake();
+        //GenerateKochSnowflake();
     }
 
-    private void GenerateKochSnowflake()
+    public void GenerateKochSnowflake()
     {
         ClearEverything();
         InitializeVars();
