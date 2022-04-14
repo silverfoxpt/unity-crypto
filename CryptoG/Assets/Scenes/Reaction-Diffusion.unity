@@ -729,8 +729,8 @@ MonoBehaviour:
   pixelPref: {fileID: 7031217919891123775, guid: 5d5bce52895d29d40b1f4af782bf407f, type: 3}
   pixelSize: 0.04
   centralOverride: 1
-  width: 256
-  height: 256
+  width: 400
+  height: 400
   mainTexture: {fileID: 0}
 --- !u!1 &309953428
 GameObject:
@@ -925,7 +925,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 025b7b3ec76c2e348ba360f783678fd2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  useJob: 0
+  useJob: 1
   screenController: {fileID: 194512670}
   dA: 1
   dB: 0.5
@@ -933,6 +933,7 @@ MonoBehaviour:
   k: 0.062
   offset: 20
   timeScale: 1
+  delay: 0
   shouldRun: 0
 --- !u!1 &859011273
 GameObject:

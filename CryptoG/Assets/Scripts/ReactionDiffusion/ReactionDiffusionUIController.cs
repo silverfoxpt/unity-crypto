@@ -16,7 +16,9 @@ public class ReactionDiffusionUIController : MonoBehaviour
     public void StartReaction()
     {
         screenController.RefreshScreen();
-        reactionDiffusion.InitializeConditions();
+
+        reactionDiffusion.StopAllCoroutines();
+        reactionDiffusion.InitializeConditions();        
         reactionDiffusion.shouldRun = true;
     }
 
