@@ -18,6 +18,11 @@ public class UtilityFunc : MonoBehaviour
 
     public static Vector2 nullVec = new Vector2(-100000f, -100000f);
 
+    public static uint RotateBitLeft(uint original, int bits)
+    {
+        return (original << bits) | (original >> (32 - bits));
+    }
+
     public static Vector2 RotatePoint(Vector2 point, float angle)
     {
         return Quaternion.Euler(0f, 0f, 360f - angle) * point;
@@ -58,7 +63,7 @@ public class UtilityFunc : MonoBehaviour
 
     public static float Remap(float value, float from1, float to1, float from2, float to2) 
     {
-        return (value - from1) / (to1 - from1) * (to2 - from2) + from2;
+        return (value - from1) * (to2 - from2) / (to1 - from1) + from2;
     }
 
     public static float Dist(Vector2 a, Vector2 b)
@@ -118,6 +123,82 @@ public class UtilityFunc : MonoBehaviour
         foreach(var x in paths) { actualPath += x; } 
 
         return actualPath;
+    }
+    #endregion
+
+    #region stringRelated
+
+    public static string BinaryToLittleEndian(string bin)
+    {
+        string s = ""; 
+        for (int idx = 0; idx < bin.Length; idx+=8)
+        {
+            string a = "";
+            for (int j = idx; j < idx+8; j++) {a+=bin[j];}
+            s = a + s;
+        }
+        return s;
+    }
+
+    public static string BinaryStringToHexString(string binary)
+    {
+        if (string.IsNullOrEmpty(binary))
+            return binary;
+
+        StringBuilder result = new StringBuilder(binary.Length / 8 + 1);
+
+        // TODO: check all 1's or 0's... throw otherwise
+
+        int mod4Len = binary.Length % 8;
+        if (mod4Len != 0)
+        {
+            // pad to length multiple of 8
+            binary = binary.PadLeft(((binary.Length / 8) + 1) * 8, '0');
+        }
+
+        for (int i = 0; i < binary.Length; i += 8)
+        {
+            string eightBits = binary.Substring(i, 8);
+            result.AppendFormat("{0:X2}", System.Convert.ToByte(eightBits, 2));
+        }
+
+        return result.ToString();
+    }
+    public static string ReverseString( string s )
+    {
+        char[] charArray = s.ToCharArray();
+        System.Array.Reverse(charArray);
+        return new string(charArray);
+    }
+
+    public static string IntToBin(uint x, int len)
+    {
+        string bin = "";
+        while(x > 0)
+        {
+            bin += (char) ('0' + x%2);
+            x /= 2;
+        }
+        while(bin.Length < len) {bin += '0';}
+        return UtilityFunc.ReverseString(bin);
+    }
+
+    public static uint BinToUint(string x)
+    {
+        x = ReverseString(x);
+        
+        uint res = 0; int counter = 0;
+        foreach(char c in x)
+        {   
+            if (c == '1') { res |= (1u << counter); }
+            counter++;
+        }
+        return res;
+    }
+
+    public static string ToHex(uint value) 
+    {
+        return string.Format("0x{0:X}", value);
     }
     #endregion
 }

@@ -140,6 +140,7 @@ public class ReactionDiffusion : MonoBehaviour
         }
     }
 
+    [BurstCompile]
     public struct CalculationDiffuse : IJobParallelFor
     {
         public int width, height;
