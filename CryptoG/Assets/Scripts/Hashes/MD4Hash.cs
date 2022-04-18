@@ -1,54 +1,38 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MD5Hash : MonoBehaviour
+public class MD4Hash : MonoBehaviour
 {
     [SerializeField] private string inputString = "Hello!";
 
     private int[] shift = {
-        7, 12, 17, 22,  7, 12, 17, 22,  7, 12, 17, 22,  7, 12, 17, 22,
-        5,  9, 14, 20,  5,  9, 14, 20,  5,  9, 14, 20,  5,  9, 14, 20,
-        4, 11, 16, 23,  4, 11, 16, 23,  4, 11, 16, 23,  4, 11, 16, 23,
-        6, 10, 15, 21,  6, 10, 15, 21,  6, 10, 15, 21,  6, 10, 15, 21,
+        3, 7, 11, 19,  3, 7, 11, 19,  3, 7, 11, 19,  3, 7, 11, 19,  
+        3, 5, 9, 13,   3, 5, 9, 13,   3, 5, 9, 13,   3, 5, 9, 13,   
+        3, 9, 11, 15,  3, 9, 11, 15,  3, 9, 11, 15,  3, 9, 11, 15,  
     };
 
-    private uint[] kConst = {
-        0xd76aa478, 0xe8c7b756, 0x242070db, 0xc1bdceee,
-        0xf57c0faf, 0x4787c62a, 0xa8304613, 0xfd469501,
-        0x698098d8, 0x8b44f7af, 0xffff5bb1, 0x895cd7be,
-        0x6b901122, 0xfd987193, 0xa679438e, 0x49b40821,
+    private int[] convertCustom = {
+        0, 8, 4, 12,  2, 10, 6, 14,  1, 9, 5, 13,  3, 11, 7, 15, 
+    };
 
-        0xf61e2562, 0xc040b340, 0x265e5a51, 0xe9b6c7aa,
-        0xd62f105d, 0x02441453, 0xd8a1e681, 0xe7d3fbc8,
-        0x21e1cde6, 0xc33707d6, 0xf4d50d87, 0x455a14ed,
-        0xa9e3e905, 0xfcefa3f8, 0x676f02d9, 0x8d2a4c8a,
-
-        0xfffa3942, 0x8771f681, 0x6d9d6122, 0xfde5380c,
-        0xa4beea44, 0x4bdecfa9, 0xf6bb4b60, 0xbebfbc70,
-        0x289b7ec6, 0xeaa127fa, 0xd4ef3085, 0x04881d05,
-        0xd9d4d039, 0xe6db99e5, 0x1fa27cf8, 0xc4ac5665,
-
-        0xf4292244, 0x432aff97, 0xab9423a7, 0xfc93a039,
-        0x655b59c3, 0x8f0ccc92, 0xffeff47d, 0x85845dd1,
-        0x6fa87e4f, 0xfe2ce6e0, 0xa3014314, 0x4e0811a1,
-        0xf7537e82, 0xbd3af235, 0x2ad7d2bb, 0xeb86d391,
+    private int[] convertCustom2 = {
+        0, 4, 8, 12,  1, 5, 9, 13,  2, 6, 10, 14,  3, 7, 11, 15
     };
 
     private const uint a0 = 0x67452301, b0 = 0xefcdab89, c0 = 0x98badcfe, d0 = 0x10325476;
 
     void Start()
     {
-        Debug.Log(MD5(inputString));
+        Debug.Log(MD4(inputString));
     }
 
     /// <summary>
-    /// Return a MD5 string in hex from raw input string
+    /// Return a MD4 string in hex from raw input string
     /// </summary>
     /// <param name="inputString"></param>
-    /// <returns>A string, hashed with MD5 algorithm</returns>
-    private string MD5(string inputString)
+    /// <returns>A string, hashed with MD4 algorithm</returns>
+    private string MD4(string inputString)
     {
         string paddedInput = PadInput(inputString); 
         List<List<uint>> choppedBlocks = GetChoppedBlock(paddedInput);
@@ -58,33 +42,28 @@ public class MD5Hash : MonoBehaviour
         {
             uint A = aMain, B = bMain, C = cMain, D = dMain;
 
-            for (int i = 0; i < 64; i++)
+            for (int i = 0; i < 48; i++)
             {
-                uint F; int g;
+                uint F, kConst; int g; 
                 if (0 <= i && i <= 15)
                 {
                     F = (B & C) | ((~B) & D);
-                    g = i;
+                    g = i; kConst = 0;
                 }
                 else if (16 <= i && i <= 31)
                 {
-                    F = (B & D) | (C & (~D));
-                    g = (i*5+1) %16;
+                    F = (((B & C) | (B & D)) | (C & D));
+                    g = convertCustom2[i%16]; kConst = 0x5a827999;
                 }
-                else if (32 <= i && i <= 47)
+                else 
                 {
                     F = B ^ C ^ D;
-                    g = (i*3+5) %16;
-                }
-                else
-                { 
-                    F = C ^ (B | (~D));
-                    g = (i*7) %16;
+                    g = convertCustom[i%16]; kConst = 0x6ed9eba1;
                 }
 
-                F = F + A + kConst[i] + block[g];  
+                F = F + A + kConst + block[g];  
                 A = D; D = C; C = B; 
-                B = B + UtilityFunc.RotateBitLeft(F, shift[i]);
+                B = UtilityFunc.RotateBitLeft(F, shift[i]);
             }
             aMain += A;
             bMain += B;
@@ -193,4 +172,5 @@ public class MD5Hash : MonoBehaviour
         while (bin.Length < 64) {bin += '0';} return bin;
     }
 }
+
 

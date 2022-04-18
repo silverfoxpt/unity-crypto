@@ -140,14 +140,12 @@ public class UtilityFunc : MonoBehaviour
         return s;
     }
 
-    public static string BinaryStringToHexString(string binary)
+    public static string BinaryToHex(string binary)
     {
         if (string.IsNullOrEmpty(binary))
             return binary;
 
         StringBuilder result = new StringBuilder(binary.Length / 8 + 1);
-
-        // TODO: check all 1's or 0's... throw otherwise
 
         int mod4Len = binary.Length % 8;
         if (mod4Len != 0)
@@ -161,7 +159,6 @@ public class UtilityFunc : MonoBehaviour
             string eightBits = binary.Substring(i, 8);
             result.AppendFormat("{0:X2}", System.Convert.ToByte(eightBits, 2));
         }
-
         return result.ToString();
     }
     public static string ReverseString( string s )
@@ -171,23 +168,22 @@ public class UtilityFunc : MonoBehaviour
         return new string(charArray);
     }
 
-    public static string IntToBin(uint x, int len = 0)
+    public static string UintToBinary(uint x, int len = 0)
     {
         string bin = "";
         while(x > 0)
         {
-            bin += (char) ('0' + x%2);
-            x /= 2;
+            bin += (char) ('0' + x%2); x /= 2;
         }
         while(bin.Length < len) {bin += '0';}
         return UtilityFunc.ReverseString(bin);
     }
 
-    public static uint BinToUint(string x)
+    public static uint BinaryToUint(string x)
     {
         x = ReverseString(x);
-        
         uint res = 0; int counter = 0;
+
         foreach(char c in x)
         {   
             if (c == '1') { res |= (1u << counter); }
@@ -196,7 +192,7 @@ public class UtilityFunc : MonoBehaviour
         return res;
     }
 
-    public static string ToHex(uint value) 
+    public static string UintToHex(uint value) 
     {
         return string.Format("0x{0:X}", value);
     }
