@@ -46,7 +46,9 @@ public class MD5Hash : MonoBehaviour
 
     private string MD5(string inputString)
     {
-        string paddedInput = PadInput(inputString); 
+        string paddedInput = PadInput(inputString); //DebugString(paddedInput);
+        //Debug.Log(paddedInput.Length);
+
         List<List<uint>> choppedBlocks = GetChoppedBlock(paddedInput);
 
         uint aMain = a0, bMain = b0, cMain = c0, dMain = d0;
@@ -77,7 +79,7 @@ public class MD5Hash : MonoBehaviour
                     F = C ^ (B | (~D));
                     g = (i*7) %16;
                 }
-                //if (i <= 15) { Debug.LogWarning(B.ToString() + " " + C.ToString() + " " + block[g].ToString());}
+                //if (i <= 15) { Debug.LogWarning(block[g].ToString()); }
 
                 F = F + A + kConst[i] + block[g];  
                 A = D; D = C; C = B; 
@@ -158,12 +160,27 @@ public class MD5Hash : MonoBehaviour
         }
         else
         {
-            int neededSecondLastBlock = 512 - remains;
+            int neededSecondLastBlock = 512 - bin.Length;
             for (int idx = 0; idx < neededSecondLastBlock + 448; idx++) {bin += '0';}
         }
         bin += GetBinaryLength(oldLen);
 
         return bin;
+    }
+
+    private void DebugString(string bin)
+    {
+        string s = ""; int c2 = 0;
+
+        for (int i = 0; i < bin.Length; i+=8)
+        {
+            c2++;
+            string a = "";
+            for (int j = i; j < i+8; j++) { a += bin[j]; }
+            a += " "; s += a;
+            if (c2 % 11 == 0) {s += '\n';}
+        }
+        Debug.Log(s);
     }
 
     /// <summary>
@@ -173,14 +190,23 @@ public class MD5Hash : MonoBehaviour
     /// <returns>A binary string with length of exactly 64 bit</returns>
     private string GetBinaryLength(uint len)
     {
-        string bin = UtilityFunc.ReverseString(UtilityFunc.IntToBin(len, 8));
-        while (bin.Length > 8) { bin = bin.Remove(bin.Length - 1); }
-        while (bin.Length < 8) { bin = bin + '0'; }
+        string bin = UtilityFunc.IntToBin(len);  
 
-        bin = UtilityFunc.ReverseString(bin);
-        while (bin.Length < 64) { bin = bin + '0'; }
+        int neededPadding = 8* Mathf.CeilToInt(bin.Length/8f); 
+        while(bin.Length < neededPadding) {bin = '0' + bin;} //Debug.LogWarning(bin);
 
-        return bin;
+        List<string> blocks = new List<string>();
+        for (int idx = 0; idx < bin.Length; idx+=8)
+        {
+            string a = "";
+            for (int j = idx; j < idx+8; j++) { a += bin[j];}
+            blocks.Add(a);
+        }
+
+        bin = "";
+        for (int idx = blocks.Count - 1; idx >= 0; idx--) { bin += blocks[idx]; }
+
+        while (bin.Length < 64) {bin += '0';} return bin;
     }
 }
 

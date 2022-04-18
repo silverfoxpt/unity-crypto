@@ -171,7 +171,7 @@ public class UtilityFunc : MonoBehaviour
         return new string(charArray);
     }
 
-    public static string IntToBin(uint x, int len)
+    public static string IntToBin(uint x, int len = 0)
     {
         string bin = "";
         while(x > 0)
