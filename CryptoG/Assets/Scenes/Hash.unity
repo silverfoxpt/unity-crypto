@@ -134,6 +134,8 @@ GameObject:
   - component: {fileID: 1456908393}
   - component: {fileID: 1456908394}
   - component: {fileID: 1456908395}
+  - component: {fileID: 1456908396}
+  - component: {fileID: 1456908397}
   m_Layer: 0
   m_Name: Hashes
   m_TagString: Untagged
@@ -182,6 +184,32 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inputString: 12345678901234567890123456789012345678901234567890123456789012345678901234567890
+--- !u!114 &1456908396
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1456908392}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 46b34ddfc2e482e46985cc2a7530b389, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  userInput: abc
+--- !u!114 &1456908397
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1456908392}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4929ba6ca3570a847952753e4db03fbc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  userInput: 
 --- !u!1 &1670197547
 GameObject:
   m_ObjectHideFlags: 0

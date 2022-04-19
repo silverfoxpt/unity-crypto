@@ -40,7 +40,7 @@ public class MD5Hash : MonoBehaviour
 
     void Start()
     {
-        Debug.Log(MD5(inputString));
+        //Debug.Log(MD5(inputString));
     }
 
     /// <summary>

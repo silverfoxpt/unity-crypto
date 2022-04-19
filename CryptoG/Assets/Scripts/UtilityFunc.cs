@@ -23,6 +23,11 @@ public class UtilityFunc : MonoBehaviour
         return (original << bits) | (original >> (32 - bits));
     }
 
+    public static uint RotateBitRight(uint original, int bits)
+    {
+        return (original >> bits) | (original << (32 - bits));
+    }
+
     public static Vector2 RotatePoint(Vector2 point, float angle)
     {
         return Quaternion.Euler(0f, 0f, 360f - angle) * point;

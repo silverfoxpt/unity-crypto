@@ -24,7 +24,7 @@ public class MD4Hash : MonoBehaviour
 
     void Start()
     {
-        Debug.Log(MD4(inputString));
+        //Debug.Log(MD4(inputString));
     }
 
     /// <summary>
@@ -146,10 +146,10 @@ public class MD4Hash : MonoBehaviour
     }
 
     /// <summary>
-    /// Return length of MD5 string in binary with length of 64 bit (longer length will be stripped down to 64, shorter will be padded with 0). 
+    /// Return length of MD4 string in binary with length of 64 bit (longer length will be stripped down to 64, shorter will be padded with 0). 
     /// Note: Return binary string is in little-endian.
     /// </summary>
-    /// <param name="len">Length of MD5 string (before padding)</param>
+    /// <param name="len">Length of MD4 string (before padding)</param>
     /// <returns>A binary string with length of exactly 64 bit</returns>
     private string GetBinaryLength(uint len)
     {
