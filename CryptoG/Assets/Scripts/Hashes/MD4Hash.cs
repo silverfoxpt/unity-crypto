@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class MD4Hash : MonoBehaviour
 {
-    [SerializeField] private string inputString = "Hello!";
+    //[SerializeField] private string inputString = "Hello!";
 
     private int[] shift = {
         3, 7, 11, 19,  3, 7, 11, 19,  3, 7, 11, 19,  3, 7, 11, 19,  

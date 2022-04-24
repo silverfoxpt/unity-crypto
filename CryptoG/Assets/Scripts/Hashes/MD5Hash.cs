@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class MD5Hash : MonoBehaviour
 {
-    [SerializeField] private string inputString = "Hello!";
+    //[SerializeField] private string inputString = "Hello!";
 
     private int[] shift = {
         7, 12, 17, 22,  7, 12, 17, 22,  7, 12, 17, 22,  7, 12, 17, 22,

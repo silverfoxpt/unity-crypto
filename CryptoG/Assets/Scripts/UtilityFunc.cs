@@ -28,6 +28,16 @@ public class UtilityFunc : MonoBehaviour
         return (original >> bits) | (original << (32 - bits));
     }
 
+    public static ulong RotateBitLeftUlong(ulong original, int bits)
+    {
+        return (original << bits) | (original >> (64 - bits));
+    }
+
+    public static ulong RotateBitRightUlong(ulong original, int bits)
+    {
+        return (original >> bits) | (original << (64 - bits));
+    }
+
     public static Vector2 RotatePoint(Vector2 point, float angle)
     {
         return Quaternion.Euler(0f, 0f, 360f - angle) * point;
@@ -184,10 +194,34 @@ public class UtilityFunc : MonoBehaviour
         return UtilityFunc.ReverseString(bin);
     }
 
+    public static string UlongToBinary(ulong x, int len = 0)
+    {
+        string bin = "";
+        while(x > 0)
+        {
+            bin += (char) ('0' + x%2); x /= 2;
+        }
+        while(bin.Length < len) {bin += '0';}
+        return UtilityFunc.ReverseString(bin);
+    }
+
     public static uint BinaryToUint(string x)
     {
         x = ReverseString(x);
         uint res = 0; int counter = 0;
+
+        foreach(char c in x)
+        {   
+            if (c == '1') { res |= (1u << counter); }
+            counter++;
+        }
+        return res;
+    }
+
+    public static ulong BinaryToUlong(string x)
+    {
+        x = ReverseString(x);
+        ulong res = 0; int counter = 0;
 
         foreach(char c in x)
         {   
