@@ -11,20 +11,33 @@ public class HexSnowController : MonoBehaviour
     public HexSnowController bottomLeftHex  = null;
     public HexSnowController bottomRightHex = null;
 
+    private SpriteRenderer rend;
+
+    private void Awake()
+    {
+        rend = GetComponent<SpriteRenderer>();
+    }
+
     public void SetPos(Vector2 pos)
     {
         transform.position = pos;
     }
 
-    public void SetColor(Color col)
+    public void SetColor(Color col, bool turnOn = false)
     {
-        GetComponent<SpriteRenderer>().color = col;
+        if (turnOn) {RendOn();}
+        rend.color = col;
     }
 
     public void SetSize(float sz)
     {
         transform.localScale = new Vector3(sz, sz, 1);
     }
+
+    public void RendOff() {rend.enabled = false;}
+    public void RendOn() {rend.enabled = true;}
+
+    public bool GetState() {return rend.enabled;}
 
     public Vector2 GetPos() { return transform.position; }
 }

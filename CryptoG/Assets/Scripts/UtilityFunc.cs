@@ -88,10 +88,12 @@ public class UtilityFunc : MonoBehaviour
 
     public static Color GetRandColor()
     {
-        return new Color(UnityEngine.Random.Range(0f, 1f),
-            UnityEngine.Random.Range(0f, 1f),
-            UnityEngine.Random.Range(0f, 1f),
-        1f);
+        return new Color(RandLimitedFloat(), RandLimitedFloat(), RandLimitedFloat(), 1f);
+    }
+
+    public static float RandLimitedFloat()
+    {
+        return Random.Range(0, 16) / 16f;
     }
 
     public static Vector2 GetRandPos(float leftBound, float rightBound, float bottomBound, float topBound)

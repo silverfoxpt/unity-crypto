@@ -12,16 +12,114 @@ public class CellSnowflakeManager : MonoBehaviour
     [SerializeField] private int hexLevel = 5;
     [SerializeField] private int perLevel = 20;
     [SerializeField] private float delay = 1f;
+    [SerializeField] private Color snowColor = Color.black;
 
-    private float hexLengthSize = 0f;
+    private float hexWidth, hexHeight;
     private List<List<HexSnowController>> hexes = new List<List<HexSnowController>>();
-    
+    private Dictionary<string, Vector2> dictProb;
 
+    private float[] pFreeze = {1, 0.2f, 0.1f, 0, 0.2f, 0.1f, 0, 0.1f, 0.1f, 1, 1, 0};
+    private float[] pMelt = {0, 0.7f, 0.5f, 0.5f, 0, 0, 0.3f, 0.5f, 0, 0.2f, 0.1f, 0};
+    private string[] config = {
+        "000001", "000011", "000101", "000111", 
+        "001001", "001011", "001111", "010101",     
+        "010111", "011011", "011111", "111111"
+    };
+    private const int state = 12;
+    
     private void Start()
     {
-        hexLengthSize = hexSize * ((-1 + Mathf.Sqrt(7f)) / 3f);
+        hexHeight = hexSize; hexWidth = hexHeight/2f * Mathf.Sqrt(3f);
 
+        SetupConfig();
         CreateHexBoard();
+        StartCoroutine(GenerateSnow());
+    }
+
+    private void SetupConfig()
+    {
+        dictProb = new Dictionary<string, Vector2>();
+
+        for (int i = 0; i < state; i++)
+        {
+            string conf = config[i]; Vector2 cur = new Vector2(pFreeze[i], pMelt[i]);
+            for (int j = 0; j < 6; j++)
+            {
+                string conf2 = ""; 
+                conf2 += conf[3]; conf2 += conf[4]; conf2 += conf[5]; 
+                conf2 += conf[0]; conf2 += conf[1]; conf2 += conf[2];
+
+                string conf3 = ""; 
+                conf3 += conf[0]; conf3 += conf[2]; conf3 += conf[1]; 
+                conf3 += conf[3]; conf3 += conf[5]; conf3 += conf[4];
+
+                if (!dictProb.ContainsKey(conf)) { dictProb.Add(conf, cur);}
+                if (!dictProb.ContainsKey(conf2)) { dictProb.Add(conf2, cur);} //mirror
+                if (!dictProb.ContainsKey(conf3)) { dictProb.Add(conf3, cur);} //mirror
+
+                char tmp = conf[0]; conf = conf.Remove(0, 1); conf += tmp; //rotate
+            }
+        }
+        dictProb.Add("000000", new Vector2(0f, 0f)); //0 case
+    }
+
+    IEnumerator GenerateSnow()
+    {
+        int x1 = hexLevel/2, y1 = perLevel/2;
+        hexes[x1][y1].SetColor(snowColor, true);
+
+        while(true)
+        {
+            List<List<int>> state = new List<List<int>>(); yield return new WaitForSeconds(delay);
+            float p = UnityEngine.Random.Range(0f, 1f);
+
+            for (int i = 0; i < hexLevel; i++)
+            {
+                state.Add(new List<int>());
+                for (int j = 0; j < perLevel; j++)
+                {
+                    var cur = hexes[i][j];
+                    string res = "";
+
+                    res += (!cur.leftHex || !cur.leftHex.GetState()) ? '0' : '1';
+                    res += (!cur.bottomLeftHex || !cur.bottomLeftHex.GetState()) ? '0' : '1';
+                    res += (!cur.bottomRightHex || !cur.bottomRightHex.GetState()) ? '0' : '1';
+
+                    res += (!cur.rightHex || !cur.rightHex.GetState()) ? '0' : '1';
+                    res += (!cur.topRightHex || !cur.topRightHex.GetState()) ? '0' : '1';
+                    res += (!cur.topLeftHex || !cur.topLeftHex.GetState()) ? '0' : '1';
+
+                    Vector2 prob = dictProb[res];
+                    
+                    if (!cur.GetState()) //melted
+                    {
+                        //if (p < prob.x) {cur.SetColor(snowColor, true);} //freeze
+                        state[i].Add((p < prob.x) ? 1 : 0);
+                    }
+                    else //frozen
+                    {
+                        //Debug.Log(prob.y);
+                        //if (p < prob.y) {cur.RendOff();} //melt
+                        state[i].Add((p < prob.y) ? 0 : 1);
+                    }
+                }
+            }
+
+            bool reached = false;
+            for (int i = 0; i < hexLevel; i++)
+            {
+                for (int j = 0; j < perLevel; j++)
+                {
+                    if (state[i][j] == 1) 
+                    {
+                        hexes[i][j].SetColor(snowColor, true);
+                        if (i == 0 || j == 0 || i == hexLevel-1 || j == perLevel-1) {reached = true;}
+                    }
+                    else {hexes[i][j].RendOff();}
+                }
+            }
+            if (reached) {break;} //reach border, stop
+        }
     }
 
     private void CreateHexBoard()
@@ -30,111 +128,60 @@ public class CellSnowflakeManager : MonoBehaviour
         for (int i = 0; i < hexLevel; i++) { hexes.Add(new List<HexSnowController>()); }
 
         bool goLeft = true; Vector2 original = new Vector2(0f, 0f);
-        original += new Vector2(-hexLevel*hexSize/2f, perLevel*(hexSize/2f + hexLengthSize/2f) /2f);
+        original += new Vector2(-hexWidth*perLevel/2f, hexLevel*hexHeight*0.75f/2f);
 
+        //create board
         for (int i = 0; i < hexLevel; i++)
         {
-            original = (goLeft) ? GetBottomLeftPos(original) : GetBottomRightPos(original); goLeft = !goLeft;
-            Vector2 cur = original;
-
+            original = (goLeft) ? GetBottomLeftPos(original) : GetBottomRightPos(original); goLeft = !goLeft; Vector2 cur = original;
             for (int j = 0; j < perLevel; j++)
             {
                 var con = CreateHex(cur); cur = GetRightPos(cur);
                 hexes[i].Add(con);
             }
         }
-        
-        /*var con1 = CreateHex(new Vector2(0,0));
 
-        hexes = new List<List<HexSnowController>>();
-        for (int i = 0; i < hexLevel; i++) { hexes.Add(new List<HexSnowController>()); }
-        hexes[0].Add(con1);
-
-        for (int i = 1; i < hexLevel; i++)
+        //add neighbor for each hex
+        for (int i = 0; i < hexLevel; i++)
         {
-            //create hex
-            yield return new WaitForSeconds(delay);
-            for (int j = 0; j < hexes[i-1].Count; j++)
+            for (int j = 0; j < perLevel; j++)
             {
-                var con = hexes[i-1][j]; 
-                
-                if (!con.topRightHex)
+                var con = hexes[i][j]; var pos = con.GetPos();
+                for (int k1 = i-2; k1 <= i+2; k1++)
                 {
-                    var newCon = CreateHex(GetTopRightPos(con.GetPos())); hexes[i].Add(newCon);
-                }
-                if (!con.topLeftHex)
-                {
-                    var newCon = CreateHex(GetTopLeftPos(con.GetPos())); hexes[i].Add(newCon);
-                }
-                if (!con.leftHex)
-                {
-                    var newCon = CreateHex(GetLeftPos(con.GetPos())); hexes[i].Add(newCon);
-                }
-                if (!con.rightHex)
-                {
-                    var newCon = CreateHex(GetRightPos(con.GetPos())); hexes[i].Add(newCon);
-                }
-                if (!con.bottomLeftHex)
-                {
-                    var newCon = CreateHex(GetBottomLeftPos(con.GetPos())); hexes[i].Add(newCon);
-                }
-                if (!con.bottomRightHex)
-                {
-                    var newCon = CreateHex(GetBottomRightPos(con.GetPos())); hexes[i].Add(newCon);
-                }
-
-                //check neighbors
-                for (int k = 0; k < hexes[i].Count; k++)
-                {
-                    var pos = hexes[i][k].GetPos(); var newCon = hexes[i][k];
-                    for (int m = i-1; m <= i; m++) //neighbors level
+                    for (int k2 = j-2; k2 <= j+2; k2++)
                     {
-                        foreach(HexSnowController con2 in hexes[m])
-                        {
-                            if (UtilityFunc.Dist(con2.GetPos(), GetTopRightPos(pos)) <= 0.00001f)       {newCon.topRightHex = con2;}
-                            if (UtilityFunc.Dist(con2.GetPos(), GetTopLeftPos(pos)) <= 0.00001f)        {newCon.topLeftHex = con2;}
-                            if (UtilityFunc.Dist(con2.GetPos(), GetRightPos(pos)) <= 0.00001f)          {newCon.rightHex = con2;}
-                            if (UtilityFunc.Dist(con2.GetPos(), GetLeftPos(pos)) <= 0.00001f)           {newCon.leftHex = con2;}
-                            if (UtilityFunc.Dist(con2.GetPos(), GetBottomRightPos(pos)) <= 0.00001f)    {newCon.bottomRightHex = con2;}
-                            if (UtilityFunc.Dist(con2.GetPos(), GetBottomLeftPos(pos)) <= 0.00001f)     {newCon.bottomLeftHex = con2;}
-                        }
-                    }
-                }
-
-                for (int k = 0; k < hexes[i-1].Count; k++)
-                {
-                    var pos = hexes[i-1][k].GetPos(); var newCon = hexes[i-1][k];
-                    foreach(HexSnowController con2 in hexes[i])
-                    {
-                        if (UtilityFunc.Dist(con2.GetPos(), GetTopRightPos(pos)) <= 0.00001f)       {newCon.topRightHex = con2;}
-                        if (UtilityFunc.Dist(con2.GetPos(), GetTopLeftPos(pos)) <= 0.00001f)        {newCon.topLeftHex = con2;}
-                        if (UtilityFunc.Dist(con2.GetPos(), GetRightPos(pos)) <= 0.00001f)          {newCon.rightHex = con2;}
-                        if (UtilityFunc.Dist(con2.GetPos(), GetLeftPos(pos)) <= 0.00001f)           {newCon.leftHex = con2;}
-                        if (UtilityFunc.Dist(con2.GetPos(), GetBottomRightPos(pos)) <= 0.00001f)    {newCon.bottomRightHex = con2;}
-                        if (UtilityFunc.Dist(con2.GetPos(), GetBottomLeftPos(pos)) <= 0.00001f)     {newCon.bottomLeftHex = con2;}
+                        if (k1 < 0 || k1 >= hexLevel || k2 < 0 || k2 >= perLevel) {continue;}
+                        var con2 = hexes[k1][k2];
+                        
+                        if (UtilityFunc.Dist(con2.GetPos(), GetTopRightPos(pos)) <= 0.00001f)       {con.topRightHex = con2;}
+                        if (UtilityFunc.Dist(con2.GetPos(), GetTopLeftPos(pos)) <= 0.00001f)        {con.topLeftHex = con2;}
+                        if (UtilityFunc.Dist(con2.GetPos(), GetRightPos(pos)) <= 0.00001f)          {con.rightHex = con2;}
+                        if (UtilityFunc.Dist(con2.GetPos(), GetLeftPos(pos)) <= 0.00001f)           {con.leftHex = con2;}
+                        if (UtilityFunc.Dist(con2.GetPos(), GetBottomRightPos(pos)) <= 0.00001f)    {con.bottomRightHex = con2;}
+                        if (UtilityFunc.Dist(con2.GetPos(), GetBottomLeftPos(pos)) <= 0.00001f)     {con.bottomLeftHex = con2;}
                     }
                 }
             }
-        }*/
+        }
     }
 
-    private Vector2 GetTopRightPos(Vector2 pos) { return new Vector2(pos.x + hexSize/2, pos.y + hexSize/2 + hexLengthSize/2); }
-    private Vector2 GetTopLeftPos(Vector2 pos) { return new Vector2(pos.x - hexSize/2, pos.y + hexSize/2 + hexLengthSize/2); }
+    private Vector2 GetTopRightPos(Vector2 pos) { return new Vector2(pos.x + hexWidth/2, pos.y + hexHeight*0.75f); }
+    private Vector2 GetTopLeftPos(Vector2 pos) { return new Vector2(pos.x - hexWidth/2, pos.y + hexHeight*0.75f); }
 
-    private Vector2 GetLeftPos(Vector2 pos) { return new Vector2(pos.x - hexSize, pos.y); }
-    private Vector2 GetRightPos(Vector2 pos) { return new Vector2(pos.x + hexSize, pos.y); }
+    private Vector2 GetLeftPos(Vector2 pos) { return new Vector2(pos.x - hexWidth, pos.y); }
+    private Vector2 GetRightPos(Vector2 pos) { return new Vector2(pos.x + hexWidth, pos.y); }
 
-    private Vector2 GetBottomRightPos(Vector2 pos) { return new Vector2(pos.x + hexSize/2, pos.y - hexSize/2 - hexLengthSize/2); }
-    private Vector2 GetBottomLeftPos(Vector2 pos) { return new Vector2(pos.x - hexSize/2, pos.y - hexSize/2 - hexLengthSize/2); }
-
+    private Vector2 GetBottomRightPos(Vector2 pos) { return new Vector2(pos.x + hexWidth/2, pos.y - hexHeight*0.75f); }
+    private Vector2 GetBottomLeftPos(Vector2 pos) { return new Vector2(pos.x - hexWidth/2, pos.y - hexHeight*0.75f); }
 
     private HexSnowController CreateHex(Vector2 pos)
     {
         GameObject hex = Instantiate(hexPref, pos, Quaternion.identity, transform);
 
         var con = hex.GetComponent<HexSnowController>();
-        con.SetSize(hexSize);
-        con.SetColor(UtilityFunc.GetRandColor());
+        con.SetSize(hexSize); 
+        con.RendOff(); //turn sprite renderer of to save the damn fps
 
         return con;
     }
