@@ -204,7 +204,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.7830189, g: 0.7830189, b: 0.7830189, a: 0}
+  m_BackGroundColor: {r: 0.38679248, g: 0.38679248, b: 0.38679248, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -418,15 +418,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tilemap: {fileID: 1187315683}
   tilePref: {fileID: 11400000, guid: ebee793e4698e0c4586b3d66ec1478b6, type: 2}
-  boardRow: 200
-  boardCol: 200
+  boardRow: 199
+  boardCol: 199
   hexSize: 0.05
-  p: 0
-  k: 0
-  u: 0
-  y: 0
-  b: 0
-  theta0: 0
-  alpha: 0
+  p: 0.36
+  k: 0.02201
+  u: 0.09206
+  y: 0.00006842
+  b: 1.069
+  theta0: 0.06171
+  alpha: 0.1548
   delay: 0
-  simDelay: 0.1
+  simDelay: 0
+  snowColor: {r: 0.5424528, g: 0.9553433, b: 1, a: 1}

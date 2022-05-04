@@ -47,6 +47,7 @@ public class GGSnowGenerator : MonoBehaviour
     [Header("Other")]
     [SerializeField] private float delay = 0.2f;
     [SerializeField] private float simDelay = 0.1f;
+    [SerializeField] private Color snowColor = Color.blue;
 
     //private
     private float hexHeight, hexWidth;
@@ -57,7 +58,8 @@ public class GGSnowGenerator : MonoBehaviour
 
     private void Start()
     {
-        StartCoroutine(CreateBoard());
+        CreateBoard();
+        StartCoroutine(SimulateSnow());
     }
 
     IEnumerator SimulateSnow()
@@ -69,6 +71,85 @@ public class GGSnowGenerator : MonoBehaviour
             yield return new WaitForSeconds(simDelay);
 
             Diffuse();
+            Freeze();
+            Atttachment();
+
+            GenerateSets();
+            Melts();
+            //GenerateSets();
+        }
+    }
+
+    private void Melts()
+    {
+        foreach (hexNeighbor hex in border)
+        {
+            float tmp1 = hex.myHex.quasi, tmp2 = hex.myHex.ice;
+            hex.myHex.quasi = (1-u) * tmp1;
+            hex.myHex.ice = (1-y) * tmp2;
+            hex.myHex.vapor += u * tmp1 + y * tmp2;
+        }
+    }
+
+    private void Atttachment()
+    {
+        foreach(hexNeighbor hex in border)
+        {
+            int count = 0; 
+            if (hex.topLeft != null && hex.topLeft.att == 1)            {count++;}
+            if (hex.topRight != null && hex.topRight.att == 1)          {count++;}
+            if (hex.left != null && hex.left.att == 1)                  {count++;}
+            if (hex.right != null && hex.right.att == 1)                {count++;}
+            if (hex.bottomLeft != null && hex.bottomLeft.att == 1)      {count++;}
+            if (hex.bottomRight != null && hex.bottomRight.att == 1)    {count++;}
+
+            if (count <= 2)
+            {
+                if (hex.myHex.quasi >= b) 
+                {
+                    hex.myHex.att = 1;
+                    CreateNewHexagonEx(hex.myHex.tilePos);
+                }
+            }
+            else if (count == 3)
+            {
+                if (hex.myHex.quasi >= 1) 
+                {
+                    hex.myHex.att = 1;
+                    CreateNewHexagonEx(hex.myHex.tilePos);
+                }
+                else 
+                {
+                    float sum = 0;
+                    if (hex.topLeft != null)        {sum += hex.topLeft.vapor;}
+                    if (hex.topRight != null)       {sum += hex.topRight.vapor;}
+                    if (hex.left != null)           {sum += hex.left.vapor;}
+                    if (hex.right != null)          {sum += hex.right.vapor;}
+                    if (hex.bottomLeft != null)     {sum += hex.bottomLeft.vapor;}
+                    if (hex.bottomRight != null)    {sum += hex.bottomRight.vapor;}
+                    if (hex.myHex.quasi >= alpha && sum <= theta0) 
+                    {
+                        hex.myHex.att = 1;
+                        CreateNewHexagonEx(hex.myHex.tilePos);
+                    }
+                }
+            }
+            else
+            {
+                hex.myHex.att = 1;
+                CreateNewHexagonEx(hex.myHex.tilePos);
+            }
+        }
+    }
+
+    private void Freeze()
+    {
+        //freeze
+        foreach (hexNeighbor hex in border)
+        {
+            hex.myHex.quasi += (1-k)*hex.myHex.vapor;
+            hex.myHex.ice += k*hex.myHex.vapor;
+            hex.myHex.vapor = 0;
         }
     }
 
@@ -127,7 +208,7 @@ public class GGSnowGenerator : MonoBehaviour
                 var tmp = hexes[i][j];
                 if (tmp.myHex.att == 1) { attached.Add(tmp); }
                 else if (CheckNeighbor(tmp)) { border.Add(tmp); }
-                else { attached.Add(tmp); }
+                else { nonBorder.Add(tmp); }
             }
         }
     }
@@ -144,7 +225,7 @@ public class GGSnowGenerator : MonoBehaviour
 
     }
 
-    IEnumerator CreateBoard()
+    private void CreateBoard()
     {
         hexesTmp = new List<List<HexInfo>>();
         hexPos = new Dictionary<Vector3Int, HexInfo>();
@@ -158,8 +239,6 @@ public class GGSnowGenerator : MonoBehaviour
         //create board
         for (int i = 0; i < boardRow; i++)
         {
-            yield return new WaitForSeconds(delay);
-
             startingPos = (goLeft) ? GetBottomLeftPos(startingPos) : GetBottomRightPos(startingPos); goLeft = !goLeft; Vector2 currentPos = startingPos;
             hexesTmp.Add(new List<HexInfo>());
 
@@ -176,12 +255,13 @@ public class GGSnowGenerator : MonoBehaviour
         }
 
         //plant middle seed
-        int mid1 = boardRow/2, mid2 = boardCol/2;
+        int mid1 = boardRow/2-1, mid2 = boardCol/2+1;
 
         var tmp = hexesTmp[mid1][mid2];
         tmp.att = 1; tmp.ice = 1f;
 
         hexesTmp[mid1][mid2] = tmp;
+        CreateNewHexagonEx(hexesTmp[mid1][mid2].tilePos);
 
         //create neighbors
         hexes = new List<List<hexNeighbor>>();
@@ -217,7 +297,6 @@ public class GGSnowGenerator : MonoBehaviour
         }
     }
 
-
     private void CreateNewHexagon(Vector2 currentPos)
     {
         Vector3Int tilePos = tilemap.WorldToCell(currentPos);
@@ -225,6 +304,13 @@ public class GGSnowGenerator : MonoBehaviour
         tilemap.SetTile(tilePos, tilePref);
         tilemap.SetTileFlags(tilePos, TileFlags.None);
         //tilemap.SetColor(tilePos, UtilityFunc.GetRandColor()); //test
+    }
+
+    private void CreateNewHexagonEx(Vector3Int pos)
+    {
+        tilemap.SetTile(pos, tilePref);
+        tilemap.SetTileFlags(pos, TileFlags.None);
+        tilemap.SetColor(pos, snowColor);
     }
 
     private Vector2 GetTopRightPos(Vector2 pos) { return new Vector2(pos.x + hexWidth/2, pos.y + hexHeight*0.75f); }

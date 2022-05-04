@@ -12,5 +12,5 @@ public class HexInfo
     public float tmp1; //placeholder
  
     public HexInfo() {}
-    public HexInfo(Vector2 p, int a, float v, float q, float i, Vector3Int tPos) {pos = p; att = a; vapor = v; quasi = q; ice = i; tilePos = tPos;}
+    public HexInfo(Vector2 p, int a, float q, float i, float v, Vector3Int tPos) {pos = p; att = a; vapor = v; quasi = q; ice = i; tilePos = tPos;}
 }
