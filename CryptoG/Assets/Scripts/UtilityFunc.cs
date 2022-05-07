@@ -18,6 +18,12 @@ public class UtilityFunc : MonoBehaviour
 
     public static Vector2 nullVec = new Vector2(-100000f, -100000f);
 
+    public static int IsBitSet(int x, int pos)
+    {
+       bool on = (x == (x | (1 << pos)));
+       return (on) ? 1 : 0;
+    }
+
     public static uint RotateBitLeft(uint original, int bits)
     {
         return (original << bits) | (original >> (32 - bits));
