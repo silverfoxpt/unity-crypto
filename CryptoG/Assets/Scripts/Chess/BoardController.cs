@@ -19,10 +19,16 @@ public class BoardController : MonoBehaviour
     public static List<List<GameObject>> boardSquares = new List<List<GameObject>>();
     private static Dictionary<int, GameObject> whitePieces = new Dictionary<int, GameObject>(), blackPieces = new Dictionary<int, GameObject>();
 
-    public static List<GameObject> curBoardPieces = new List<GameObject>(); //hold current pieces on board
+    private static List<GameObject> curBoardPieces = new List<GameObject>(); //hold current pieces on board
     private static Transform piecePlaceTransform;
+    private static float acc;
 
     private void Start()
+    {
+        //InitializeBoard();
+    }
+
+    public void InitializeBoard()
     {
         PrepBoard();
         PrepPieces();
@@ -51,7 +57,7 @@ public class BoardController : MonoBehaviour
     {
         piecePlaceTransform = piecePlace.transform;
 
-        float acc = squarePref.transform.localScale.x;
+        acc = squarePref.transform.localScale.x; 
         Vector2 iniPos = new Vector2(-4 * acc, -4 * acc) + new Vector2(acc/2, acc/2);
 
         for (int files = 0; files < 8; files++) //left to right
@@ -114,5 +120,16 @@ public class BoardController : MonoBehaviour
             piecePlaceTransform
         );
         curBoardPieces.Add(newPiece);
+    }
+
+    public static Vector2Int FindPos(Vector2 pos)
+    {
+        Vector2 halfBoard = new Vector2(acc * 4, acc * 4);
+        float full = acc * 8;
+
+        Vector2 newPos = pos + halfBoard;
+        if (newPos.x <= 0 || newPos.y <= 0 || newPos.x >= full || newPos.y >= full) { return UtilityFunc.nullVecInt;}
+
+        return new Vector2Int(Mathf.FloorToInt(newPos.x / acc), Mathf.FloorToInt(newPos.y / acc));
     }
 }

@@ -17,6 +17,7 @@ public class UtilityFunc : MonoBehaviour
     #region maths
 
     public static Vector2 nullVec = new Vector2(-100000f, -100000f);
+    public static Vector2Int nullVecInt = new Vector2Int(100000, 100000);
 
     public static int IsBitSet(int x, int pos)
     {

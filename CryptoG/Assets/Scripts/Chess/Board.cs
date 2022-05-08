@@ -10,7 +10,7 @@ public static class Board
     {
         board = new int[8,8];
 
-        board[0,0] = Piece.White | Piece.Bishop; //test
-        board[4,4] = Piece.Black | Piece.King; //test
+        //board[0,0] = Piece.White | Piece.Bishop; //test
+        //board[4,4] = Piece.Black | Piece.King; //test
     }
 }

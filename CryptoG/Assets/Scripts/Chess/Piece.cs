@@ -23,4 +23,35 @@ public static class Piece
 
         return res; 
     }
+
+    public static int ToPiece(char c)
+    {
+        int res = 0;
+
+        string tmp = ""; tmp += c;
+        if (tmp == tmp.ToLower()) {res |= Black;} else {res |= White;}
+        c = tmp.ToLower()[0];
+
+        switch(c)
+        {
+            case 'p' : res |= Pawn; break;
+            case 'n' : res |= Knight; break;
+            case 'b' : res |= Bishop; break;
+            case 'r' : res |= Rook; break;
+            case 'q' : res |= Queen; break;
+            case 'k' : res |= King; break;
+        }
+
+        return res;
+    }
+
+    public static bool IsType(int info, int type)
+    {
+        return PieceInfo(info).y == type;
+    }
+
+    public static bool IsColor(int info, int col)
+    {
+        return PieceInfo(info).x == col;
+    }
 }
