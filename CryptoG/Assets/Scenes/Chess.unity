@@ -2517,8 +2517,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   squarePref: {fileID: 1114866928065168908, guid: 4ebd05db953cec549abcf054b05355bd, type: 3}
   piecePlace: {fileID: 1989389465}
-  blackSquare: {r: 0.6320754, g: 0.50866365, b: 0.45616764, a: 1}
-  whiteSquare: {r: 0.9150943, g: 0.77265036, b: 0.77265036, a: 1}
+  blackSquare: {r: 0.509434, g: 0.34309366, b: 0.29556784, a: 1}
+  whiteSquare: {r: 0.942, g: 0.9019608, b: 0.7490196, a: 1}
   whiteParent: {fileID: 1410059962}
   blackParent: {fileID: 168018811}
 --- !u!1 &1989389465

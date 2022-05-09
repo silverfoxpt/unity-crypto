@@ -9,6 +9,9 @@ public static class FENNotation
 
     public static void LoadBoardFromFen()
     {
+        //fen = "3K4/8/1p5N/6p1/8/p3Q2N/8/3kN3 w - - 0 1"; //test
+        fen = "k1K5/7p/8/8/1Pp5/3P4/8/8 b - b3 0 1"; //test enpassant
+
         //prep board
         BoardController.ClearBoard();
 
@@ -48,5 +51,13 @@ public static class FENNotation
     {
         string [] sp = fen.Split(' ');
         return (sp[1] == "w") ? Piece.White : Piece.Black;
+    }
+
+    public static Vector2Int EnPassantMove()
+    {
+        string [] sp = fen.Split(' ');
+        string en = sp[3];
+
+        return ConvertSquare.NoteToSquare(en);
     }
 }

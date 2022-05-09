@@ -23,9 +23,13 @@ public class BoardController : MonoBehaviour
     private static Transform piecePlaceTransform;
     private static float acc;
 
+    private static Color black, white;
+
     private void Start()
     {
         //InitializeBoard();
+        white = whiteSquare;
+        black = blackSquare;
     }
 
     public void InitializeBoard()
@@ -73,6 +77,27 @@ public class BoardController : MonoBehaviour
                 sq.GetComponent<SpriteRenderer>().color = col;
             }
         }
+    }
+
+    public static void ColorBoardNormal()
+    {
+        for (int files = 0; files < 8; files++) //left to right
+        {
+            for (int ranks = 0; ranks < 8; ranks++) //bottom to top
+            {
+                bool isWhite = (files + ranks) % 2 != 0; 
+                Color col = (isWhite) ? white : black;
+                boardSquares[files][ranks].GetComponent<SpriteRenderer>().color = col;
+            }
+        }
+    }
+
+    public static void ColorSquare(Vector2Int pos)
+    {
+        Color col = black;
+        col.r = 1f; //redding
+
+        boardSquares[pos.x][pos.y].GetComponent<SpriteRenderer>().color = col;
     }
 
     /// <summary>

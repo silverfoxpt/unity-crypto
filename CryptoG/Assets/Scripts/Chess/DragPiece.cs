@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class DragPiece : MonoBehaviour, IDragHandler, IEndDragHandler, IBeginDragHandler
+public class DragPiece : MonoBehaviour, IDragHandler, IEndDragHandler, IBeginDragHandler, IPointerClickHandler
 {
     private Vector2 originalPos = new Vector2();
     private SpriteRenderer spriteRenderer;
@@ -13,10 +13,28 @@ public class DragPiece : MonoBehaviour, IDragHandler, IEndDragHandler, IBeginDra
         spriteRenderer = GetComponent<SpriteRenderer>();    
     }
 
+    public void OnPointerClick(PointerEventData pointerEventData)
+    {
+        ColorMoveable();
+    }
+
+    private void ColorMoveable()
+    {
+        Vector2Int boardPos = BoardController.FindPos(transform.position);
+        List<Vector2Int> movesAvail = PieceMoveGenerator.GetMoves(boardPos);
+
+        foreach (var pos in movesAvail)
+        {
+            BoardController.ColorSquare(pos);
+        }
+    }
+
     public void OnBeginDrag(PointerEventData pointerEventData)
     {
         originalPos = transform.position;
         spriteRenderer.sortingOrder = 2;
+
+        ColorMoveable();
     }
     
     public void OnDrag(PointerEventData eventData)
@@ -30,9 +48,11 @@ public class DragPiece : MonoBehaviour, IDragHandler, IEndDragHandler, IBeginDra
         Vector2Int boardPos = BoardController.FindPos(transform.position);
         Vector2Int oldBoardPos = BoardController.FindPos(originalPos);
 
-        if (boardPos == UtilityFunc.nullVecInt || boardPos == oldBoardPos) { transform.position = originalPos;} //nothing happen
+        if (boardPos == UtilityFunc.nullVecInt || boardPos == oldBoardPos || 
+            !PieceMoveGenerator.GetMoves(oldBoardPos).Contains(boardPos)) 
+                { transform.position = originalPos;} //nothing happen
         else //make move, NOT COMPLETED
-        {    
+        {
             int info = Board.board[oldBoardPos.x, oldBoardPos.y]; 
 
             Board.board[boardPos.x, boardPos.y] = info;
@@ -43,6 +63,7 @@ public class DragPiece : MonoBehaviour, IDragHandler, IEndDragHandler, IBeginDra
         }
 
         spriteRenderer.sortingOrder = 1;
+        BoardController.ColorBoardNormal();
     }
 
 }
