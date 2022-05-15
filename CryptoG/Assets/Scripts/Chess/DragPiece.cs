@@ -15,6 +15,7 @@ public class DragPiece : MonoBehaviour, IDragHandler, IEndDragHandler, IBeginDra
 
     public void OnPointerClick(PointerEventData pointerEventData)
     {
+        BoardController.ColorBoardNormal();
         ColorMoveable();
     }
 
@@ -34,6 +35,7 @@ public class DragPiece : MonoBehaviour, IDragHandler, IEndDragHandler, IBeginDra
         originalPos = transform.position;
         spriteRenderer.sortingOrder = 2;
 
+        BoardController.ColorBoardNormal();
         ColorMoveable();
     }
     

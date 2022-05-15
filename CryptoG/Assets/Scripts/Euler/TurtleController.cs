@@ -6,10 +6,12 @@ public class TurtleController : MonoBehaviour
 {
     private LineRenderer rend;
 
+    private void Awake() {
+        rend = GetComponent<LineRenderer>(); 
+    }
+
     void Start()
     {
-        rend = GetComponent<LineRenderer>(); 
-
         rend.positionCount = 1;
         rend.SetPosition(0, transform.position);
 

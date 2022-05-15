@@ -46,7 +46,7 @@ public static class PieceMoveGenerator
 
         if (!Piece.IsColor(info, curColor)) {return moves;} //incorrect side, empty
 
-        if (Piece.IsType(info, Piece.Rook))
+        if      (Piece.IsType(info, Piece.Rook))
         {
             foreach(Vector2Int move in verHori) //rooks move horizontally and vertically
             {
@@ -258,7 +258,28 @@ public static class PieceMoveGenerator
                 }
             }
         }
+        else if (Piece.IsType(info, Piece.King))
+        {
+            
+        }
+
         return moves;
+    }
+
+    public static List<Vector2Int> GetAllMoves(int[,] board)
+    {
+        return null;
+    }
+
+    public static List<Vector2Int> GetLegalMoves(List<Vector2Int> moves)
+    {
+        int[,] copy = Board.board.Clone() as int[,];
+
+        foreach(Vector2Int move in moves)
+        {
+            
+        }
+        return null;
     }
 
     private static void InitializeCombo()
