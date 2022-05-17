@@ -175,6 +175,7 @@ MonoBehaviour:
   cohesionPercent: 10
   seperationPercent: 3
   alignmentPercent: 12.5
+  spreadOut: 0
   obstacles:
   - {fileID: 1339323017}
   - {fileID: 1979669834}
@@ -277,7 +278,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 885ef43038fc2ad40a49b536f2a540bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  padding: 0.25
+  padding: 0.5
 --- !u!1 &1409098344
 GameObject:
   m_ObjectHideFlags: 0
@@ -440,7 +441,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 885ef43038fc2ad40a49b536f2a540bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  padding: 0.25
+  padding: 0.5
 --- !u!212 &1979669837
 SpriteRenderer:
   m_ObjectHideFlags: 0

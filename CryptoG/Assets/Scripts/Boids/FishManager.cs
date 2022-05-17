@@ -137,7 +137,7 @@ public class FishManager : MonoBehaviour
             }
 
             Vector2 alignment = Vector2.ClampMagnitude(align, maxForce);
-            alignment *= (seperationPercent / 100f);
+            alignment *= (alignmentPercent / 100f);
 
             newVelocity[i] += alignment;
         }
