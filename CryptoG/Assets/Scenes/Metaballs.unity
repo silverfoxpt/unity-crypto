@@ -156,7 +156,9 @@ MonoBehaviour:
   debug: 0
   linePref: {fileID: 4981704270472758128, guid: 9f866839e4d59a54e8647fe7d11e16c5, type: 3}
   lineWidth: 0.025
-  spacing: 0.2
+  spacing: 0.06
+  updateDelay: 0.06
+  precise: 1
 --- !u!4 &170833214
 Transform:
   m_ObjectHideFlags: 0
@@ -418,9 +420,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   circlePref: {fileID: 4960411627923257087, guid: 8e04d8ecb5cfdd84fb0cc0be9af0ed47, type: 3}
-  circleCount: 10
-  sizeRange: {x: 1, y: 2}
-  speedRange: {x: 0.75, y: 2}
+  circleCount: 13
+  sizeRange: {x: 1, y: 2.5}
+  speedRange: {x: 0.75, y: 3}
 --- !u!4 &1794051949
 Transform:
   m_ObjectHideFlags: 0

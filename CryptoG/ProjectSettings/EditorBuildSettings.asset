@@ -9,6 +9,9 @@ EditorBuildSettings:
     path: Assets/Scenes/TEST.unity
     guid: f2238ff19a93e8848a1642c8ad7f27c1
   - enabled: 1
+    path: Assets/Scenes/Metaballs.unity
+    guid: a745e0de989742d4688ceea482f35ff0
+  - enabled: 1
     path: Assets/Scenes/Main Menu.unity
     guid: e4df7e88c8dfa194bbcecddcd326b6e1
   - enabled: 1
