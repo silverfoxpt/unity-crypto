@@ -36,8 +36,13 @@ public class DebugLine : MonoBehaviour
 
     private void Awake()
     {
+        RefreshRenderers();
+    }
+
+    private void RefreshRenderers()
+    {
         rends = new List<LineRenderer>();
-        foreach(Transform child in transform)
+        foreach (Transform child in transform)
         {
             var rend = child.gameObject.GetComponent<LineRenderer>();
             rends.Add(rend);
@@ -157,6 +162,11 @@ public class DebugLine : MonoBehaviour
 
     private void UpdateLineRenderers()
     {
+        if (numBodies != rends.Count)
+        {
+            RefreshRenderers();
+        }
+        
         for (int i = 0; i < numBodies; i++)
         {
             rends[i].enabled = true;
