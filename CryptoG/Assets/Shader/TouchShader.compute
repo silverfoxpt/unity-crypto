@@ -1,0 +1,52 @@
+// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel CSMain
+
+// Create a RenderTexture with enableRandomWrite flag and set it
+// with cs.SetTexture
+RWTexture2D<float4> Result;
+RWTexture2D<float4> Copy;
+
+int posX;
+int posY;
+int resolution;
+
+//int dx[9] = {-1, 1, 1, 0, 1, -1, -1, 0, 0};
+//int dy[9] = {1, 0, 1, 1, -1, 0, -1, -1, 0};
+
+[numthreads(8,8,1)]
+void CSMain (uint3 id : SV_DispatchThreadID)
+{
+    int x = id.x, y = id.y;
+    if (x != 0 && x != resolution - 1 && y != 0 && y != resolution - 1) 
+    {
+        float sum; sum = 0;
+        sum += Copy[uint2(x, y)].x * (-1.0);
+
+        sum += Copy[uint2(x-1, y+1)].x * (0.05);
+        sum += Copy[uint2(x-1, y-1)].x * (0.05);
+        sum += Copy[uint2(x+1, y+1)].x * (0.05);
+        sum += Copy[uint2(x+1, y-1)].x * (0.05);
+
+        sum += Copy[uint2(x, y-1)].x * (0.2);
+        sum += Copy[uint2(x-1, y)].x * (0.2);
+        sum += Copy[uint2(x, y+1)].x * (0.2);
+        sum += Copy[uint2(x+1, y)].x * (0.2);
+
+        //safeguard
+        if (sum > 1.0) {sum = 1.0;}
+        if (sum < 0.0) {sum = 0.0;}
+
+        Result[id.xy] = float4(sum, sum, sum, 1.0);
+
+        /*float val = Copy[id.xy].x;
+        if (val < 0.5) //white
+        {
+            Result[id.xy] = float4(1, 1, 0, 1);
+        }*/
+    }
+    else
+    {
+        Result[id.xy] = float4(1, 1, 1, 1); //black, for testing
+    }
+}
+
