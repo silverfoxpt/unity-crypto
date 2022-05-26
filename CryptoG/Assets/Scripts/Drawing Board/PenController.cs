@@ -1,0 +1,48 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class PenController : MonoBehaviour
+{
+    [Header("Options")]
+    [SerializeField] private int penType = 0; //0 circle, 1 square
+    [SerializeField] private int penSize = 2;
+    [SerializeField] private Color col = Color.black;
+
+    [Header("References")]
+    [SerializeField] private ComputeShader compShade;
+    [SerializeField] private DrawingBoardController drawBoard;
+
+    private Vector2Int size;
+    private RenderTexture rend;
+
+    private void Start()
+    {
+        size = drawBoard.size; 
+
+        rend = new RenderTexture(size.x, size.y, 24);
+        rend.enableRandomWrite = true;
+        rend.Create();
+    }
+    
+    void Update()
+    {
+        if (Input.GetKey(KeyCode.Mouse0)) //when pressed
+        {
+            Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            Vector2Int pos = CanvasInfoGetter.PosToImagePos(mousePos);
+
+            //drawBoard.SetPixelDirect(pos); //test
+            //compute shader
+            compShade.SetInt("posX", pos.x);
+            compShade.SetInt("posY", pos.y);
+            compShade.SetInt("penType", penType);
+            compShade.SetInt("penSize", penSize);
+            compShade.SetVector("col", col);
+            compShade.SetTexture(compShade.FindKernel("Draw"), "Result", rend);
+
+            compShade.Dispatch(compShade.FindKernel("Draw"), size.x / 8, size.y / 8, 1);
+            drawBoard.SetTexture(rend);
+        }
+    }
+}

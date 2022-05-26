@@ -1,0 +1,29 @@
+// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel Draw
+
+// Create a RenderTexture with enableRandomWrite flag and set it
+// with cs.SetTexture
+RWTexture2D<float4> Result;
+int posX;
+int posY;
+int penType;
+int penSize;
+float4 col;
+
+bool withinDist(uint2 pos)
+{
+    float a1 = (posX - pos.x) * (posX - pos.x);
+    float a2 = (posY - pos.y) * (posY - pos.y);
+    float dist = sqrt(a1 + a2);
+
+    return (dist <= penSize);
+}
+
+[numthreads(8,8,1)]
+void Draw (uint3 id : SV_DispatchThreadID)
+{
+    if (withinDist(id.xy))
+    {
+        Result[id.xy] = col; //set to black
+    }
+}   
