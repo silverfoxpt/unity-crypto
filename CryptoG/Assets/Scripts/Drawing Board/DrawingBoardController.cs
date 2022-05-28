@@ -9,18 +9,18 @@ public class DrawingBoardController : MonoBehaviour
     [Header("Options")]
     public Vector2Int size;
     public float multiplier = 1f;
-
-    private Texture2D imageTex;
+    public Texture2D imageTex;
+    public Color originalColor = Color.white;
 
     [Header("References")]
     public Image image;
 
     private void Start()
     {
-        SetImageSize();
+        //CreateNewBoard();
     }
 
-    private void SetImageSize()
+    public void CreateNewBoard()
     {
         RectTransform trans = image.GetComponent<RectTransform>();
         trans.sizeDelta = new Vector2(size.x, size.y) * multiplier;
@@ -30,7 +30,7 @@ public class DrawingBoardController : MonoBehaviour
         {
             for (int j = 0; j < size.y; j++)
             {
-                imageTex.SetPixel(i, j, Color.white);
+                imageTex.SetPixel(i, j, originalColor);
             }
         }
         imageTex.Apply();

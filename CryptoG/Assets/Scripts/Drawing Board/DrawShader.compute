@@ -10,7 +10,7 @@ int penType;
 int penSize;
 float4 col;
 
-bool withinDist(uint2 pos)
+bool withinCircle(uint2 pos)
 {
     float a1 = (posX - pos.x) * (posX - pos.x);
     float a2 = (posY - pos.y) * (posY - pos.y);
@@ -19,11 +19,27 @@ bool withinDist(uint2 pos)
     return (dist <= penSize);
 }
 
+bool withinSquare(int2 pos)
+{
+    return abs((pos.x - posX) + (pos.y - posY)) + 
+            abs((pos.x - posX) - (pos.y - posY)) <= penSize * 2;
+}
+
 [numthreads(8,8,1)]
 void Draw (uint3 id : SV_DispatchThreadID)
 {
-    if (withinDist(id.xy))
+    if (penType == 0)
     {
-        Result[id.xy] = col; //set to black
+        if (withinCircle(id.xy))
+        {
+            Result[id.xy] = col; //set to black
+        }
+    }
+    else if (penType == 1)
+    {
+        if (withinSquare(id.xy))
+        {
+            Result[id.xy] = col; //set to black
+        }
     }
 }   

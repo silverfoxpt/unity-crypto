@@ -10,11 +10,11 @@ public class CanvasInfoGetter : MonoBehaviour
     [SerializeField] private Image image;
     [SerializeField] private DrawingBoardController boardController;
 
-    private static float canvasWidth, canvasHeight, imgWidth, imgHeight, camWidth, camHeight;
+    private float canvasWidth, canvasHeight, imgWidth, imgHeight, camWidth, camHeight;
     private int imgPixelWidth, imgPixelHeight;
-    private static Vector2 offset;
+    private Vector2 offset;
     private Vector2Int size;
-    private static float mul, blockSize;
+    private float mul, blockSize;
 
     private void Awake()
     {
@@ -45,7 +45,7 @@ public class CanvasInfoGetter : MonoBehaviour
         mul = boardController.multiplier;
     }
 
-    public static Vector2Int PosToImagePos(Vector2 pos)
+    public Vector2Int PosToImagePos(Vector2 pos)
     {
         Vector2 cur = pos - offset; //to 0,0 of the pic
         cur = cur + new Vector2(imgWidth/2f, imgHeight/2f); //to bottom left of pic
