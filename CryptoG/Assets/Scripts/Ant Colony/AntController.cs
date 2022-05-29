@@ -9,11 +9,22 @@ public class AntController : MonoBehaviour
     public float wanderStrength = 1;
     
     private Vector2 position;
-    private Vector2 velocity;
-    private Vector2 desiredDirection;
+    public Vector2 velocity;
+    public Vector2 desiredDirection; //needed to be set
+    public int foodStat = 0; //0 not found, 1 found, 2 got food + return
 
+    private void Start()
+    {
+        position = transform.position;
+        desiredDirection = Random.insideUnitCircle;
+    }
     
     void Update()
+    {
+        HandleMovement();
+    }
+
+    private void HandleMovement()
     {
         desiredDirection = (desiredDirection + Random.insideUnitCircle * wanderStrength).normalized;
 

@@ -16,7 +16,7 @@ public class PenController : MonoBehaviour
     [SerializeField] private CanvasInfoGetter canvasInfo;
 
     private Vector2Int size;
-    private RenderTexture rend;
+    public RenderTexture rend;
     private Color ori;
     private bool ranned = false;
     public bool allowedDraw = false;

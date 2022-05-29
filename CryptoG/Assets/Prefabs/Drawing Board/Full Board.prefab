@@ -159,7 +159,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 2100000, guid: 4205f3ec6f12f2b439936bca5eaf8179, type: 2}
+  m_Material: {fileID: 2100000, guid: cc2933446d166fe4e97f5325e8e15678, type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 0.70980394}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
@@ -224,7 +224,7 @@ MonoBehaviour:
   size: {x: 512, y: 256}
   multiplier: 2
   imageTex: {fileID: 0}
-  originalColor: {r: 1, g: 1, b: 1, a: 0}
+  originalColor: {r: 1, g: 1, b: 1, a: 0.101960786}
   image: {fileID: 9143821279776059135}
 --- !u!1 &9143821280684960848
 GameObject:
@@ -274,6 +274,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pen: {fileID: 9143821281186236229}
   board: {fileID: 9143821279830808754}
+  canvasInfo: {fileID: 9143821281229902961}
 --- !u!1 &9143821281186236231
 GameObject:
   m_ObjectHideFlags: 0
@@ -325,6 +326,8 @@ MonoBehaviour:
   compShade: {fileID: 7200000, guid: 3f99174b4c496d042aa42d252c1c7e21, type: 3}
   drawBoard: {fileID: 9143821279830808754}
   canvasInfo: {fileID: 9143821281229902961}
+  rend: {fileID: 0}
+  allowedDraw: 0
 --- !u!1 &9143821281229902963
 GameObject:
   m_ObjectHideFlags: 0

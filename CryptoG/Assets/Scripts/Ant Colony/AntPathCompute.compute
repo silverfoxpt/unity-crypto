@@ -1,0 +1,82 @@
+// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel AntPathFind
+
+// Create a RenderTexture with enableRandomWrite flag and set it
+// with cs.SetTexture
+
+int num;
+float angle;
+float strength;
+float4 emptyColor;
+int homeX; int homeY;
+
+RWTexture2D<float4> foodMap;
+struct ant
+{
+    int2 pos;
+    int2 foodPos;
+    float2 dir;
+    float2 desDir;
+    int stat;
+};
+RWStructuredBuffer<ant> antInfo;
+
+float dist(float2 x)
+{
+    return sqrt(x.x * x.x + x.y * x.y);
+}
+
+float dotProd(float2 a, float2 b)
+{
+    return a.x * b.x + a.y * b.y;
+}
+
+float angleBetween(float2 a, float2 b)
+{
+    return acos(dotProd(a,b) / (dist(a) * dist(b))) * (180 / 3.1412);
+}
+
+[numthreads(8,8,1)]
+void AntPathFind (uint3 id : SV_DispatchThreadID)
+{
+    float4 col = foodMap[id.xy];
+    if (col.a > 0.9) //food
+    {
+        for (int i = 0; i < num; i++)
+        {
+            ant cur = antInfo[i];  
+            if (cur.stat == 0) //finding food
+            {
+                float2 dirTo = id.xy - cur.pos;
+                float2 dir = cur.desDir;
+
+                if (dist(dirTo) > strength || dist(dirTo) > dist(dir)) { continue;} //too far
+                if (angleBetween(dirTo, cur.dir) > angle) { continue; } // too wide
+
+                cur.desDir = dirTo;
+                cur.stat = 1; //found food, not reached
+                cur.foodPos = id.xy;
+            }
+            else if (cur.stat == 1) //found food, not reached
+            {
+                cur.desDir = cur.foodPos - cur.pos; //reach for food stupid
+                if (dist(cur.desDir) < 2) //reached
+                {
+                    foodMap[cur.foodPos] = float4(0, 0, 0, 1); //take the food
+                    cur.stat = 2; //reached food, should return home soon
+                }
+            }
+            /*else if (cur.stat == 2) //not our problem
+            {
+                float2 home = float2(homeX, homeY) - cur.pos;
+                cur.desDir = home;
+
+                if (dist(home) < 2) //reached home
+                {
+                    cur.stat = 0; //find more food bruv
+                }
+            }*/
+            antInfo[i] = cur; //reassigned 
+        }
+    }
+}

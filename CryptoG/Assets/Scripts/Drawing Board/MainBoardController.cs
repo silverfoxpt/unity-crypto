@@ -7,5 +7,6 @@ public class MainBoardController : MonoBehaviour
     [Header("References")]
     public PenController pen;
     public DrawingBoardController board;
+    public CanvasInfoGetter canvasInfo;
 
 }
