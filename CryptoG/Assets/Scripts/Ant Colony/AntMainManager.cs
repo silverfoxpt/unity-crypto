@@ -16,6 +16,7 @@ public class AntMainManager : MonoBehaviour
 
     [Header("References")]
     [SerializeField] private MainBoardController mainBoard;
+    [SerializeField] private MainBoardController pheroBoard;
     [SerializeField] private GameObject home;
     [SerializeField] private GameObject antPref;
     [SerializeField] private ComputeShader antPath;
@@ -32,6 +33,10 @@ public class AntMainManager : MonoBehaviour
     [SerializeField] private float wanderStrength = 0.1f;
     [SerializeField] private float detectAngle = 40;
     [SerializeField] private float detectStrength = 3;
+
+    [Header("Pheromones")]
+    [SerializeField] private Color toHomeColor = Color.blue;
+    [SerializeField] private Color toFoodColor = Color.red;
   
     private List<AntController> ants;
     private antPackage[] antInfo;
@@ -43,6 +48,7 @@ public class AntMainManager : MonoBehaviour
         //CreateAllAnts();
     }
 
+    #region preSim
     private void CreateAllAnts()
     {
         ants = new List<AntController>();
@@ -63,6 +69,10 @@ public class AntMainManager : MonoBehaviour
         mainBoard.pen.RefreshPen();
         mainBoard.board.CreateNewBoard();
         mainBoard.pen.allowedDraw = true;
+
+        pheroBoard.pen.RefreshPen();
+        pheroBoard.board.CreateNewBoard();
+        pheroBoard.pen.allowedDraw = false;
     }
 
     public void SetNestColor() { mainBoard.pen.ChangePenColor(nestColor);}
@@ -76,16 +86,22 @@ public class AntMainManager : MonoBehaviour
         antInfo = new antPackage[numAnts];
         status = "sim";
     }
+    #endregion
 
     private void Update()
     {
         if (status == "sim")
         {
+            AntInitiateShaderPackage();
             AntFindFood();
+            AntDropFeromones();
+
+            AntInitiateShaderPackage(); //retake
+            AntFollowFeromones();
         }
     }
 
-    private void AntFindFood()
+    private void AntInitiateShaderPackage()
     {
         for (int i = 0; i < numAnts; i++)
         {
@@ -99,7 +115,26 @@ public class AntMainManager : MonoBehaviour
 
             antInfo[i] = pack;
         }
+    }
 
+    private void AntFollowFeromones()
+    {
+        
+    }
+
+    private void AntDropFeromones()
+    {
+        for (int i = 0; i < numAnts; i++)
+        {
+            Vector2Int pos = pheroBoard.canvasInfo.PosToImagePos(ants[i].transform.position);
+            if (ants[i].foodStat < 2) {pheroBoard.board.SetPixelDirect(pos, toHomeColor, false);}
+            else if (ants[i].foodStat == 2) {pheroBoard.board.SetPixelDirect(pos, toFoodColor, false);}
+        }
+        pheroBoard.board.imageTex.Apply(); //apply after
+    }
+
+    private void AntFindFood()
+    {
         antPath.SetTexture(antPath.FindKernel("AntPathFind"), "foodMap", mainBoard.pen.rend);
 
         int strides = sizeof(int) * 2 + sizeof(int) * 2 +

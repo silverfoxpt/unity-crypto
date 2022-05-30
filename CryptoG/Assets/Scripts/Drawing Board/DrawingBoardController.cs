@@ -48,10 +48,10 @@ public class DrawingBoardController : MonoBehaviour
         image.material.mainTexture = imageTex;
     }
 
-    public void SetPixelDirect(Vector2Int pos)
+    public void SetPixelDirect(Vector2Int pos, Color col, bool apply = false)
     {
-        imageTex.SetPixel(pos.x, pos.y, Color.black);
-        imageTex.Apply();
+        imageTex.SetPixel(pos.x, pos.y, col);
+        if (apply) { imageTex.Apply(); }
 
         image.material.mainTexture = imageTex;
     }
