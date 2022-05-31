@@ -1,0 +1,31 @@
+// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel AntPhero
+
+// Create a RenderTexture with enableRandomWrite flag and set it
+// with cs.SetTexture
+
+RWTexture2D<float4> pheroMap;
+float incAmount;
+
+[numthreads(8,8,1)]
+void AntPhero (uint3 id : SV_DispatchThreadID)
+{
+    float4 col = pheroMap[id.xy];
+    if (col.r > 0.00001 && col.a > 0.00001)
+    {
+        //col.g = (col.g + incAmount > 1) ? 1 : col.g - incAmount;
+        //col.b = (col.b + incAmount > 1) ? 1 : col.b - incAmount;
+        col.r = (col.r - incAmount < 0) ? 0 : col.r - incAmount;
+    }
+    else if (col.b > 0.00001 && col.a > 0.00001)
+    {
+        col.b = (col.b - incAmount < 0) ? 0 : col.b - incAmount;
+        //col.g = (col.g + incAmount > 1) ? 1 : col.g - incAmount;
+        //col.r = (col.r + incAmount > 1) ? 1 : col.r - incAmount;
+    }
+
+    if (col.a - incAmount > 0.001) {col.a = col.a - incAmount;}  
+    else {col.a = 0.0;}  
+
+    pheroMap[id.xy] = col;
+}

@@ -55,4 +55,10 @@ public class DrawingBoardController : MonoBehaviour
 
         image.material.mainTexture = imageTex;
     }
+
+    public Color GetPixelDirect(Vector2Int pos)
+    {
+        if (pos == UtilityFunc.nullVecInt) {return new Color(0f, 0f, 0f, 0f);}
+        return imageTex.GetPixel(pos.x, pos.y);
+    }
 }

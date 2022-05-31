@@ -56,4 +56,11 @@ public class CanvasInfoGetter : MonoBehaviour
 
         return new Vector2Int(xPos, yPos); 
     }   
+
+    public Vector4 GetMapRealBound()
+    {
+        Vector2 realPos = offset;
+        return new Vector4(realPos.x - imgWidth/2, realPos.x + imgWidth / 2,
+                            realPos.y - imgHeight/2, realPos.y + imgHeight / 2);
+    }
 }
