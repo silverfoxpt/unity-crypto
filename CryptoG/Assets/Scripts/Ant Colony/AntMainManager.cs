@@ -16,7 +16,10 @@ public class AntMainManager : MonoBehaviour
 
     [Header("References")]
     [SerializeField] private MainBoardController mainBoard;
-    [SerializeField] private MainBoardController pheroBoard;
+    [SerializeField] private MainBoardController pheroBoardBlue;
+    [SerializeField] private MainBoardController pheroBoardRed;
+
+    [Space(10)]
     [SerializeField] private GameObject home;
     [SerializeField] private GameObject antPref;
     [SerializeField] private ComputeShader antPath;
@@ -43,6 +46,10 @@ public class AntMainManager : MonoBehaviour
     [SerializeField] private float turnAngle = 20;
     [SerializeField] private int turnStrength = 3;
 
+    [Space(10)]
+    [SerializeField] private float maxDistFromCenter = 5;
+    [SerializeField] private bool useInverseDist = false;
+
     [Header("Pheromones")]
     [SerializeField] private Color toHomeColor = Color.blue;
     [SerializeField] private Color toFoodColor = Color.red;
@@ -55,7 +62,7 @@ public class AntMainManager : MonoBehaviour
     {
         InitializeBoard();
         SetFoodColor();
-        Debug.Log(diffuseAmount);
+
         //CreateAllAnts();
     }
 
@@ -82,9 +89,13 @@ public class AntMainManager : MonoBehaviour
         mainBoard.board.CreateNewBoard();
         mainBoard.pen.allowedDraw = true;
 
-        pheroBoard.pen.RefreshPen();
-        pheroBoard.board.CreateNewBoard();
-        pheroBoard.pen.allowedDraw = false;
+        pheroBoardBlue.pen.RefreshPen();
+        pheroBoardBlue.board.CreateNewBoard();
+        pheroBoardBlue.pen.allowedDraw = false;
+
+        pheroBoardRed.pen.RefreshPen();
+        pheroBoardRed.board.CreateNewBoard();
+        pheroBoardRed.pen.allowedDraw = false;
     }
 
     public void SetNestColor() { mainBoard.pen.ChangePenColor(nestColor);}
@@ -117,16 +128,30 @@ public class AntMainManager : MonoBehaviour
     private void PheromonesDiffuse()
     {
         //copy
-        RenderTexture.active = pheroBoard.pen.rend;
-        Graphics.Blit(pheroBoard.board.imageTex, pheroBoard.pen.rend);
+        RenderTexture.active = pheroBoardBlue.pen.rend;
+        Graphics.Blit(pheroBoardBlue.board.imageTex, pheroBoardBlue.pen.rend);
 
-        antPhero.SetTexture(antPhero.FindKernel("AntPhero"), "pheroMap", pheroBoard.pen.rend);
+        //blueboard
+        antPhero.SetTexture(antPhero.FindKernel("AntPhero"), "pheroMap", pheroBoardBlue.pen.rend);
         antPhero.SetFloat("incAmount", diffuseAmount);
 
         antPhero.Dispatch(antPhero.FindKernel("AntPhero"), 
-            pheroBoard.board.size.x / 8, pheroBoard.board.size.y / 8, 1);
+            pheroBoardBlue.board.size.x / 8, pheroBoardBlue.board.size.y / 8, 1);
 
-        pheroBoard.board.SetTexture(pheroBoard.pen.rend);
+        pheroBoardBlue.board.SetTexture(pheroBoardBlue.pen.rend);
+
+        //copy
+        RenderTexture.active = pheroBoardRed.pen.rend;
+        Graphics.Blit(pheroBoardRed.board.imageTex, pheroBoardRed.pen.rend);
+
+        //redboard
+        antPhero.SetTexture(antPhero.FindKernel("AntPhero"), "pheroMap", pheroBoardRed.pen.rend);
+        antPhero.SetFloat("incAmount", diffuseAmount);
+
+        antPhero.Dispatch(antPhero.FindKernel("AntPhero"), 
+            pheroBoardRed.board.size.x / 8, pheroBoardRed.board.size.y / 8, 1);
+
+        pheroBoardRed.board.SetTexture(pheroBoardRed.pen.rend);
     }
 
     private void AntInitiateShaderPackage()
@@ -153,7 +178,7 @@ public class AntMainManager : MonoBehaviour
             if (ants[i].foodStat == 1) {continue;}
 
             var dir = antInfo[i].desDir;
-            var pos = pheroBoard.canvasInfo.PosToImagePos(ants[i].transform.position);
+            var pos = mainBoard.canvasInfo.PosToImagePos(ants[i].transform.position);
 
             Vector2 forward = dir.normalized * turnStrength;
             Vector2 left = Quaternion.Euler(0f, 0f, turnAngle) * forward;
@@ -167,20 +192,24 @@ public class AntMainManager : MonoBehaviour
             if (OutOfBounds(posL)) {posF = UtilityFunc.nullVecInt;}
             if (OutOfBounds(posR)) {posF = UtilityFunc.nullVecInt;}
 
-            var colF = pheroBoard.board.GetPixelDirect(posF);
-            var colL = pheroBoard.board.GetPixelDirect(posL);
-            var colR = pheroBoard.board.GetPixelDirect(posR);
-
             //take pheromone sample
             float valF, valR, valL;
             if (antInfo[i].status < 2) //follow red trail to food
             {
+                var colF = pheroBoardRed.board.GetPixelDirect(posF);
+                var colL = pheroBoardRed.board.GetPixelDirect(posL);
+                var colR = pheroBoardRed.board.GetPixelDirect(posR);
+
                 valF = (colF.a > 0) ? colF.r : 0; 
                 valL = (colL.a > 0) ? colL.r : 0; 
                 valR = (colR.a > 0) ? colR.r : 0; 
             }
             else if (antInfo[i].status == 2)
             {
+                var colF = pheroBoardBlue.board.GetPixelDirect(posF);
+                var colL = pheroBoardBlue.board.GetPixelDirect(posL);
+                var colR = pheroBoardBlue.board.GetPixelDirect(posR);
+
                 valF = (colF.a > 0) ? colF.b : 0; 
                 valL = (colL.a > 0) ? colL.b : 0; 
                 valR = (colR.a > 0) ? colR.b : 0; 
@@ -209,16 +238,39 @@ public class AntMainManager : MonoBehaviour
     {
         for (int i = 0; i < numAnts; i++)
         {
-            Vector2Int pos = pheroBoard.canvasInfo.PosToImagePos(ants[i].transform.position);
-            Color col = pheroBoard.board.GetPixelDirect(pos); 
+            Vector2Int pos = mainBoard.canvasInfo.PosToImagePos(ants[i].transform.position);
+            Color col = (ants[i].foodStat < 2) 
+                ? pheroBoardBlue.board.GetPixelDirect(pos)
+                : pheroBoardRed.board.GetPixelDirect(pos); 
 
-            if (ants[i].foodStat < 2) {col.b = 1;}
-            else  {col.r = 1;}
-            col.a = 1;
+            if (useInverseDist)
+            {
+                if (ants[i].foodStat < 2) 
+                {
+                    var inverseDist = 1/((ants[i].transform.position - home.transform.position).magnitude / maxDistFromCenter);
+                    col.b = Mathf.Clamp(inverseDist, 0, 1);
+                    col.a = Mathf.Clamp(inverseDist, 0, 1);
+                }
+                else  
+                {
+                    var inverseDist = 1/((pos - ants[i].foodPos).magnitude / maxDistFromCenter);                
+                    col.r = Mathf.Clamp(inverseDist, 0, 1);
+                    col.a = Mathf.Clamp(inverseDist, 0, 1);
+                }
+                col.a = 1;
+            }
+            else
+            {
+                if (ants[i].foodStat < 2) {col.b = 1;} else {col.r = 1;}
+                col.a = 1;
+            }
 
-            pheroBoard.board.SetPixelDirect(pos, col, false);
+            if (ants[i].foodStat < 2) { pheroBoardBlue.board.SetPixelDirect(pos, col, false);}
+            else { pheroBoardRed.board.SetPixelDirect(pos, col, false);}
         }
-        pheroBoard.board.imageTex.Apply(); //apply after
+        
+        pheroBoardBlue.board.imageTex.Apply(); //apply after
+        pheroBoardRed.board.imageTex.Apply(); //apply after
     }
 
     private void AntFindFood()

@@ -58,11 +58,12 @@ void AntPathFind (uint3 id : SV_DispatchThreadID)
         else if (cur.stat == 1) //found food, not reached
         {
             //cur.desDir = cur.foodPos - cur.pos; //reach for food stupid
-            if (dist(cur.desDir) < 2) //reached
+            if (dist(cur.desDir) < 5) //reached
             {
                 foodMap[cur.foodPos] = emptyColor; //take the food
                 cur.stat = 2; //reached food, should return home soon
-                cur.foodPos = int2(0, 0);
+
+                //cur.foodPos = int2);
                 //cur.desDir = -cur.desDir; //turn back, some bullshit
             }
         }
@@ -71,7 +72,7 @@ void AntPathFind (uint3 id : SV_DispatchThreadID)
             float2 home = float2(homeX, homeY) - cur.pos;
             //cur.desDir = home; //I'm tired of this shit
 
-            if (dist(home) < 2) //reached home
+            if (dist(home) < 14) //reached home
             {
                 cur.stat = 0; //find more food bruv
             }
