@@ -1,0 +1,36 @@
+// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel diff
+
+// Create a RenderTexture with enableRandomWrite flag and set it
+// with cs.SetTexture
+RWTexture2D<float4> old;
+RWTexture2D<float4> newMap;
+int width, height;
+float diffuseSpeed, deltaTime, evaSpeed;
+
+[numthreads(8,8,1)]
+void diff (uint3 id : SV_DispatchThreadID)
+{
+    int x = id.x, y = id.y;
+    if (x < 0 || y < 0 || x >= width || y >= height) {return;}
+
+    float4 original = old[id.xy];
+
+    float4 sum = 0;
+    for (int i = -1; i <= 1; i++)
+    {
+        for (int j = -1; j <= 1; j++)
+        {
+            int newX = x + i, newY = y + j;    
+            if (newX < 0 || newY < 0 || newX >= width || newY >= height) {continue;}
+
+            sum += old[int2(newX, newY)];
+        }
+    }
+    sum /= 9.0;
+
+    float4 diffuseVal = lerp(original, sum, diffuseSpeed * deltaTime);
+    float4 evaVal = max(0, diffuseVal - evaSpeed * deltaTime);
+
+    newMap[id.xy] = evaVal;
+}

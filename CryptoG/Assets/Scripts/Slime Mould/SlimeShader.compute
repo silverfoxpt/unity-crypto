@@ -1,0 +1,108 @@
+// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel CSMain
+
+// Create a RenderTexture with enableRandomWrite flag and set it
+// with cs.SetTexture
+RWTexture2D<float4> map;
+int width;
+int height;
+
+float moveSpeed;
+float deltaTime;
+float turnSpeed;
+
+struct agent
+{
+    float2 pos; float angle;
+};
+RWStructuredBuffer<agent> agents;
+
+//agents shit
+float sensorAngleSpacing;
+float sensorOffsetDist;
+int sensorSize;
+
+float rand(uint state) 
+{
+    state ^= 2747636419u;
+    state *= 2654435769u;
+    state ^= state >> 16;
+    state *= 2654435769u;
+    state ^= state >> 16;
+    state *= 2654435769u;
+
+    return state / 4294967295.0;
+}
+
+float sense(agent ag, float sensorAngleOffset)
+{
+    float sensorAngle = ag.angle + sensorAngleOffset;
+    float2 sensorDir = float2(cos(sensorAngle), sin(sensorAngle));
+    int2 sensorCenter = ag.pos + sensorDir * sensorOffsetDist;
+
+    float sum;
+    for (int i = -sensorSize; i <= sensorSize; i++)
+    {
+        for (int j = -sensorSize; i <= sensorSize; i++)
+        {
+            int2 pos = sensorCenter + int2(i, j);
+
+            if (pos.x > 0 && pos.y > 0 && pos.x < width && pos.y < height)
+            {
+                sum += map[pos].x;
+            }
+        }
+    }
+
+    return sum;
+}
+
+[numthreads(16,1,1)]
+void CSMain (uint3 id : SV_DispatchThreadID)
+{
+    agent cur = agents[id.x];
+    float ran = rand(cur.pos.y * width + cur.pos.x + rand(id.x));
+
+    //steer here
+    float sensorRad = sensorAngleSpacing * (3.1412 / 180);
+
+    float forward = sense(cur, 0);
+    float left = sense(cur, -sensorAngleSpacing);
+    float right = sense(cur, sensorAngleSpacing);
+
+    float randomSteer = ran;
+    float turner = turnSpeed * 2 * 3.1412;
+
+    //debate steer course
+    if (forward > left && forward > right) {} //nothing
+    else if (forward < left && forward < right)
+    {
+        agents[id.x].angle += (randomSteer - 0.5) * 2 * turner * deltaTime;
+    }
+    else if (right > left)
+    {
+        agents[id.x].angle -= randomSteer * turner * deltaTime;
+    }
+    else if (right < left)
+    {
+        agents[id.x].angle += randomSteer * turner * deltaTime;
+    }
+    else {}
+
+    //continue    
+    float2 dir = float2(cos(cur.angle), sin(cur.angle));
+    float2 newPos = cur.pos + dir * moveSpeed * deltaTime;
+
+    if (newPos.x < 0 || newPos.x >= width || newPos.y < 0 || newPos.y >= height)
+    {
+        ran = rand(ran);
+        newPos.x = min(width - 3, max(0, newPos.x));
+        newPos.y = min(height - 3, max(0, newPos.y));
+
+        agents[id.x].angle = ran * 2 * 3.1412;
+    }
+
+    agents[id.x].pos = newPos;
+    map[int2(newPos.x, newPos.y)] = float4(1, 1, 1, 1);
+
+}
