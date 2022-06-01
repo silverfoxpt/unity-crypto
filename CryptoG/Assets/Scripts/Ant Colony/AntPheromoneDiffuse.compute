@@ -24,7 +24,7 @@ void AntPhero (uint3 id : SV_DispatchThreadID)
         //col.r = (col.r + incAmount > 1) ? 1 : col.r - incAmount;
     }
 
-    if (col.a - incAmount > 0.001) {col.a = col.a - incAmount;}  
+    if (col.a - incAmount > 0) {col.a = col.a - incAmount;}  
     else {col.a = 0.0;}  
 
     pheroMap[id.xy] = col;

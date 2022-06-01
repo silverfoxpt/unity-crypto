@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class AntMainManager : MonoBehaviour
 {
@@ -22,8 +23,17 @@ public class AntMainManager : MonoBehaviour
     [Space(10)]
     [SerializeField] private GameObject home;
     [SerializeField] private GameObject antPref;
+
+    [Space(10)]
     [SerializeField] private ComputeShader antPath;
     [SerializeField] private ComputeShader antPhero;
+    [SerializeField] private ComputeShader reverseColor;
+
+    [Space(10)]
+    [SerializeField] private Image redImg;
+    [SerializeField] private Image blueImg;
+
+    [Space(10)]
     public string status = "drawing";
 
     [Header("Drawing")]
@@ -57,11 +67,14 @@ public class AntMainManager : MonoBehaviour
   
     private List<AntController> ants;
     private antPackage[] antInfo;
+    private Texture2D imgTex1, imgTex2; 
+    public RenderTexture tex1, tex2;
 
     private void Start()
     {
+        CreateTextures();
         InitializeBoard();
-        SetFoodColor();
+        SetFoodColor();        
 
         //CreateAllAnts();
     }
@@ -103,6 +116,8 @@ public class AntMainManager : MonoBehaviour
 
     public void StartSimulation()
     {
+        if (status == "sim") {return;}
+
         CreateAllAnts();
         mainBoard.pen.allowedDraw = false; //can't draw
         
@@ -110,6 +125,22 @@ public class AntMainManager : MonoBehaviour
         status = "sim";
     }
     #endregion
+    private void CreateTextures()
+    {
+        tex1 = new RenderTexture(mainBoard.board.size.x, mainBoard.board.size.y, 24);
+        tex1.enableRandomWrite = true;
+        tex1.Create();
+
+        tex2 = new RenderTexture(mainBoard.board.size.x, mainBoard.board.size.y, 24);
+        tex2.enableRandomWrite = true;
+        tex2.Create();
+
+        imgTex1 = new Texture2D(mainBoard.board.size.x, mainBoard.board.size.y, 
+            TextureFormat.RGBA32, false);
+
+        imgTex2 = new Texture2D(mainBoard.board.size.x, mainBoard.board.size.y, 
+            TextureFormat.RGBA32, false);
+    }
 
     private void Update()
     {
@@ -122,7 +153,51 @@ public class AntMainManager : MonoBehaviour
             AntInitiateShaderPackage(); //retake
             AntFollowFeromones();
             PheromonesDiffuse();
+
+            DoSomeColorMagic();
         }
+    }
+
+    private void DoSomeColorMagic()
+    {
+        //copy stuff
+        Graphics.CopyTexture(pheroBoardBlue.board.imageTex, imgTex1);
+        Graphics.CopyTexture(pheroBoardRed.board.imageTex, imgTex2);
+        Graphics.Blit(imgTex1, tex1); Graphics.Blit(imgTex2, tex2);
+
+        //compute shader shit bla bla
+        reverseColor.SetInt("reverseBlue", 0);
+        reverseColor.SetTexture(reverseColor.FindKernel("ReverseColor"), "mapIn", tex1);
+        reverseColor.Dispatch(reverseColor.FindKernel("ReverseColor"), 
+            mainBoard.board.size.x/8, mainBoard.board.size.y/8, 1);
+
+        //copy tex1
+        RenderTexture.active = tex1;
+        imgTex1.ReadPixels(new Rect(0, 0, tex1.width, tex1.height), 0, 0);
+        imgTex1.Apply();
+
+        reverseColor.SetInt("reverseBlue", 1);
+        reverseColor.SetTexture(reverseColor.FindKernel("ReverseColor"), "mapIn", tex2);
+        reverseColor.Dispatch(reverseColor.FindKernel("ReverseColor"), 
+            mainBoard.board.size.x/8, mainBoard.board.size.y/8, 1);
+
+        //copy tex2
+        RenderTexture.active = tex2;
+        imgTex2.ReadPixels(new Rect(0, 0, tex2.width, tex2.height), 0, 0);
+        imgTex2.Apply();
+
+        /* doing some magic hokey pokey */
+        /*blueImg.sprite = Sprite.Create(imgTex1, new Rect(0, 0, 
+            mainBoard.board.size.x, mainBoard.board.size.y), new Vector2());
+
+        redImg.sprite = Sprite.Create(imgTex1, new Rect(0, 0, 
+            mainBoard.board.size.x, mainBoard.board.size.y), new Vector2());*/
+
+        blueImg.material.mainTexture = imgTex1;
+        blueImg.SetMaterialDirty();
+
+        redImg.material.mainTexture = imgTex2;
+        redImg.SetMaterialDirty();
     }
 
     private void PheromonesDiffuse()
@@ -308,3 +383,4 @@ public class AntMainManager : MonoBehaviour
         compBuff.Dispose();
     }
 }
+

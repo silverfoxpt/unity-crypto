@@ -64,7 +64,7 @@ void AntPathFind (uint3 id : SV_DispatchThreadID)
                 cur.stat = 2; //reached food, should return home soon
 
                 //cur.foodPos = int2);
-                //cur.desDir = -cur.desDir; //turn back, some bullshit
+                cur.desDir = int2(homeX, homeY) - cur.pos;
             }
         }
         else if (cur.stat == 2) //now our problem
@@ -75,6 +75,7 @@ void AntPathFind (uint3 id : SV_DispatchThreadID)
             if (dist(home) < 14) //reached home
             {
                 cur.stat = 0; //find more food bruv
+                cur.desDir = (cur.foodPos - cur.pos);
             }
         }
         antInfo[i] = cur; //reassigned 

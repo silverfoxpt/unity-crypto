@@ -1,0 +1,24 @@
+// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel ReverseColor
+
+// Create a RenderTexture with enableRandomWrite flag and set it
+// with cs.SetTexture
+RWTexture2D<float4> mapIn;
+int reverseBlue;
+
+[numthreads(8,8,1)]
+void ReverseColor (uint3 id : SV_DispatchThreadID)
+{
+    float4 col = mapIn[id.xy];
+
+    //just apply the color bruv
+    if (reverseBlue == 0)
+    {
+        col.b = 1; 
+    }
+    else
+    {
+        col.r = 1;
+    }
+    mapIn[id.xy] = col;
+}
