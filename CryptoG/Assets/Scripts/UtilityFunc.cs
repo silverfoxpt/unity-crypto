@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 using System.Text;
-using SFB;
 
 public struct IntVec2
 {
@@ -138,7 +137,7 @@ public class UtilityFunc : MonoBehaviour
 
     public static string OpenImageFile()
     {
-        var extensions = new [] {
+        /*var extensions = new [] {
             new ExtensionFilter("Image Files", "png", "jpg", "jpeg" ),
         };
         var paths = StandaloneFileBrowser.OpenFilePanel("Open File", "", extensions, true);
@@ -146,7 +145,8 @@ public class UtilityFunc : MonoBehaviour
         string actualPath = "";
         foreach(var x in paths) { actualPath += x; } 
 
-        return actualPath;
+        return actualPath;*/
+        return "";
     }
     #endregion
 

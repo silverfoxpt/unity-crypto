@@ -9,4 +9,12 @@ public class MainBoardController : MonoBehaviour
     public DrawingBoardController board;
     public CanvasInfoGetter canvasInfo;
 
+    public void SetBoardSize(Vector2Int size)
+    {
+        board.size = size;
+        board.image.rectTransform.sizeDelta = size;
+    }
+
+    public void SetMultiplier(float m ) {board.multiplier = m;}
+
 }

@@ -25,6 +25,9 @@ public class DrawingBoardController : MonoBehaviour
         RectTransform trans = image.GetComponent<RectTransform>();
         trans.sizeDelta = new Vector2(size.x, size.y) * multiplier;
 
+        Material tmp = new Material(Shader.Find("Sprites/Default")); tmp.name = "Blank Material";
+        image.material = tmp;
+
         imageTex = new Texture2D(size.x, size.y, TextureFormat.RGBA32, false);
         for (int i = 0; i < size.x; i++)
         {
@@ -36,6 +39,7 @@ public class DrawingBoardController : MonoBehaviour
         imageTex.Apply();
 
         image.material.mainTexture = imageTex;
+        imageTex.filterMode = FilterMode.Point;
     }
 
     public void SetTexture(RenderTexture tex)
