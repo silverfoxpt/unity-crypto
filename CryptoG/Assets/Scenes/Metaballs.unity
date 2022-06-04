@@ -420,7 +420,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   circlePref: {fileID: 4960411627923257087, guid: 8e04d8ecb5cfdd84fb0cc0be9af0ed47, type: 3}
-  circleCount: 13
+  circleCount: 15
   sizeRange: {x: 1, y: 2.5}
   speedRange: {x: 0.75, y: 3}
 --- !u!4 &1794051949

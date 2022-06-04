@@ -33,12 +33,9 @@ public class SlimeGen : MonoBehaviour
     private RenderTexture tex, copyTex;
     private Texture2D texImg;
     private agent[] dat;
-    private float counter;
 
     private void Start()
     {
-        counter = 0;
-
         tex = new RenderTexture(size.x, size.y, 24);
         tex.enableRandomWrite = true;
         tex.Create();

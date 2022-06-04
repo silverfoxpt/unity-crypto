@@ -11,8 +11,8 @@ public class PathMapGenerator : MonoBehaviour
     [SerializeField] private MainBoardController board;
 
     public Dictionary<Vector2Int, List<Vector2Int>> ne;
-    private int[] dx = {1, 0, -1, 0};
-    private int[] dy = {0, -1, 0, 1};
+    private int[] dx = {1, 0, -1, 0, -1, -1, 1, 1};
+    private int[] dy = {0, -1, 0, 1, 1, -1, 1, -1};
 
     private void Start()
     {
@@ -41,7 +41,7 @@ public class PathMapGenerator : MonoBehaviour
             for (int j = 0; j < size.y; j++)
             {
                 ne.Add(new Vector2Int(i, j), new List<Vector2Int>() {});
-                for (int k = 0; k < 4; k++)
+                for (int k = 0; k < 8; k++)
                 {
                     int newX = i + dx[k], newY = j + dy[k];
                     if (newX < 0 || newY < 0 || newX >= size.x || newY >= size.y) {continue;}
