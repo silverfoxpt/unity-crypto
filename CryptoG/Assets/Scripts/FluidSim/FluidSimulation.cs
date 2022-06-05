@@ -11,6 +11,7 @@ public class FluidSimulation : MonoBehaviour
     [SerializeField] private float diff = 1;
     [SerializeField] private float visc = 0.1f;
     [SerializeField] private float iteration = 10;
+    [SerializeField] private float speed = 10f;
 
     private float[] s, density;
     private float[] vX, vY; 
@@ -41,7 +42,9 @@ public class FluidSimulation : MonoBehaviour
     #region slowCpuShit
     private int ToInd(int x, int y)
     {
-        return x * size + y;
+        x = Mathf.Clamp(x, 0, size-1);
+        y = Mathf.Clamp(y, 0, size-1);
+        return x*size + y;
     }
     private void AddDye(float amount, int posX, int posY)
     {
@@ -52,6 +55,30 @@ public class FluidSimulation : MonoBehaviour
     {
         vX[ToInd(posX, posY)] += amX;
         vY[ToInd(posX, posY)] += amY;
+    }
+
+    private void set_bnd(int b, float[] x)
+    {
+        for(int i = 1; i < size - 1; i++) 
+        {
+            x[ToInd(i, 0)] = b == 2 ? -x[ToInd(i, 1)] : x[ToInd(i, 1)];
+            x[ToInd(i, size-1)] = b == 2 ? -x[ToInd(i, size-2)] : x[ToInd(i, size-2)];
+        }
+        
+        for(int j = 1; j < size - 1; j++) 
+        {
+            x[ToInd(0  , j)] = b == 1 ? -x[ToInd(1  , j)] : x[ToInd(1  , j)];
+            x[ToInd(size-1, j)] = b == 1 ? -x[ToInd(size-2, j)] : x[ToInd(size-2, j)];
+        }
+
+        x[ToInd(0, 0)]       = 0.5f * (x[ToInd(1, 0)]
+                                    + x[ToInd(0, 1)]);
+        x[ToInd(0, size-1)]     = 0.5f * (x[ToInd(1, size-1)]
+                                    + x[ToInd(0, size-2)]);
+        x[ToInd(size-1, 0)]     = 0.5f * (x[ToInd(size-2, 0)]
+                                    + x[ToInd(size-1, 1)]);
+        x[ToInd(size-1, size-1)]   = 0.5f * (x[ToInd(size-2, size-1)]
+                                    + x[ToInd(size-1, size-2)]);
     }
 
     private void LinearSolve(int b, float[] x, float[] x0, float a, float c)
@@ -74,17 +101,17 @@ public class FluidSimulation : MonoBehaviour
                             ) * cRecip;
                 }
             }
-            //set_bnd(b, x, N);
+            set_bnd(b, x);
         }
     }
 
-    private void DiffuseFluid(int b, float[] x, float[] x0)
+    private void DiffuseFluid(int b, float[] x, float[] x0, float diff)
     {
         float a = Time.deltaTime * diff * (size - 2) * (size - 2);
         LinearSolve(b, x, x0, a, 1 + 6 * a);
     }
 
-    private void ProjectFluid(float[] velocX, float[] velocY, float[] velocZ, float[] p, float[] div)
+    private void ProjectFluid(float[] velocX, float[] velocY, float[] p, float[] div)
     {
         for (int j = 1; j < size - 1; j++) 
         {
@@ -101,8 +128,8 @@ public class FluidSimulation : MonoBehaviour
             }
         }
 
-        //set_bnd(0, div, N); 
-        //set_bnd(0, p, N);
+        set_bnd(0, div); 
+        set_bnd(0, p);
         LinearSolve(0, p, div, 1, 6);
         
         for (int j = 1; j < size - 1; j++) 
@@ -115,77 +142,114 @@ public class FluidSimulation : MonoBehaviour
                                                 -p[ToInd(i, j-1)]) * size;
             }
         }
-        //set_bnd(1, velocX, N);
-        //set_bnd(2, velocY, N);
-        //set_bnd(3, velocZ, N);
+        set_bnd(1, velocX);
+        set_bnd(2, velocY);
     }
     
-    /*static void advect(int b, float[] d, float[] d0,  float[] velocX, float[] velocY, float[] velocZ)
-{
-    float i0, i1, j0, j1, k0, k1;
-    
-    float dtx = dt * (N - 2);
-    float dty = dt * (N - 2);
-    float dtz = dt * (N - 2);
-    
-    float s0, s1, t0, t1, u0, u1;
-    float tmp1, tmp2, tmp3, x, y, z;
-    
-    float Nfloat = N;
-    float ifloat, jfloat, kfloat;
-    int i, j, k;
-    
-    for(k = 1, kfloat = 1; k < N - 1; k++, kfloat++) {
-        for(j = 1, jfloat = 1; j < N - 1; j++, jfloat++) { 
-            for(i = 1, ifloat = 1; i < N - 1; i++, ifloat++) {
-                tmp1 = dtx * velocX[IX(i, j, k)];
-                tmp2 = dty * velocY[IX(i, j, k)];
-                tmp3 = dtz * velocZ[IX(i, j, k)];
+    private void AdvectFluid(int b, float[] d, float[] d0,  float[] velocX, float[] velocY)
+    {
+        float i0, i1, j0, j1;
+        
+        float dtx = Time.deltaTime * (size - 2);
+        float dty = Time.deltaTime * (size - 2);
+        
+        float s0, s1, t0, t1;
+        float tmp1, tmp2, x, y;
+        
+        float Nfloat = size;
+        float ifloat, jfloat;
+        int i, j;
+        
+        for (j = 1, jfloat = 1; j < size - 1; j++, jfloat++) 
+        { 
+            for (i = 1, ifloat = 1; i < size - 1; i++, ifloat++) 
+            {
+                tmp1 = dtx * velocX[ToInd(i, j)];
+                tmp2 = dty * velocY[ToInd(i, j)];
                 x    = ifloat - tmp1; 
                 y    = jfloat - tmp2;
-                z    = kfloat - tmp3;
                 
                 if(x < 0.5f) x = 0.5f; 
                 if(x > Nfloat + 0.5f) x = Nfloat + 0.5f; 
-                i0 = floorf(x); 
+                i0 = Mathf.Floor(x); 
                 i1 = i0 + 1.0f;
+
                 if(y < 0.5f) y = 0.5f; 
                 if(y > Nfloat + 0.5f) y = Nfloat + 0.5f; 
-                j0 = floorf(y);
+                j0 = Mathf.Floor(y);
                 j1 = j0 + 1.0f; 
-                if(z < 0.5f) z = 0.5f;
-                if(z > Nfloat + 0.5f) z = Nfloat + 0.5f;
-                k0 = floorf(z);
-                k1 = k0 + 1.0f;
                 
                 s1 = x - i0; 
                 s0 = 1.0f - s1; 
                 t1 = y - j0; 
                 t0 = 1.0f - t1;
-                u1 = z - k0;
-                u0 = 1.0f - u1;
                 
-                int i0i = i0;
-                int i1i = i1;
-                int j0i = j0;
-                int j1i = j1;
-                int k0i = k0;
-                int k1i = k1;
+                int i0i = (int) i0;
+                int i1i = (int) i1;
+                int j0i = (int) j0;
+                int j1i = (int) j1;
                 
-                d[IX(i, j, k)] = 
+                d[ToInd(i, j)] = 
                 
-                    s0 * ( t0 * (u0 * d0[IX(i0i, j0i, k0i)]
-                                +u1 * d0[IX(i0i, j0i, k1i)])
-                        +( t1 * (u0 * d0[IX(i0i, j1i, k0i)]
-                                +u1 * d0[IX(i0i, j1i, k1i)])))
-                   +s1 * ( t0 * (u0 * d0[IX(i1i, j0i, k0i)]
-                                +u1 * d0[IX(i1i, j0i, k1i)])
-                        +( t1 * (u0 * d0[IX(i1i, j1i, k0i)]
-                                +u1 * d0[IX(i1i, j1i, k1i)])));
+                    s0 * ( t0 * d0[ToInd(i0i, j0i)]
+                        + t1 * d0[ToInd(i0i, j1i)])
+
+                +   s1 * ( t0 * d0[ToInd(i1i, j0i)]
+                        + t1 * d0[ToInd(i1i, j1i)]);
+            }
+        }
+    
+        set_bnd(b, d);
+    }
+    
+    private void Update()
+    {
+        AddFluid();
+        UpdateFluid();
+        DisplayBoard();
+    }
+
+    private void AddFluid()
+    {
+        for (int i = size/2-2; i <= size/2+2; i++)
+        {
+            for (int j = size/2-2; j <= size/2+2; j++)
+            {
+                AddDye(1f, i, j);
+                Vector2 v = UnityEngine.Random.insideUnitCircle.normalized * speed;
+                AddVelocity(v.x, v.y, i, j); 
             }
         }
     }
-    set_bnd(b, d, N);
-}*/
+
+    private void DisplayBoard()
+    {
+        for (int i = 0; i < size; i++)
+        {
+            for (int j = 0; j < size; j++)
+            {
+                float v = Mathf.Clamp(density[ToInd(i, j)], 0f, 1f); //if (v > 0.5f) {Debug.Log(new Vector2Int(i, j));}
+                Color col = new Color(v, v, v, 1f);
+                board.board.SetPixelDirect(new Vector2Int(i, j), col, false);
+            }
+        }
+        board.board.imageTex.Apply();
+    }
+
+    private void UpdateFluid()
+    {
+        DiffuseFluid(1, vX0, vX, visc);
+        DiffuseFluid(2, vY0, vY, visc);
+
+        ProjectFluid(vX0, vY0, vX, vY);
+
+        AdvectFluid(1, vX, vX0, vX0, vY0);
+        AdvectFluid(2, vY, vY0, vX0, vY0);
+
+        ProjectFluid(vX, vY, vX0, vY0);
+
+        DiffuseFluid(0, s, density, diff);
+        AdvectFluid(0, density, s, vX, vY);
+    }
     #endregion
 }

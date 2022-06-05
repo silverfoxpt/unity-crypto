@@ -130,6 +130,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 6670521563694452354, guid: fd691794e3384dc41975881258aed8d3, type: 3}
+      propertyPath: m_Camera
+      value: 
+      objectReference: {fileID: 1581707467}
     - target: {fileID: 9143821279830808754, guid: fd691794e3384dc41975881258aed8d3, type: 3}
       propertyPath: size.x
       value: 128
@@ -327,8 +331,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da8649bc01c17c74b8a17ebb21ebdd12, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  size: 0
+  size: 128
   board: {fileID: 830479596}
-  diff: 1
-  visc: 0.1
-  iteration: 10
+  diff: 0.000035
+  visc: 0
+  iteration: 5
+  speed: 4
