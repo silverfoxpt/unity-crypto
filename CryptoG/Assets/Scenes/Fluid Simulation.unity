@@ -142,6 +142,10 @@ PrefabInstance:
       propertyPath: size.y
       value: 128
       objectReference: {fileID: 0}
+    - target: {fileID: 9143821279830808754, guid: fd691794e3384dc41975881258aed8d3, type: 3}
+      propertyPath: multiplier
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 9143821280684960848, guid: fd691794e3384dc41975881258aed8d3, type: 3}
       propertyPath: m_Name
       value: Full Board

@@ -45,7 +45,7 @@ public class GGSnowGenerator : MonoBehaviour
     [SerializeField] private float alpha;
 
     [Header("Other")]
-    [SerializeField] private float delay = 0.2f;
+    //[SerializeField] private float delay = 0.2f;
     [SerializeField] private float simDelay = 0.1f;
     [SerializeField] private Color snowColor = Color.blue;
 
