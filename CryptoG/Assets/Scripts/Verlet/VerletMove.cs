@@ -50,4 +50,6 @@ public class VerletMove : MonoBehaviour
 
     public void SetMaxAccel(float mag) {maxAccel = mag;}
     public void SetTimeStep(float dt) {timeStep = dt;}
+    public void SetBoolTime(bool y) {useDeltaTime = y;}
+    public void SetDrag(float d) {drag = d;}
 }

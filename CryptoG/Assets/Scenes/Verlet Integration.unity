@@ -167,9 +167,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03efb494e2d0c034b932b348d9d2da15, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  numObjects: 100
-  scale: 0.2
+  numObjects: 500
+  scale: 0.1
+  bounds: 15
+  maxAccel: 0.1
+  timeStep: 0.05
+  useDeltaTime: 0
+  drag: 0.99
+  useCollision: 1
   obj: {fileID: 1935375162775486815, guid: a741871656ea8e042b1cf727037537b3, type: 3}
+  collision: {fileID: 801610243}
 --- !u!1 &801610241
 GameObject:
   m_ObjectHideFlags: 0
@@ -214,7 +221,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d38d9e40672275042b1b1af71d7435ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  iter: 100
+  iter: 3
+  spawn: {fileID: 663334128}
 --- !u!1 &1141629868
 GameObject:
   m_ObjectHideFlags: 0
