@@ -9,7 +9,7 @@ public class VerletMove : MonoBehaviour
     [SerializeField] private float timeStep = 1f;
     [SerializeField] private bool useDeltaTime = false;
     [SerializeField] private float drag = 0.95f;
-    [SerializeField] private float minSpeed = 0.01f;
+    //[SerializeField] private float minSpeed = 0.01f;
 
     public float radius;
     public Vector2 pos;
