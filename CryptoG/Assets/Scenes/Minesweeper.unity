@@ -236,7 +236,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cellPref: {fileID: 1908935522904401619, guid: 0b96cb11d7977e04ab0104837a77cd05, type: 3}
   size: {x: 20, y: 20}
-  squareSize: 0.2
+  squareSize: 0.4
+  spacing: 0.02
+  numBombs: 3
 --- !u!1 &1683971990
 GameObject:
   m_ObjectHideFlags: 0

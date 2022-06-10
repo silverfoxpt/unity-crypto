@@ -245,4 +245,14 @@ public class UtilityFunc : MonoBehaviour
         return string.Format("0x{0:X}", value);
     }
     #endregion
+
+    #region debug
+    public static void PrintListInt(List<int> li)
+    {
+        foreach(var ob in li)
+        {
+            Debug.Log(ob.ToString());
+        }
+    }
+    #endregion
 }
