@@ -21,22 +21,33 @@ public class MinesweepBoard : MonoBehaviour
     public List<List<char>> playerVal;
     private List<List<int>> realVal;
     private List<List<int>> indicatorVal;
-    private int height, width;
+    public int height, width;
+    private int curNumBomb = 0;
 
-    private string stat = "playing";
+    public string stat = "playing";
     private int[] dy = new int[4] {+1, 0, -1, 0};
     private int[] dx = new int[4] {0, -1, 0, +1};
 
     void Start()
     {
+        
+    }
+
+    #region boardRelated
+    public void InitializeBoard(bool createNew = false)
+    {
         height = size.y; width = size.x;
-        CreateBoard();   
+        stat = "playing";
         CreateValueList();
+
+        if (createNew) {CreateBoard();}
+        else {RefreshBoard();}
     }
 
     private void CreateValueList()
     {
         if (size.x * size.y < numBombs) { throw new System.Exception("Too many bombs");}
+        curNumBomb = numBombs;
 
         //initialize some list
         playerVal = new List<List<char>>();
@@ -62,7 +73,6 @@ public class MinesweepBoard : MonoBehaviour
         
         System.Random rng = new System.Random();
         bombs = bombs.OrderBy(a => rng.Next()).ToList();
-        Debug.Log(bombs.Count(x => x == 1));
 
         //assign back to true list
         for (int i = 0; i < size.x * size.y; i++)
@@ -92,6 +102,17 @@ public class MinesweepBoard : MonoBehaviour
         }
     }
 
+    private void RefreshBoard()
+    {
+        for (int i = 0; i < height; i++)
+        {
+            for (int j = 0; j < width; j++)
+            {
+                cells[i][j].SetText("");
+            }
+        }
+    }
+
     private void CreateBoard()
     {
         cells = new List<List<MineCell>>();
@@ -114,7 +135,9 @@ public class MinesweepBoard : MonoBehaviour
             startX = -size.x * squareSize / 2f; startY -= squareSize + spacing;
         }
     }
+    #endregion
 
+    #region moveRelated
     public void ProcessClick(int type, Vector2Int pos)
     {
         if (stat == "end") {return;} //game ended
@@ -128,7 +151,8 @@ public class MinesweepBoard : MonoBehaviour
             if (player != ' ') {return; } //not empty -> already clicked / flagged
             else if (indi == -1) //bomb, not flagged
             {
-                stat = "end"; 
+                stat = "end"; Debug.Log("lose!");
+                StopAllCoroutines();
                 playerVal[pos.x][pos.y] = 'B'; 
                 cells[pos.x][pos.y].SetText("B");
             }
@@ -156,24 +180,28 @@ public class MinesweepBoard : MonoBehaviour
             {
                 playerVal[pos.x][pos.y] = 'F';
                 cells[pos.x][pos.y].SetText("F"); 
-                numBombs--;
+                curNumBomb--;
             }
             else if (player == 'F') //unflagging
             {
                 playerVal[pos.x][pos.y] = ' ';
                 cells[pos.x][pos.y].SetText(" ");
-                numBombs++;
+                curNumBomb++;
             }
         }
 
         //check win condition
-        for (int i = 0; i < height; i++)
-        {
-            for (int j = 0; j < width; j++)
-            {
-                if (playerVal[i][j] == ' ') {return;}
-            }
-        }
+        if (curNumBomb > 0) {return;}
         Debug.Log("win!"); stat = "end";
     }
+
+    public void ApplyMove(List<mineSweepMove> moves)
+    {
+        foreach(var move in moves)
+        {
+            ProcessClick(move.type, move.pos);
+            
+        }
+    }
+    #endregion
 }

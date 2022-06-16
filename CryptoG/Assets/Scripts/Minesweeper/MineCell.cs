@@ -17,7 +17,7 @@ public class MineCell : MonoBehaviour
         clicker.SetPos(pos);
     }
 
-    public void SetSize(float sz) { transform.localScale = new Vector3(sz, sz, 1f);}
+    public void SetSize(float sz) { transform.localScale = new Vector3(sz, sz, 1f);} 
     public void SetText(string t) {tex.text = t;}
     public string GetText() {return tex.text;}
 }
