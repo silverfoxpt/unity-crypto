@@ -14,17 +14,6 @@ public struct mineSweepMove
 
 public class MinesweepAI : MonoBehaviour
 {
-    struct constraint
-    {
-        public HashSet<Vector2Int> tiles;
-        public int num;
-
-        public void Star() {this.num = 0; this.tiles = new HashSet<Vector2Int>(); }
-        public void ModNum(int n) {this.num = n; }
-        public void AddTile(Vector2Int t) {tiles.Add(t);}
-
-        public constraint(int n) {this.num  = n; this.tiles = new HashSet<Vector2Int>();}
-    }
 
     [Header("Options")]
     [SerializeField] [TextArea(10, 20)] private string inputBoard;
@@ -35,14 +24,15 @@ public class MinesweepAI : MonoBehaviour
     [SerializeField] private MinesweepBoard board;
     [SerializeField] private MineManagerSweep manager;
     
-    private List<List<constraint>> cons = new List<List<constraint>>();
+    private List<List<MineConstraint>> cons = new List<List<MineConstraint>>();
     private List<List<char>> playerVal;
     private List<Vector2Int> borderCells;
     private Dictionary<Vector2Int, Vector2Int> par;
     private List<List<Vector2Int>> estimates;
-    private List<mineSweepMove> moves;
+    private HashSet<mineSweepMove> moves;
 
     private static string num = ".123456789"; //opened cell, not bomb/flags
+    public bool firstTime;
     private int row, col;
 
     private Dictionary<char, int> valInt = new Dictionary<char, int>() {
@@ -80,20 +70,20 @@ public class MinesweepAI : MonoBehaviour
 
     private void FindMoves()
     {
-        moves = new List<mineSweepMove>();
+        moves = new HashSet<mineSweepMove>();
 
         for (int i = 0; i < row; i++)
         {
             for (int j = 0; j < col; j++)
             {
-                HashSet<Vector2Int> first = cons[i][j].tiles;
-                int num1 = cons[i][j].num;
+                HashSet<Vector2Int> first = cons[i][j].bombCells;
+                int num1 = cons[i][j].bombCount;
 
                 if (!num.Contains(playerVal[i][j])) {continue;}
 
                 //single constraint
                 if (first.Count == 0) {continue;}
-                if (first.Count == num1) //all marked neighbor baby!
+                else if (first.Count == num1) //all marked neighbor baby!
                 {
                     foreach(var pos in first)
                     {
@@ -101,9 +91,8 @@ public class MinesweepAI : MonoBehaviour
                     }
                     continue;
                 }
-                if (num1 == 0) //all free neighbor baby!
+                else if (num1 == 0) //all free neighbor baby!
                 {
-                    Debug.Log("All free : " + i.ToString() + " " + j.ToString() + " " + num1.ToString());
                     foreach(var pos in first)
                     {
                         moves.Add(new mineSweepMove(pos, 0));
@@ -112,7 +101,8 @@ public class MinesweepAI : MonoBehaviour
                 }
 
                 //double constraints -> bug-proned
-                /*for (int m = -2; m <= 2; m++)
+                //Debug.Log("Double baby!");
+                for (int m = -2; m <= 2; m++)
                 {
                     for (int n = -2; n <= 2; n++)
                     {
@@ -120,9 +110,10 @@ public class MinesweepAI : MonoBehaviour
 
                         if (m == 0 && n == 0) {continue;}
                         if (newX < 0 || newY < 0 || newX >= row || newY >= col) {continue;}
+                        if (!num.Contains(playerVal[newX][newY])) {continue;}
 
-                        HashSet<Vector2Int> sec = cons[newX][newY].tiles;
-                        int num2 = cons[newX][newY].num;
+                        HashSet<Vector2Int> sec = cons[newX][newY].bombCells;
+                        int num2 = cons[newX][newY].bombCount;
 
                         HashSet<Vector2Int> sub;
                         if (sec.IsSubsetOf(first)) //first contains sec
@@ -168,13 +159,15 @@ public class MinesweepAI : MonoBehaviour
                             }
                         }
                     }
-                }*/
+                }
             }
         }
 
         if (moves.Count == 0) //guessing time...
         {
-            Debug.Log("rand1");
+            if (firstTime) {firstTime = false;}
+            //else {return;}
+
             List<mineSweepMove> empty = new List<mineSweepMove>();
             for (int i = 0; i < row; i++)
             {
@@ -198,14 +191,14 @@ public class MinesweepAI : MonoBehaviour
         row = board.height; col = board.width;
 
         playerVal = new List<List<char>>(board.playerVal); //copy some value bruh
-        cons = new List<List<constraint>>();
+        cons = new List<List<MineConstraint>>();
 
         for (int i = 0; i < row; i++)
         {
-            cons.Add(new List<constraint>());
+            cons.Add(new List<MineConstraint>());
             for (int j = 0; j < col; j++)
             {
-                constraint x = new constraint(); x.Star();
+                MineConstraint x = new MineConstraint(); x.Initialize();
                 cons[i].Add(x);
             }
         }
@@ -217,13 +210,12 @@ public class MinesweepAI : MonoBehaviour
         {
             for (int j = 0; j < col; j++)
             {
-                char play = playerVal[i][j];                
+                char play = playerVal[i][j];    
+                cons[i][j].Initialize();            
 
                 if (num.Contains(play)) //number -> clues!
                 {
-                    //Debug.LogWarning(new Vector2Int(i, j) + " " + cons[i][j].num.ToString() + " " + valInt[play].ToString());
-
-                    cons[i][j] = new constraint(valInt[play]);
+                    cons[i][j].bombCount = valInt[play];
                     for (int m = -1; m <= 1; m++)
                     {
                         for (int n = -1; n <= 1; n++)
@@ -238,13 +230,42 @@ public class MinesweepAI : MonoBehaviour
 
                             if (con == ' ') //empty
                             {
-                                cons[i][j].AddTile(pos);
+                                cons[i][j].bombCells.Add(pos);
+                            }
+                            else if (con == 'F') //flagged -> decrease count
+                            {
+                                cons[i][j].bombCount--;
                             }
                         }
                     }
                 }
             }
         }
+    }
+
+    public void PrintCell(Vector2Int pos)
+    {
+        //Debug.Log(cons[pos.x][pos.y].bombCells.Count + " " + );
+        string outp = "";
+        outp += "Bombs : " + cons[pos.x][pos.y].bombCount.ToString() + "\n";
+
+        foreach(var bomb in cons[pos.x][pos.y].bombCells)
+        {
+            outp += bomb.ToString() + "\n";
+        }
+        outp += "---------------------------------------------------\n";
+
+        HashSet<Vector2Int> first = new HashSet<Vector2Int>(cons[pos.x][pos.y].bombCells);
+        int num1 = cons[pos.x][pos.y].bombCount;
+
+        if (!num.Contains(playerVal[pos.x][pos.y])) { Debug.Log("haha! jokes on you"); return;}
+
+        //single constraint
+        if (first.Count == num1) //all marked neighbor baby!
+        {
+            outp += "Found!";
+        }
+        //Debug.Log(outp);
     }
 
     /*

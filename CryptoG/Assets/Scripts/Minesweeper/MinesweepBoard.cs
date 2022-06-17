@@ -22,7 +22,7 @@ public class MinesweepBoard : MonoBehaviour
     private List<List<int>> realVal;
     private List<List<int>> indicatorVal;
     public int height, width;
-    private int curNumBomb = 0;
+    [SerializeField] private int curNumBomb = 0;
 
     public string stat = "playing";
     private int[] dy = new int[4] {+1, 0, -1, 0};
@@ -176,7 +176,7 @@ public class MinesweepBoard : MonoBehaviour
         }
         else if (type == 1) //right click -> only to set/unset flag
         {
-            if (player == ' ' && numBombs > 0) //flagging
+            if (player == ' ' && curNumBomb > 0) //flagging
             {
                 playerVal[pos.x][pos.y] = 'F';
                 cells[pos.x][pos.y].SetText("F"); 
@@ -195,12 +195,11 @@ public class MinesweepBoard : MonoBehaviour
         Debug.Log("win!"); stat = "end";
     }
 
-    public void ApplyMove(List<mineSweepMove> moves)
+    public void ApplyMove(HashSet<mineSweepMove> moves)
     {
         foreach(var move in moves)
         {
             ProcessClick(move.type, move.pos);
-            
         }
     }
     #endregion

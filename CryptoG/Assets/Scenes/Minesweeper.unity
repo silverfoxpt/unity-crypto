@@ -284,9 +284,10 @@ MonoBehaviour:
   inputBoard: "F21112  \n12F22F  \n1222F3  \n1F2222  \n322F11  \nF21122  \nF2..1F3
     \n221.123 "
   useCustomBoard: 1
-  delay: 1
+  delay: 0.1
   board: {fileID: 1317184447}
   manager: {fileID: 624377477}
+  firstTime: 0
 --- !u!1 &1317184445
 GameObject:
   m_ObjectHideFlags: 0
@@ -338,6 +339,7 @@ MonoBehaviour:
   numBombs: 40
   height: 0
   width: 0
+  curNumBomb: 0
   stat: playing
 --- !u!1 &1683971990
 GameObject:

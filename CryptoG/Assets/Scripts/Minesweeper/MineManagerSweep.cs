@@ -15,6 +15,6 @@ public class MineManagerSweep : MonoBehaviour
     public void RefreshBoard(bool newBoard)
     {
         board.InitializeBoard(newBoard);
-        if (runAI) { StartCoroutine(aiMine.SolveMinesweep());} 
+        if (runAI) { aiMine.firstTime = true; StartCoroutine(aiMine.SolveMinesweep());} 
     }
 }
