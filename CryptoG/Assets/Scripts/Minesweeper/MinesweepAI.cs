@@ -17,7 +17,7 @@ public class MinesweepAI : MonoBehaviour
 
     [Header("Options")]
     [SerializeField] [TextArea(10, 20)] private string inputBoard;
-    [SerializeField] private bool useCustomBoard = true;
+    //[SerializeField] private bool useCustomBoard = true;
     [SerializeField] private float delay = 0.1f;
 
     [Header("References")]

@@ -284,7 +284,7 @@ MonoBehaviour:
   inputBoard: "F21112  \n12F22F  \n1222F3  \n1F2222  \n322F11  \nF21122  \nF2..1F3
     \n221.123 "
   useCustomBoard: 1
-  delay: 0.1
+  delay: 0
   board: {fileID: 1317184447}
   manager: {fileID: 624377477}
   firstTime: 0
@@ -333,7 +333,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cellPref: {fileID: 1908935522904401619, guid: 0b96cb11d7977e04ab0104837a77cd05, type: 3}
-  size: {x: 20, y: 20}
+  size: {x: 16, y: 16}
   squareSize: 0.4
   spacing: 0.02
   numBombs: 40
