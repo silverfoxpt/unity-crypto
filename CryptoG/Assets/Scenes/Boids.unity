@@ -174,7 +174,7 @@ MonoBehaviour:
   maxForce: 3
   cohesionPercent: 10
   seperationPercent: 3
-  alignmentPercent: 12.5
+  alignmentPercent: 11
   spreadOut: 0
   obstacles:
   - {fileID: 1339323017}
