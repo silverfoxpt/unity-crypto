@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Accessibility;
 using UnityEngine.Events;
 
 public class MineClick : MonoBehaviour, IPointerDownHandler
