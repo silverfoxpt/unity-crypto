@@ -251,11 +251,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 50e53c5bfbbe9654c99e871f015f6d03, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  size: {x: 2, y: 2}
+  row: 5
+  col: 5
   massPoint: {fileID: 8681641925501207828, guid: e0d0d840ab1e03d41840a779c88e9558, type: 3}
   mass: 1
-  space: 2
-  dampingFactor: 0.001
-  stiffness: 0.001
+  space: 0.4
+  dampingFactor: 0.0005
+  stiffness: 0.05
   gravitationalConstant: 0.0005
   deltaTime: 0.05
   lowerBound: -4.5

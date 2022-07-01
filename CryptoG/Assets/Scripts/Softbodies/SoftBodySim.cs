@@ -13,6 +13,11 @@ public class SoftBodySim : MonoBehaviour
         public spring(Masspoint a, Masspoint b, float rest) { pa = a; pb = b; restLength = rest;}
     }
 
+    [Header("Generation")]
+    [SerializeField] private Vector2 size = new Vector2(1.5f, 1.5f);
+    [SerializeField] private int row = 5;
+    [SerializeField] private int col = 5;
+
     [Header("Points")]
     [SerializeField] private GameObject massPoint;
     [SerializeField] private float mass = 1f;
@@ -28,23 +33,81 @@ public class SoftBodySim : MonoBehaviour
     [SerializeField] private float lowerBound = -4.5f;
 
     private List<Masspoint> masses;
+    private List<List<Masspoint>> doubleMass;
     private List<spring> springs;
+
+    private float rowSpace, colSpace;
 
     void Start()
     {
+        CreateAllPoints();
+        AddSprings();
+    }
+
+    private void AddSprings()
+    {
         springs = new List<spring>();
+        float diagonal = Mathf.Sqrt(2 * space * space);
+
+        for (int i = 0; i < row; i++)
+        {
+            for (int j = 0; j < col; j++)
+            {
+                if (j != 0)
+                {
+                    var new1 = new spring(doubleMass[i][j], doubleMass[i][j-1], space); //left
+                    springs.Add(new1);
+                    if (i != row-1)
+                    {
+                        var new2 = new spring(doubleMass[i][j], doubleMass[i+1][j-1], diagonal); //bottom left
+                        springs.Add(new2);
+                    }
+                }
+
+                if (j != col-1)
+                {
+                    var new1 = new spring(doubleMass[i][j], doubleMass[i][j+1], space); //right
+                    springs.Add(new1);
+                    if (i != row-1)
+                    {
+                        var new2 = new spring(doubleMass[i][j], doubleMass[i+1][j+1], diagonal); //bottom right
+                        springs.Add(new2);
+                    }
+                }
+
+                if (i != row-1)
+                {
+                    var new1 = new spring(doubleMass[i][j], doubleMass[i+1][j], space); //down
+                    springs.Add(new1);
+                }
+            }
+        }
+    }
+
+    private void CreateAllPoints()
+    {
         masses = new List<Masspoint>();
+        doubleMass = new List<List<Masspoint>>();
 
-        /*//test
-        Masspoint a = Instantiate(massPoint, new Vector2(0, 0), Quaternion.identity, transform).GetComponent<Masspoint>();
-        Masspoint b = Instantiate(massPoint, new Vector2(0, -1), Quaternion.identity, transform).GetComponent<Masspoint>();
-        a.mass = 1; b.mass = 1;
+        rowSpace = size.y / row;
+        colSpace = size.x / col;
 
-        springs.Add(new spring(a, b, space));
-        masses.Add(a); masses.Add(b);
+        float startX = -size.x/2f, startY = size.y/2f;
 
-        b.velocity.x += 0.1f;
-        a.velocity.x += -0.1f;*/
+        for (int i = 0; i < row; i++)
+        {
+            doubleMass.Add(new List<Masspoint>());
+            for (int j = 0; j < col; j++)
+            {
+                Masspoint newMass = Instantiate(massPoint, new Vector2(startX, startY), Quaternion.identity, transform).GetComponent<Masspoint>();
+                masses.Add(newMass); doubleMass[i].Add(newMass);
+                newMass.mass = mass;
+
+                startX += colSpace;
+            }
+            startY += rowSpace;
+            startX = -size.x / 2f;
+        }
     }
 
     void Update()
@@ -58,13 +121,18 @@ public class SoftBodySim : MonoBehaviour
 
         //apply
         ApplyForce();
+
+        //spring line
+        foreach(var sp in springs)
+        {
+            Debug.DrawLine(sp.pa.pos, sp.pb.pos, Color.green, Time.deltaTime);
+        }
     }
 
     private void UpdateGravity()
     {
         for (int i = 0; i < masses.Count; i++)
         {
-            //if (i == 0) {continue;} //test
             masses[i].force.y += -(gravitationalConstant * masses[i].mass);
         }
     }
@@ -73,6 +141,8 @@ public class SoftBodySim : MonoBehaviour
     {
         foreach(var p in masses)
         {
+            if (p.mass == 0) {continue;}
+
             p.acceleration = p.force / p.mass; //reset acceleration completely
             p.velocity += p.acceleration; 
 
