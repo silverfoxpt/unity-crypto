@@ -49,6 +49,7 @@ public class PenController : MonoBehaviour
         {
             Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             Vector2Int pos = canvasInfo.PosToImagePos(mousePos);
+            //Debug.Log(pos);
 
             //drawBoard.SetPixelDirect(pos); //test
             //compute shader

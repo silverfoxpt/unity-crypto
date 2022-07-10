@@ -1,0 +1,29 @@
+// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel ApplyTex
+
+struct blockInfo
+{
+    int id;
+    float lifetime;
+    float velocity;
+    float4 col;
+    bool updated;
+};
+
+RWTexture2D<float4> rend;
+RWStructuredBuffer<blockInfo> blocks;
+
+int sizeX, sizeY;
+
+int ToOneDi(int i, int j)
+{
+    int newX = sizeY - j, newY = sizeX - i;
+    return (sizeX * newX + (newY + 1));
+}
+
+[numthreads(8,8,1)]
+void ApplyTex (uint3 id : SV_DispatchThreadID)
+{
+    int idx = ToOneDi(id.x, id.y);
+    rend[id.xy] = blocks[idx].col;
+}

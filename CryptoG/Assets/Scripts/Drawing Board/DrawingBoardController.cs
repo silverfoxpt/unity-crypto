@@ -65,4 +65,6 @@ public class DrawingBoardController : MonoBehaviour
         if (pos == UtilityFunc.nullVecInt) {return new Color(0f, 0f, 0f, 0f);}
         return imageTex.GetPixel(pos.x, pos.y);
     }
+
+    public void ApplyColor() {imageTex.Apply();}
 }

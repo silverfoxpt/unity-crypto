@@ -18,6 +18,7 @@ public class CanvasInfoGetter : MonoBehaviour
 
     private void Awake()
     {
+        /* REMEMBER TO SET CANVAS HEIGHT AND WIDTH BEFORE CHECKING FOR ERROR*/
         canvasWidth = canvas.GetComponent<CanvasScaler>().referenceResolution.x;
         canvasHeight = canvas.GetComponent<CanvasScaler>().referenceResolution.y;
 

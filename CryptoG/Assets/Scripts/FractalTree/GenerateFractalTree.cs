@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class GenerateFractalTree : MonoBehaviour
 {
@@ -23,6 +24,7 @@ public class GenerateFractalTree : MonoBehaviour
 
     [Header("References")]
     [SerializeField] private GameObject linePref;
+    [SerializeField] private GameObject pointPref;
 
     [Header("Line options")]
     [SerializeField] private float lineWidth = 0.025f;
@@ -36,23 +38,26 @@ public class GenerateFractalTree : MonoBehaviour
     [SerializeField] private int depth = 5;
     [SerializeField] private float turnAngle = 30f;
 
+    [Header("Other")]
+    [SerializeField] private float delay = 0.5f;
+
     private List<turtle> turtles;
     private string curFracString;
 
     void Start()
     {
-        GenerateTree();
+        StartCoroutine(GenerateTree());
     }
 
-    private Vector2 RotateVector(Vector2 inp, int sign)
+    private Vector2 RotateVector(Vector2 inp, float an)
     {
-        float angle = turnAngle * Mathf.Deg2Rad * sign;
+        float angle = an * Mathf.Deg2Rad;
 
         return new Vector2(Mathf.Cos(angle) * inp.x - Mathf.Sin(angle) * inp.y,
                            Mathf.Sin(angle) * inp.x + Mathf.Cos(angle) * inp.y);
     }
 
-    private void GenerateTree()
+    IEnumerator GenerateTree()
     {
         turtles = new List<turtle>();
 
@@ -71,15 +76,20 @@ public class GenerateFractalTree : MonoBehaviour
                 {
                     Vector2 newPos = cur.pos + cur.dir * branchLength;
                     CreateNewLine(cur.pos, newPos);
+
+                    //Instantiate(pointPref, cur.pos, Quaternion.identity, transform);
+                    //Instantiate(pointPref, newPos, Quaternion.identity, transform);
+
+                    yield return new WaitForSeconds(delay);
                     cur.pos = newPos;
                 }
                 else if (c == '+')
                 {
-                    cur.dir = RotateVector(cur.dir, -1);
+                    cur.dir = RotateVector(cur.dir, 360f - turnAngle);
                 }
                 else if (c == '-' || c == '−')
                 {
-                    cur.dir = RotateVector(cur.dir, 1);
+                    cur.dir = RotateVector(cur.dir, turnAngle);
                 }
                 else if (c == '[')
                 {
@@ -93,11 +103,26 @@ public class GenerateFractalTree : MonoBehaviour
             }
 
             //update
-            foreach (var rule in rules)
+            string newString = "";
+            for (int j = 0; j < curFracString.Length; j++)
             {
-                curFracString = curFracString.Replace(rule.root, rule.apply);
+                char c = curFracString[j];
+
+                bool found = false;
+                foreach(var rule in rules)
+                {
+                    if (c == rule.root[0])
+                    {
+                        newString += rule.apply; 
+                        found = true; break;
+                    }
+                }
+                if (!found) {newString += c;}
             }
+            curFracString = newString;
+            
         }
+        //Debug.Log(curFracString.Count(f => f == 'A'));
     }
 
     private void CreateNewLine(Vector2 start, Vector2 end)
