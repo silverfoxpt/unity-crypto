@@ -47,20 +47,19 @@ public class BoxWorldController : MonoBehaviour
     {
         blocks = new blockInfo[size.x * size.y];
 
-        for (int i = 0; i < size.x; i++)
+        for (int j = 0; j < size.y; j++)
         {
-            for (int j = 0; j < size.y; j++)
+            for (int i = 0; i < size.x; i++)
             {
-                int toArr = ToOneDi(i, j); Debug.Log(toArr);
+                int toArr = ToOneDi(i, j); //Debug.Log(toArr);
 
                 blockInfo newBlock = new blockInfo(); 
-                newBlock.id = currentDrawID;
+                newBlock.id = -1; //air
                 newBlock.lifeTime = int.MaxValue;
                 newBlock.col = board.board.originalColor;
                 newBlock.updated = 0;
 
                 blocks[toArr] = newBlock;
-                //
             }
         }
     }
@@ -98,7 +97,7 @@ public class BoxWorldController : MonoBehaviour
         applyTexComp.SetInt("sizeY", size.y);
 
         applyTexComp.SetTexture(kernelIdx, "rend", currend);
-        applyTexComp.Dispatch(kernelIdx, size.x / 8, size.y / 8, 1); //buggy?
+        applyTexComp.Dispatch(kernelIdx, size.x / 16, size.y / 16, 1); //buggy?
 
         applyBuffer.Dispose();
     }
@@ -115,7 +114,7 @@ public class BoxWorldController : MonoBehaviour
             Color cur = new Color();
             foreach (var rul in colors)
             {
-                if (rul.id == currentDrawID) {cur = rul.color; break;}
+                if (rul.id == currentDrawID) { cur = rul.color; break; }
             }
             
             Vector2Int pos = board.canvasInfo.PosToImagePos(Camera.main.ScreenToWorldPoint(Input.mousePosition));
@@ -125,7 +124,9 @@ public class BoxWorldController : MonoBehaviour
             {
                 for (int j = pos.y - penSize/2; j <= pos.y + penSize/2; j++)
                 {
-                    int toArr = ToOneDi(i, j);
+                    int toArr = ToOneDi(i, j); //Debug.Log(toArr);
+                    if (toArr < 0 || toArr >= size.x * size.y) {continue;} //skip
+
                     if (blocks[toArr].id == -1) //air
                     {
                         board.board.SetPixelDirect(new Vector2Int(i, j), cur, false);
@@ -148,6 +149,6 @@ public class BoxWorldController : MonoBehaviour
     private int ToOneDi(int i, int j)
     {
         int newX = size.y - 1 - j, newY = i;
-        return (size.x * newX + (newY + 1));
+        return (size.x * newX + (newY));
     }
 }

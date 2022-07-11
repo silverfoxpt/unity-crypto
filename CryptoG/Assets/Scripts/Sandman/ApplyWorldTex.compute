@@ -1,5 +1,7 @@
 // Each #kernel tells which function to compile; you can have many kernels
 #pragma kernel ApplyTex
+#define AIR -1
+#define SAND 0
 
 struct blockInfo
 {
@@ -17,11 +19,11 @@ int sizeX, sizeY;
 
 int ToOneDi(int i, int j)
 {
-    int newX = sizeY - j, newY = sizeX - i;
-    return (sizeX * newX + (newY + 1));
+    int newX = sizeY - 1 - j, newY = i;
+    return (sizeX * newX + (newY));
 }
 
-[numthreads(8,8,1)]
+[numthreads(16,16,1)]
 void ApplyTex (uint3 id : SV_DispatchThreadID)
 {
     int idx = ToOneDi(id.x, id.y);
