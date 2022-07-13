@@ -1,15 +1,13 @@
 // Each #kernel tells which function to compile; you can have many kernels
 #pragma kernel ApplyTex
-#define AIR -1
-#define SAND 0
 
 struct blockInfo
 {
     int id;
-    float lifetime;
+    int lifetime;
     float velocity;
     float4 col;
-    bool updated;
+    int updated;
 };
 
 RWTexture2D<float4> rend;
@@ -28,4 +26,6 @@ void ApplyTex (uint3 id : SV_DispatchThreadID)
 {
     int idx = ToOneDi(id.x, id.y);
     rend[id.xy] = blocks[idx].col;
+
+    blocks[idx].updated = 0; //reset
 }

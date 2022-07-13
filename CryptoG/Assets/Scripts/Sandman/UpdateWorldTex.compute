@@ -1,14 +1,68 @@
 // Each #kernel tells which function to compile; you can have many kernels
-#pragma kernel CSMain
+#pragma kernel UpTex
+#define AIR -1
+#define SAND 0
 
-// Create a RenderTexture with enableRandomWrite flag and set it
-// with cs.SetTexture
-RWTexture2D<float4> Result;
+struct blockInfo
+{
+    int id;
+    int lifeTime;
+    float velocity;
+    float4 col;
+    int updated;
+};
+
+RWStructuredBuffer<blockInfo> readBlock, writeBlock;
+int sizeX, sizeY;
+
+int ToOneDi(int i, int j)
+{
+    int newX = sizeY - 1 - j, newY = i;
+    return (sizeX * newX + (newY));
+}
 
 [numthreads(8,8,1)]
-void CSMain (uint3 id : SV_DispatchThreadID)
+void UpTex (uint3 id : SV_DispatchThreadID)
 {
-    // TODO: insert actual code here!
+    int cur = ToOneDi(id.x, id.y);
+    blockInfo inf = readBlock[cur];
 
-    Result[id.xy] = float4(id.x & id.y, (id.x & 15)/15.0, (id.y & 15)/15.0, 0.0);
+    if (inf.updated == 1) {return; } //updated then skip
+
+    inf.updated = 1;
+    writeBlock[cur] = inf; //preemptive sets
+
+    if (id.y == 0 || id.x == 0 || id.x == sizeX - 1) {return;} //base level
+
+    if (inf.id == SAND)
+    {
+        int left = ToOneDi(id.x-1, id.y-1);
+        int mid = ToOneDi(id.x, id.y-1);
+        int right = ToOneDi(id.x+1, id.y-1);
+
+        blockInfo leftBlock = readBlock[left];
+        blockInfo midBlock = readBlock[mid];
+        blockInfo rightBlock = readBlock[right];
+
+        //checking -> double check - buggy - not fixed
+        if (midBlock.id == AIR)
+        {
+            writeBlock[mid] = inf;
+            writeBlock[cur] = midBlock;
+        }
+        else if (leftBlock.id == AIR)
+        {
+            writeBlock[left] = inf;
+            writeBlock[cur] = leftBlock;
+        }
+        else if (rightBlock.id == AIR)
+        {
+            writeBlock[right] = inf;
+            writeBlock[cur] = rightBlock;
+        }
+        else
+        {
+            writeBlock[cur] = inf;
+        }
+    }
 }

@@ -227,15 +227,19 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 9143821279776059134, guid: fd691794e3384dc41975881258aed8d3, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 512
+      value: 256
+      objectReference: {fileID: 0}
+    - target: {fileID: 9143821279776059134, guid: fd691794e3384dc41975881258aed8d3, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 256
       objectReference: {fileID: 0}
     - target: {fileID: 9143821279830808754, guid: fd691794e3384dc41975881258aed8d3, type: 3}
       propertyPath: size.x
-      value: 512
+      value: 256
       objectReference: {fileID: 0}
     - target: {fileID: 9143821279830808754, guid: fd691794e3384dc41975881258aed8d3, type: 3}
       propertyPath: size.y
-      value: 512
+      value: 256
       objectReference: {fileID: 0}
     - target: {fileID: 9143821279830808754, guid: fd691794e3384dc41975881258aed8d3, type: 3}
       propertyPath: multiplier
@@ -340,10 +344,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   board: {fileID: 1569443149}
-  size: {x: 512, y: 512}
+  size: {x: 256, y: 256}
   currentDrawID: 0
   penSize: 10
   colors:
   - id: 0
     color: {r: 1, g: 0.8107188, b: 0, a: 1}
   applyTexComp: {fileID: 7200000, guid: 480178458e7922c4099603b142b5c00a, type: 3}
+  updateComp: {fileID: 7200000, guid: 6be8d10a2e4b9d94d920e0c19dd460d0, type: 3}
+  slowUp: 1
+  delay: 0.1
+  debug: 0
+  debugPoint: {x: 0, y: 0}
