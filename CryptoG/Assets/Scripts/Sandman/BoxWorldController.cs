@@ -31,6 +31,10 @@ public class BoxWorldController : MonoBehaviour
     [Space(10)] [Header("Draw elements")]
     [SerializeField] private List<blockRule> colors;
 
+    [Space(10)] 
+    [Header("Compute Shader")]
+    [SerializeField] private int breakRange = 4;
+
     [Space(10)]
     [Header("References")]
     [SerializeField] private ComputeShader applyTexComp;
@@ -47,11 +51,14 @@ public class BoxWorldController : MonoBehaviour
 
     private blockInfo[] blocks, writeBlocks;
 
+    private Vector2Int[,] spreader;
+
     #region startMethods
     void Start()
     {
         InitializePlayField();    
         InitializeDataArray();
+        InitalizeBreakArray();
 
         //debug - place some test sand
         //PlaceTestBlocks();
@@ -60,6 +67,14 @@ public class BoxWorldController : MonoBehaviour
         {
             StartCoroutine(SlowUpdate());
         }
+    }
+
+    private void InitalizeBreakArray()
+    {
+        int divider = size.x * size.y / (breakRange * breakRange);
+        spreader = new Vector2Int[breakRange * breakRange, divider];
+
+        
     }
 
     private void PlaceTestBlocks()
