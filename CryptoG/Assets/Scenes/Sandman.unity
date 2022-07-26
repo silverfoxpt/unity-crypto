@@ -350,9 +350,10 @@ MonoBehaviour:
   colors:
   - id: 0
     color: {r: 1, g: 0.8107188, b: 0, a: 1}
+  breakRange: 4
   applyTexComp: {fileID: 7200000, guid: 480178458e7922c4099603b142b5c00a, type: 3}
   updateComp: {fileID: 7200000, guid: 6be8d10a2e4b9d94d920e0c19dd460d0, type: 3}
-  slowUp: 1
+  slowUp: 0
   delay: 0.1
   debug: 0
   debugPoint: {x: 0, y: 0}

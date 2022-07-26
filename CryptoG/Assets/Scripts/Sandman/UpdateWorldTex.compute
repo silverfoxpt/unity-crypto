@@ -12,8 +12,16 @@ struct blockInfo
     int updated;
 };
 
+struct cellInf
+{
+    int xPos;
+    int yPos;
+};
+
 RWStructuredBuffer<blockInfo> readBlock, writeBlock;
 int sizeX, sizeY;
+
+RWStructuredBuffer<cellInf> location;
 
 int ToOneDi(int i, int j)
 {
@@ -21,24 +29,45 @@ int ToOneDi(int i, int j)
     return (sizeX * newX + (newY));
 }
 
-[numthreads(8,8,1)]
+int CheckBlockStatus(in blockInfo block) //not modifying anything
+{
+    int oldVal = -1;
+    //InterlockedCompareExchange(block.updated, -1, block.updated, oldVal);
+
+    return oldVal;
+}
+
+int SetBlockUpdate(in blockInfo block, in blockInfo setBlock) //modify and lock
+{
+    int oldVal = CheckBlockStatus(block);
+
+    if (oldVal == 1) {return oldVal;} //already updated
+    //InterlockedCompareExchange(block.updated, 0, 1, 101); //set original to random crap
+
+    setBlock = block;
+}
+
+[numthreads(16,1,1)]
 void UpTex (uint3 id : SV_DispatchThreadID)
 {
-    int cur = ToOneDi(id.x, id.y);
+    int2 pos = int2(location[id.x].xPos, location[id.x].yPos);
+    int cur = ToOneDi(pos.x, pos.y);
+
     blockInfo inf = readBlock[cur];
 
-    if (inf.updated == 1) {return; } //updated then skip
+    if (pos.y == 0 || pos.x == 0 || pos.x == sizeX - 1) {return;} //base level
 
-    inf.updated = 1;
-    writeBlock[cur] = inf; //preemptive sets
-
-    if (id.y == 0 || id.x == 0 || id.x == sizeX - 1) {return;} //base level
-
+    //process block
+    if (inf.id == AIR)
+    {
+        writeBlock[cur] = inf;
+        //SetBlockUpdate(writeBlock[cur], inf);
+    }
     if (inf.id == SAND)
     {
-        int left = ToOneDi(id.x-1, id.y-1);
-        int mid = ToOneDi(id.x, id.y-1);
-        int right = ToOneDi(id.x+1, id.y-1);
+        int left = ToOneDi(pos.x-1, pos.y-1);
+        int mid = ToOneDi(pos.x, pos.y-1);
+        int right = ToOneDi(pos.x+1, pos.y-1);
 
         blockInfo leftBlock = readBlock[left];
         blockInfo midBlock = readBlock[mid];

@@ -22,9 +22,14 @@ public class BoxWorldController : MonoBehaviour
         public int updated;
     }
 
+    struct cellInf
+    {
+        public int xPos, yPos;
+    }
+
     [Header("Drawing board")]
     [SerializeField] private MainBoardController board;
-    [SerializeField] private Vector2Int size;
+    [SerializeField] private Vector2Int size;     
     [SerializeField] private int currentDrawID = 0;
     [SerializeField] private int penSize = 10;
 
@@ -33,7 +38,7 @@ public class BoxWorldController : MonoBehaviour
 
     [Space(10)] 
     [Header("Compute Shader")]
-    [SerializeField] private int breakRange = 4;
+    [SerializeField] private int breakRange = 16;
 
     [Space(10)]
     [Header("References")]
@@ -51,7 +56,7 @@ public class BoxWorldController : MonoBehaviour
 
     private blockInfo[] blocks, writeBlocks;
 
-    private Vector2Int[,] spreader;
+    private cellInf[] spread1, spread2;
 
     #region startMethods
     void Start()
@@ -71,10 +76,21 @@ public class BoxWorldController : MonoBehaviour
 
     private void InitalizeBreakArray()
     {
-        int divider = size.x * size.y / (breakRange * breakRange);
-        spreader = new Vector2Int[breakRange * breakRange, divider];
+        spread1 = new cellInf[size.x * size.y/2];
+        spread2 = new cellInf[size.x * size.y/2];
 
-        
+        int c0 = 0, c1 = 0;
+
+        for (int i = 0; i < size.x; i++)
+        {
+            for (int j = 0; j < size.y; j++)
+            {
+                cellInf inf = new cellInf(); inf.xPos = i; inf.yPos = j;
+
+                bool first = (i / breakRange) % 2 == 0;
+                if (first) {spread1[c0] = inf; c0++;} else {spread2[c1] = inf; c1++;}
+            }
+        }
     }
 
     private void PlaceTestBlocks()
@@ -160,11 +176,11 @@ public class BoxWorldController : MonoBehaviour
             UpdateAllBlocks();
 
             //update
-            WriteBlockToTex(blocks, board.pen.rend);
+            WriteBlockToTex(writeBlocks, board.pen.rend);
             board.board.SetTexture(board.pen.rend); 
 
-            //double buff boy
-            //Array.Copy(writeBlocks, blocks, size.x * size.y);
+            //double buffer
+            Array.Copy(writeBlocks, blocks, size.x * size.y);
         }
 
         if (debug)
@@ -200,7 +216,11 @@ public class BoxWorldController : MonoBehaviour
     private void UpdateAllBlocks()
     {
         writeBlocks = new blockInfo[size.x * size.y];
+        UpdateHalf(spread1); UpdateHalf(spread2);
+    }
 
+    private void UpdateHalf(cellInf[] curCells)
+    {
         int wholeSize = sizeof(int) * 3 + sizeof(float) * 5;//Debug.Log(wholeSize);        
         ComputeBuffer updateBuffer = new ComputeBuffer(size.x * size.y, wholeSize);
         updateBuffer.SetData(blocks);
@@ -208,19 +228,24 @@ public class BoxWorldController : MonoBehaviour
         ComputeBuffer updateWriteBuffer = new ComputeBuffer(size.x * size.y, wholeSize);
         updateWriteBuffer.SetData(writeBlocks);
 
+        int whole2 = sizeof(int) * 2;
+        ComputeBuffer updatePosBuffer = new ComputeBuffer(size.x * size.y / 2, whole2);
+        updatePosBuffer.SetData(curCells);
+
         int kernelIdx = updateComp.FindKernel("UpTex");
         updateComp.SetBuffer(kernelIdx, "readBlock", updateBuffer);
         updateComp.SetBuffer(kernelIdx, "writeBlock", updateWriteBuffer);
+        updateComp.SetBuffer(kernelIdx, "location", updatePosBuffer);
 
         updateComp.SetInt("sizeX", size.x);
         updateComp.SetInt("sizeY", size.y);
 
-        updateComp.Dispatch(kernelIdx, size.x / 8, size.y / 8, 1); //buggy?
-
-        updateWriteBuffer.GetData(blocks);
+        updateComp.Dispatch(kernelIdx, size.x * size.y / 2 / 16, 1, 1); //buggy?
+        updateWriteBuffer.GetData(writeBlocks);
 
         updateBuffer.Dispose();
         updateWriteBuffer.Dispose();
+        updatePosBuffer.Dispose();
     }
 
     private void CheckColoring()
