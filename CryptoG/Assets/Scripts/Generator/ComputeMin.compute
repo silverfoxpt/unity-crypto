@@ -1,0 +1,43 @@
+// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel Minkowski
+
+struct po
+{
+    int x, y;
+    float4 col;
+};
+
+RWStructuredBuffer<po> pos;
+RWTexture2D<float4> map;
+
+int power;
+int numCells;
+
+float minkowskiDist(int2 a, int2 b)
+{
+    int p = pow(2, power);
+    float dist = pow(pow(abs(a.x - b.x), p) + pow(abs(a.y - b.y), p), 1.0 / p);
+
+    return dist;
+
+    /*float dist = sqrt((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y));
+    return dist;*/
+}
+
+[numthreads(8,8,1)]
+void Minkowski (uint3 id : SV_DispatchThreadID)
+{
+    int min = 200000000; float4 col;
+
+    for (int i = 0; i < numCells; i++)
+    {
+        int d = minkowskiDist(int2(pos[i].x, pos[i].y), id.xy);
+        if (d < min)
+        {
+            min = d;
+            col = pos[i].col;
+        }
+    }
+
+    map[id.xy] = col;
+}
