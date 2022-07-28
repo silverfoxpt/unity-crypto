@@ -334,4 +334,4 @@ MonoBehaviour:
   board: {fileID: 952204822}
   computeMin: {fileID: 7200000, guid: 56a8deff8596d324b8a4f606f1fee14e, type: 3}
   numCells: 20
-  power: 1
+  power: 0
