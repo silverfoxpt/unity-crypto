@@ -82,7 +82,7 @@ public class HuffmanCoding : MonoBehaviour
         }
     }
 
-    private void GenerateStartCells()
+    private void GenerateStartCells()   
     {
         cells = new List<cell>();
         string newS = new string(inputString.ToCharArray().Distinct().ToArray());
