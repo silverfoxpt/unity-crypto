@@ -228,7 +228,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   size: {x: 256, y: 256}
-  numBlock: 30000
+  numBlock: 15000
   multiplier: 3
   board: {fileID: 194392489}
 --- !u!1 &732435977
@@ -247,7 +247,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &732435978
 Transform:
   m_ObjectHideFlags: 0
