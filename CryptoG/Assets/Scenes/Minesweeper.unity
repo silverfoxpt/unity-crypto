@@ -200,6 +200,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f231c4fb786f3946a6b90b886c48677, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_SendPointerHoverToParent: 1
   m_HorizontalAxis: Horizontal
   m_VerticalAxis: Vertical
   m_SubmitButton: Submit
@@ -283,7 +284,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inputBoard: "F21112  \n12F22F  \n1222F3  \n1F2222  \n322F11  \nF21122  \nF2..1F3
     \n221.123 "
-  useCustomBoard: 1
   delay: 0
   board: {fileID: 1317184447}
   manager: {fileID: 624377477}

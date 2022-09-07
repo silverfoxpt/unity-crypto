@@ -304,24 +304,44 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff8d62ba734a9334b9d6eebf7256884e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  upper: '2
+  upper: '8
 
-    4
+    8
 
-    3 1
+    8
 
-    4
+    8
 
-    2'
-  lefter: '1 1 1
+    8
 
-    5
+    8
 
-    3
+    8
 
-    1 1
+    8
 
-    3'
+    8
+
+    8'
+  lefter: '8
+
+    8
+
+    8
+
+    8
+
+    8
+
+    8
+
+    8
+
+    8
+
+    8
+
+    8'
 --- !u!1 &2483476839442681427
 GameObject:
   m_ObjectHideFlags: 0

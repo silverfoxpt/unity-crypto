@@ -34,7 +34,9 @@ public class NonogramSolver : MonoBehaviour
 
     private void TEST_LINESOLVE()
     {
-        
+        InitializeLineSolver(0, 1);
+
+        DebugList(confirmedLines[0]);
     }
 
     private void InitializeConfirmedLines()
@@ -44,9 +46,10 @@ public class NonogramSolver : MonoBehaviour
 
         for (int i = 0; i < boardSize.x; i++)
         {
+            confirmedLines.Add(new List<int>());
             for (int j = 0; j < boardSize.y; j++)
             {
-                confirmedLines[i][j] = -1;
+                confirmedLines[i].Add(-1);
             }
         }
     }
@@ -90,7 +93,7 @@ public class NonogramSolver : MonoBehaviour
         if (dir == 1) //horizontal
         {
             desc = rowList[idx]; 
-            partial = new List<int>(confirmedLines[idx]);
+            partial = new List<int>(confirmedLines[idx]); partial.Insert(0, -1000000000);
         } 
         else //vertical
         {
@@ -102,21 +105,48 @@ public class NonogramSolver : MonoBehaviour
                 partial.Add(confirmedLines[i][idx]);
             }
         }
-        int k = desc.Count;
+        int k = desc.Count; desc.Insert(0, -1000000000);
 
         solved = new int[n+1,k+1];
+        for (int i = 0; i <= n; i++)
+        {
+            for (int j = 0; j <= k; j++)
+            {
+                solved[i,j] = -1;
+            }
+        }
         solved[0, 0] = 1;
 
+        //test
+        //DebugList(desc);
+        //DebugList(partial);
+        //DebugList(newPartial);
+
         //solve
-        SolveLine(n, k);
+        for (int i = 0; i <= n; i++)
+        {
+            for (int j = 0; j <= k; j++)
+            {
+                SolveLine(i, j);
+            }
+        }
+        newPartial.RemoveAt(0); //remove the keepsake
+        partial.RemoveAt(0);
+        desc.RemoveAt(0);
+
+        //Debug.LogWarning(solved[8, 1]);
 
         //reupdate
         for (int i = 0; i < n; i++)
         {
-            newPartial.RemoveAt(0); //remove the keepsake
+            if (partial[i] != -1 || newPartial[i] == 2) {continue;} //skip
             if (dir == 1)
             {
-                
+                confirmedLines[idx][i] = newPartial[i];
+            }
+            else if (dir == 2)
+            {
+                confirmedLines[i][idx] = newPartial[i];
             }
         }
     }
@@ -125,11 +155,10 @@ public class NonogramSolver : MonoBehaviour
     {
         for (int m = i; m > i - desc[j]; m--)
         {
-            if (partial[m] == 1) //if confirmed white, can't place block j
-            {return false;}
+            if (partial[m] == 1) {return false;} //if confirmed white, can't place block j
         }
 
-        if (j > 0 && partial[i - desc[j]] == 0) //not the first block && there isn't a white space to place
+        if (j > 1 && partial[i - desc[j]] == 0) //not the first block && there isn't a white space to place (is black)
         {
             return false;
         }
@@ -146,7 +175,7 @@ public class NonogramSolver : MonoBehaviour
     //white = 1, black = 0;
     private int SolveLine(int i, int j) 
     {
-        int lval = (j > 0) ? 1 : 0;
+        int lval = (j > 1) ? 1 : 0;
 
         if (i < 0 || j < 0) {return 0;}
         if (i == 0 && j == 0) {return 1;}
@@ -155,22 +184,38 @@ public class NonogramSolver : MonoBehaviour
         else
         {
             solved[i,j] = 0;
-            if (SolveLine(i-1, j) > 0 && partial[i] != 0)
+            if (SolveLine(i-1, j) > 0 && partial[i] != 0) //cell not black
             {
                 UpdateCellColor(i, 1); //cell is white
-                solved[i,j] = solved[i, j] + SolveLine(i-1, j);
+                solved[i,j] = solved[i,j] + SolveLine(i-1, j);
             }
             if (SolveLine(i - desc[j] - lval, j-1) > 0 && CanPlaceBlock(i, j))
             {
                 for (int m = i; m > i - desc[j]; m--)
                 {
-                    UpdateCellColor(i, 0);
+                    UpdateCellColor(m, 0); //block is black
                 }
-                solved[i,j] = solved[i, j] + SolveLine(i - desc[j] - lval, j-1);
+                //if (lval == 1) {UpdateCellColor();}
+
+                solved[i,j] = solved[i,j] + SolveLine(i - desc[j] - lval, j-1);
             }
 
-            return solved[i, j];
+            Debug.Log("solved " + i.ToString() + " " + j.ToString() + " : " + solved[i,j].ToString() + " lval = " + lval.ToString());
+            DebugList(newPartial);
+
+            return solved[i,j];
         }
     }
     #endregion
+
+    private void DebugList(List<int> c)
+    {
+        //test
+        string x = "";
+        for (int i = 0; i < c.Count; i++)
+        {
+            x += c[i].ToString() + " ";
+        }
+        Debug.Log(x);
+    }
 }
