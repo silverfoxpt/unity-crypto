@@ -47,7 +47,7 @@ public class NonoBoardController : MonoBehaviour
         var con = newCell.GetComponent<NonoCellController>();
 
         con.SetPosition(pos);
-        con.SetScale(cellScale);
+        con.SetScale(cellScale * .95f); //have some border between cells
 
         cells[idx.x].Add(con);
     }
@@ -55,5 +55,22 @@ public class NonoBoardController : MonoBehaviour
     public Vector2Int GetBoardSize()
     {
         return boardSize;
+    }
+
+    //HARDCODING ALEART!!!!!!!!!!!!!!!!!
+    public void SetCellsFromBoard(List<List<int>> currentBoard)
+    {
+        for (int i = 0; i < boardSize.y; i++)
+        {
+            for (int j = 0; j < boardSize.x; j++)
+            {
+                switch(currentBoard[i][j])
+                {
+                    case -1: cells[i][j].SetColor(Color.gray); break;
+                    case 0: cells[i][j].SetColor(Color.black); break;
+                    case 1: cells[i][j].SetColor(Color.white); break;
+                }
+            }
+        }
     }
 }

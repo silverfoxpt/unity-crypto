@@ -18,4 +18,5 @@ public class NonoCellController : MonoBehaviour
     public void SetPosition(Vector2 pos) {GetComponent<RectTransform>().anchoredPosition = pos;}
 
     public void SetText(string t) {tex.text = t;}
+    public void SetColor(Color col) {image.color = col;}
 }
