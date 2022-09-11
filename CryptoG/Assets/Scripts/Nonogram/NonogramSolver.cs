@@ -144,7 +144,7 @@ public class NonogramSolver : MonoBehaviour
                 SolveLine(i, j);
             }
         }*/
-        SolveLine(n, k);
+        SolveLine(n, k, -100000000, -100000000);
 
         newPartial.RemoveAt(0); //remove the keepsake
         partial.RemoveAt(0);
@@ -170,7 +170,7 @@ public class NonogramSolver : MonoBehaviour
             if (partial[i] == -1 && newPartial[i] != -1 && newPartial[i] != 2) {diff.Add(i);}
         }
 
-        boardController.SetCellsFromBoard(confirmedLines);
+        boardController.SetCellsFromBoard(confirmedLines); 
         return diff;
     }
 
@@ -199,7 +199,7 @@ public class NonogramSolver : MonoBehaviour
     }   
 
     //white = 1, black = 0;
-    private int SolveLine(int i, int j) 
+    private int SolveLine(int i, int j, int pari, int parj) 
     {
         int lval = (j > 1 || (j == 1 && i - desc[j] > 0)) ? 1 : 0; //not the first block OR is the first block and not completely to the left (i - desc[j] > 0)
 
@@ -210,13 +210,16 @@ public class NonogramSolver : MonoBehaviour
         else
         {
             solved[i,j] = 0;
-            if (SolveLine(i-1, j) > 0 && partial[i] != 0) //cell not black
+            if (SolveLine(i-1, j, i, j) > 0 && partial[i] != 0) //cell not black
             {
                 UpdateCellColor(i, 1, j); //cell is white
-                solved[i,j] = solved[i,j] + SolveLine(i-1, j);
+                solved[i,j] = solved[i,j] + SolveLine(i-1, j, i, j);
+                //Debug.LogWarning("Yes " + i.ToString() + " " + j.ToString());
             }
-            if (SolveLine(i - desc[j] - lval, j-1) > 0 && CanPlaceBlock(i, j))
-            {
+
+            if (i == 4 && j == 1) {Debug.LogError(CanPlaceBlock(i, j)); }
+            if (SolveLine(i - desc[j] - lval, j-1, i, j) > 0 && CanPlaceBlock(i, j))
+            {                
                 //color the whole block
                 for (int m = i; m > i - desc[j]; m--)
                 {
@@ -224,10 +227,10 @@ public class NonogramSolver : MonoBehaviour
                 }
                 if (lval == 1) {UpdateCellColor(i - desc[j], 1, j);} //if cell before the (black) block needs to be white (lval = 1), then so be it
 
-                solved[i,j] = solved[i,j] + SolveLine(i - desc[j] - lval, j-1);
+                solved[i,j] = solved[i,j] + SolveLine(i - desc[j] - lval, j-1, i, j);
             }
 
-            Debug.Log("solved " + i.ToString() + " " + j.ToString() + " : " + solved[i,j].ToString() + " lval = " + lval.ToString());
+            Debug.Log("solved " + i.ToString() + " " + j.ToString() + " : " + solved[i,j].ToString() + " lval = " + lval.ToString() + " ; " + pari.ToString() + " " + parj.ToString());
             DebugList(newPartial);
 
             return solved[i,j];
@@ -287,9 +290,10 @@ public class NonogramSolver : MonoBehaviour
 
     private void TEST_LINESOLVE()
     {
-        confirmedLines[1][5] = 0; confirmedLines[2][5] = 1;
+        confirmedLines[1][5] = 0; confirmedLines[2][5] = 1;  
         InitializeLineSolver(5, 2);
         //DebugList(confirmedLines[0]);
+        //boardController.SetCellsFromBoard(confirmedLines);
     }
     #endregion
 }
