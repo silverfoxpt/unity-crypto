@@ -6,14 +6,20 @@ using System.Linq;
 
 public class NonogramSolver : MonoBehaviour
 {
+    struct query
+    {
+        public int idx, orient;
+
+        public query(int i, int o) {idx = i; orient = o;}
+    }
+
     [Header("Input")]
     [SerializeField] [TextArea(10, 20)] private string upper;
     [SerializeField] [TextArea(10, 20)] private string lefter;
 
-
-
     private List<List<int>> colList, rowList;
     private List<List<int>> confirmedLines;
+    private LinkedList<query> lineQueue;
 
     private Vector2Int boardSize;
 
@@ -30,52 +36,51 @@ public class NonogramSolver : MonoBehaviour
         InitializeConfirmedLines();
 
         TEST_LINESOLVE();
+        InitializeBruteSolve();
+        //StartCoroutine(BruteSolve());
     }
 
-    private void TEST_LINESOLVE()
+    #region bruteSolve
+    private void InitializeBruteSolve()
     {
-        InitializeLineSolver(0, 1);
-
-        DebugList(confirmedLines[0]);
-    }
-
-    private void InitializeConfirmedLines()
-    {
-        boardSize = boardController.GetBoardSize();
-        confirmedLines = new List<List<int>>();
-
+        lineQueue = new LinkedList<query>();
         for (int i = 0; i < boardSize.x; i++)
         {
-            confirmedLines.Add(new List<int>());
-            for (int j = 0; j < boardSize.y; j++)
-            {
-                confirmedLines[i].Add(-1);
-            }
+            lineQueue.AddLast(new query(i, 1)); //horizontal
+            lineQueue.AddLast(new query(i, 2)); //vertical
         }
     }
 
-    private void InitializeInputModules()
+    IEnumerator BruteSolve()
     {
-        colList = new List<List<int>>(); rowList = new List<List<int>>();
-
-        //upper first
-        List<string> lines = upper.Split('\n').ToList();
-        foreach(var line in lines)
+        while(lineQueue.Count > 0)
         {
-            List<int> sp = new List<int>();
-            foreach(var x in line.Split(' ')) { sp.Add(int.Parse(x)); }
-            colList.Add(sp);
+            var q = lineQueue.First.Value;
+            List<int> diff = InitializeLineSolver(q.idx, q.orient);
+
+            foreach (var d in diff)
+            {
+                lineQueue.AddLast(new query(d, (q.orient == 1) ? 2 : 1));
+            }
+            lineQueue.RemoveFirst();
+            yield return new WaitForSeconds(0.05f);
         }
 
-        //lefter latter
-        lines = lefter.Split('\n').ToList();
-        foreach(var line in lines)
+        InitializeBruteSolve();
+        while(lineQueue.Count > 0)
         {
-            List<int> sp = new List<int>();
-            foreach(var x in line.Split(' ')) { sp.Add(int.Parse(x)); }
-            rowList.Add(sp);
+            var q = lineQueue.First.Value;
+            List<int> diff = InitializeLineSolver(q.idx, q.orient);
+
+            foreach (var d in diff)
+            {
+                lineQueue.AddLast(new query(d, (q.orient == 1) ? 2 : 1));
+            }
+            lineQueue.RemoveFirst();
+            yield return new WaitForSeconds(0.05f);
         }
     }
+    #endregion
 
     #region lineSolver
     private int[,] solved; //dynamic programming baby!
@@ -84,7 +89,13 @@ public class NonogramSolver : MonoBehaviour
     private List<int> newPartial; //new coloring (to be found, if any)
     private int currentK;
 
-    private void InitializeLineSolver(int idx, int dir)
+    /// <summary>
+    /// Solve a line in puzzle (column/row) and check if any index changed compare to before
+    /// </summary>
+    /// <param name="idx"></param>
+    /// <param name="dir"></param>
+    /// <returns></returns>
+    private List<int> InitializeLineSolver(int idx, int dir)
     {
         //confirmedLines[0][1] = 0; //test
 
@@ -142,6 +153,7 @@ public class NonogramSolver : MonoBehaviour
         //Debug.LogWarning(solved[8, 1]);
 
         //reupdate
+        List<int> diff = new List<int>();
         for (int i = 0; i < n; i++)
         {
             if (partial[i] != -1 || newPartial[i] == 2) {continue;} //skip
@@ -153,9 +165,13 @@ public class NonogramSolver : MonoBehaviour
             {
                 confirmedLines[i][idx] = newPartial[i];
             }
+
+            //check if cell changed
+            if (partial[i] == -1 && newPartial[i] != -1 && newPartial[i] != 2) {diff.Add(i);}
         }
 
         boardController.SetCellsFromBoard(confirmedLines);
+        return diff;
     }
 
     private bool CanPlaceBlock(int i, int j) //cell 1->i, block j
@@ -211,13 +227,37 @@ public class NonogramSolver : MonoBehaviour
                 solved[i,j] = solved[i,j] + SolveLine(i - desc[j] - lval, j-1);
             }
 
-            //Debug.Log("solved " + i.ToString() + " " + j.ToString() + " : " + solved[i,j].ToString() + " lval = " + lval.ToString());
-            //DebugList(newPartial);
+            Debug.Log("solved " + i.ToString() + " " + j.ToString() + " : " + solved[i,j].ToString() + " lval = " + lval.ToString());
+            DebugList(newPartial);
 
             return solved[i,j];
         }
     }
     #endregion
+
+    #region helper & initializer & debug
+    private void InitializeInputModules()
+    {
+        colList = new List<List<int>>(); rowList = new List<List<int>>();
+
+        //upper first
+        List<string> lines = upper.Split('\n').ToList();
+        foreach(var line in lines)
+        {
+            List<int> sp = new List<int>();
+            foreach(var x in line.Split(' ')) { sp.Add(int.Parse(x)); }
+            colList.Add(sp);
+        }
+
+        //lefter latter
+        lines = lefter.Split('\n').ToList();
+        foreach(var line in lines)
+        {
+            List<int> sp = new List<int>();
+            foreach(var x in line.Split(' ')) { sp.Add(int.Parse(x)); }
+            rowList.Add(sp);
+        }
+    }
 
     private void DebugList(List<int> c)
     {
@@ -229,4 +269,27 @@ public class NonogramSolver : MonoBehaviour
         }
         Debug.Log(x);
     }
+
+    private void InitializeConfirmedLines()
+    {
+        boardSize = boardController.GetBoardSize();
+        confirmedLines = new List<List<int>>();
+
+        for (int i = 0; i < boardSize.x; i++)
+        {
+            confirmedLines.Add(new List<int>());
+            for (int j = 0; j < boardSize.y; j++)
+            {
+                confirmedLines[i].Add(-1);
+            }
+        }
+    }
+
+    private void TEST_LINESOLVE()
+    {
+        confirmedLines[1][5] = 0; confirmedLines[2][5] = 1;
+        InitializeLineSolver(5, 2);
+        //DebugList(confirmedLines[0]);
+    }
+    #endregion
 }

@@ -47,7 +47,7 @@ public class NonoBoardController : MonoBehaviour
         var con = newCell.GetComponent<NonoCellController>();
 
         con.SetPosition(pos);
-        con.SetScale(cellScale * .95f); //have some border between cells
+        con.SetScale(cellScale * .93f); //have some border between cells  -HARDCODE ALERT!!!!
 
         cells[idx.x].Add(con);
     }
