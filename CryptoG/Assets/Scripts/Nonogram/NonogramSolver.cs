@@ -17,7 +17,7 @@ public class NonogramSolver : MonoBehaviour
     [SerializeField] [TextArea(10, 20)] private string upper;
     [SerializeField] [TextArea(10, 20)] private string lefter;
 
-    private List<List<int>> colList, rowList;
+    public List<List<int>> colList, rowList;
     private List<List<int>> confirmedLines;
     private LinkedList<query> lineQueue;
 
@@ -34,6 +34,7 @@ public class NonogramSolver : MonoBehaviour
     {
         InitializeInputModules();
         InitializeConfirmedLines();
+        boardController.GenerateHintRows();
 
         //TEST_LINESOLVE();
         InitializeBruteSolve();
