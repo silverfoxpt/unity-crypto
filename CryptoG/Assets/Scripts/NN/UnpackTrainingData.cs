@@ -18,7 +18,7 @@ public class UnpackTrainingData : MonoBehaviour
 
     private void Start()
     {
-        if (forceDestroyPreviousSave)
+        /*if (forceDestroyPreviousSave)
         {
             var data = FileReaderMNIST.LoadImagesAndLables(
                 "./Assets/Train NN/train-labels-idx1-ubyte.gz",
@@ -37,7 +37,7 @@ public class UnpackTrainingData : MonoBehaviour
             tests = dat.tests;
 
             Debug.Log(tests.Count);
-        }
+        }*/
     }
 
     public void SaveData(object objectToSave, string fileName)
