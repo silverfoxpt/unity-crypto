@@ -29,10 +29,12 @@ public class GraphCanvasController : MonoBehaviour
         text.fontSize = font;     
 
         rec.anchoredPosition = new Vector2(0f, 0f);
+        
         rec.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Bottom, 0, 0);
         rec.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Top, 0, 0);
         rec.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Left, 0, 0);
         rec.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Right, 0, 0);
+
         rec.anchorMin = new Vector2(0f, 0f);
         rec.anchorMax = new Vector2(1f, 1f);
     }

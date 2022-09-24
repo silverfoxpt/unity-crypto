@@ -14,11 +14,11 @@ public class NeuralNetwork
 {
     public List<LayerNN> layers;
 
-    private int numHiddenLayer;
-    private int numNodeOfHiddenLayer;
-    private int numNodeOfOutputLayer;
-    private int numNodeOfInputLayer;
-    private int numTotalLayer;
+    public int numHiddenLayer;
+    public int numNodeOfHiddenLayer;
+    public int numNodeOfOutputLayer;
+    public int numNodeOfInputLayer;
+    public int numTotalLayer;
 
     public NeuralNetwork(int hidden, int hiddenNodes, int outputNodes, int inputNodes)
     {

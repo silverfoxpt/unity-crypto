@@ -8,6 +8,7 @@ public class GraphTestNN : MonoBehaviour
     [Header("References")]
     [SerializeField] private NNPointPlot pointPlot;
     [SerializeField] private DrawGraphNN refGraph;
+    [SerializeField] private InfoController infoCon;
 
     [Header("Reference graph options")]
     [SerializeField] private Color inPointCol;
@@ -18,21 +19,23 @@ public class GraphTestNN : MonoBehaviour
     [SerializeField] private float learnRate;
 
     private DataPoint[] datPoints;
+    private int accuracy, total;
 
     IEnumerator Start()
     {
         CreateAllDataPoints();
 
         var neuralNet = new NeuralNetwork(2, 3, 2, 2);
-        
+        total = pointPlot.inPoints.Count + pointPlot.outPoints.Count;
+
         while(true)
         {
             yield return new WaitForSeconds(0.05f);
 
             var cost = neuralNet.CalculateAverageTotalCost(datPoints);
 
-            Debug.Log(cost);
             PlotReferencePointAccuracy(neuralNet);
+            infoCon.UpdateNetGraphInfo(accuracy, total, cost, neuralNet);
 
             neuralNet.Learn(datPoints, learnRate);
         }
@@ -44,6 +47,7 @@ public class GraphTestNN : MonoBehaviour
         ReturnData[] networkAccuracy = nn.CheckNeuralNetAccuracy(datPoints);
 
         int idx = 0;
+        accuracy = 0;
         foreach(var po in pointPlot.inPoints)
         {
             var pos = po.GetLocalPos();
@@ -55,6 +59,7 @@ public class GraphTestNN : MonoBehaviour
             }
             else
             {
+                accuracy += 1;
                 if (ret.type == 1)
                 {
                     refGraph.PlotPoint(pos, inPointCol);
@@ -77,6 +82,7 @@ public class GraphTestNN : MonoBehaviour
             }
             else
             {
+                accuracy += 1;
                 if (ret.type == 1)
                 {
                     refGraph.PlotPoint(pos, inPointCol);
