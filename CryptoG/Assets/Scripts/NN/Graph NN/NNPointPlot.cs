@@ -9,12 +9,12 @@ public class NNPointPlot : MonoBehaviour
     [SerializeField] private DrawGraphNN graph;
 
     [Header("Options")]
-    [SerializeField] private Vector2 plotRange = new Vector2(0f, 8f);
-    [SerializeField] private int numberOfPoint = 100;
+    [SerializeField] public Vector2 plotRange = new Vector2(0f, 8f);
+    [SerializeField] public int numberOfPoint = 100;
     [SerializeField] private Color inPointCol;
     [SerializeField] private Color outPointCol;
 
-    private List<GameObject> inPoints, outPoints;
+    public List<PointControlNN> inPoints, outPoints;
 
     private void Start()
     {
@@ -34,13 +34,17 @@ public class NNPointPlot : MonoBehaviour
 
     private void ColorCodePoint()
     {
-        inPoints = new List<GameObject>();
-        outPoints = new List<GameObject>();
+        inPoints = new List<PointControlNN>();
+        outPoints = new List<PointControlNN>();
 
         foreach (var point in graph.points)
         {
-            Vector2 pos = point.transform.position; bool ok = PointCheck(pos);
+            var con = point.GetComponent<PointControlNN>();
+
+            Vector2 pos = con.GetLocalPos(); bool ok = PointCheck(pos);
             point.GetComponent<SpriteRenderer>().color = (ok) ? inPointCol : outPointCol;
+
+            if (ok) {inPoints.Add(con);} else {outPoints.Add(con);}
         }
     }
 

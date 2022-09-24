@@ -12,6 +12,7 @@ public class DrawGraphNN : MonoBehaviour
     [SerializeField] private float spaceLen = 1f;
     [SerializeField] private float addLen = 0.05f;
     [SerializeField] private float addIndicatorLen = 0.05f;
+    [SerializeField] private Vector2 shift = new Vector2(0f, 0f);
 
     [Header("Line options")]
     [SerializeField] private float lineWidth = 0.025f;
@@ -19,19 +20,24 @@ public class DrawGraphNN : MonoBehaviour
 
     [Header("References")]
     [SerializeField] private GameObject pointPref;
+    [SerializeField] private GameObject tipPref;
 
     public List<GameObject> points;
 
-    void Start()
+    private void Awake()
+    {
+        transform.position += (Vector3) shift;
+    }
+
+    private void Start()
     {
         points = new List<GameObject>();
         CreateGraph();
-        // test
-        //PlotPoint(new Vector2(1f, 1f), Color.red);
     }
 
     private void CreateGraph()
     {
+        DeleteAll();
         CreateLineRend(new Vector2(0f, 0f), new Vector2(xLen * spaceLen + addLen, 0f)); //x
         CreateLineRend(new Vector2(0f, 0f), new Vector2(0f, yLen * spaceLen + addLen)); //y
 
@@ -44,6 +50,14 @@ public class DrawGraphNN : MonoBehaviour
         {
             CreateLineRend(new Vector2(addIndicatorLen, i), new Vector2(-addIndicatorLen, i));
         }
+        CreateTips();
+    }
+
+    private void CreateTips()
+    {
+        var xTip = Instantiate(tipPref, shift + new Vector2(xLen * spaceLen + addLen, 0f), Quaternion.identity, transform);
+        var yTip = Instantiate(tipPref, shift + new Vector2(0f, yLen * spaceLen + addLen), Quaternion.identity, transform);
+        yTip.transform.eulerAngles = new Vector3(0f, 0f, 90f);
     }
 
     private void CreateLineRend(Vector2 start, Vector2 end)
@@ -52,22 +66,25 @@ public class DrawGraphNN : MonoBehaviour
 
         var trans = newLine.transform;
         trans.SetParent(transform);
-        trans.position = new Vector3(0f, 0f, 0f);
 
         var rend = newLine.AddComponent<LineRenderer>();
+        rend.useWorldSpace = false;
         rend.startColor = rend.endColor = lineColor;
         rend.startWidth = rend.endWidth = lineWidth;
         rend.positionCount = 2;
         rend.SetPosition(0, start);
         rend.SetPosition(1, end);
 
+        trans.position = new Vector3(shift.x, shift.y, 0f);
+
         rend.material = new Material(Shader.Find("Legacy Shaders/Particles/Alpha Blended Premultiply"));
     }
 
-    private void DeleteAll()
+    public void DeleteAll()
     {
         foreach(Transform child in transform)
         {
+            if (child.gameObject.tag != "NNPoint") {continue;}
             Destroy(child.gameObject);
         }
     }
@@ -76,8 +93,10 @@ public class DrawGraphNN : MonoBehaviour
     {
         var po = Instantiate(pointPref, pos, Quaternion.identity, transform);
 
-        po.GetComponent<SpriteRenderer>().color = col;
-        po.transform.localScale = new Vector3(scale, scale, 1f);
+        var con = po.GetComponent<PointControlNN>();
+        con.SetLocalPos(pos);
+        con.SetColor(col);
+        con.SetScale(scale);
 
         points.Add(po);
     }

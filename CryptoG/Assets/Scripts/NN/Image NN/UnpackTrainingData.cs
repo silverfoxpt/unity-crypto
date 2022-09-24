@@ -14,7 +14,7 @@ public class UnpackTrainingData : MonoBehaviour
     
     List<TestCase> tests = new List<TestCase>();
 
-    [SerializeField] private bool forceDestroyPreviousSave = false;
+    //[SerializeField] private bool forceDestroyPreviousSave = false;
 
     private void Start()
     {

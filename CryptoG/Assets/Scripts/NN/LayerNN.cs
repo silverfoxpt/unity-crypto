@@ -5,24 +5,26 @@ using UnityEngine;
 
 public class LayerNN
 {
-    private float[,] weights;
-    private float[] biases;
+    public float[,] weights;
+    public float[] biases;
+    public float[,] weightGradients;
+    public float[] biasGradients;
 
-    private int numNode, prevNumNode;
+    public int numNode, prevNumNode;
 
-    //private float[,] prevVal; //given when calculating layer
-    private float[] thisLayerOutput;
+    public float[] thisLayerOutput;
 
-    public LayerNN(int nNode, int pnNode, bool needPrevConnection = true)
+    public LayerNN(int nNode, int pnNode)
     {
         numNode = nNode; prevNumNode = pnNode;
+
         weights = new float[prevNumNode, numNode];
         biases = new float[numNode];
-        
-        if (needPrevConnection)
-        {
-            CreateRandomWeightsAndBiases();
-        }
+
+        weightGradients = new float[prevNumNode, numNode];
+        biasGradients = new float[numNode];
+
+        CreateRandomWeightsAndBiases();
     }
 
     private void CreateRandomWeightsAndBiases()
@@ -31,16 +33,49 @@ public class LayerNN
         {
             for (int j = 0; j < numNode; j++)
             {
-                weights[i, j] = UnityEngine.Random.Range(-1f, 1f);
+                //weights[i, j] = UnityEngine.Random.Range(-1f, 1f);
+                weights[i, j] = 1f;
             }
         }
 
         for (int i = 0; i < numNode; i++)
         {
-            biases[i] = UnityEngine.Random.Range(-1f, 1f);
+            //biases[i] = UnityEngine.Random.Range(-1f, 1f);
+            biases[i] = 1f;
         }
     }
 
+    public void ApplyGradients(float learnRate)
+    {
+        for (int i = 0; i < prevNumNode; i++)
+        {
+            for (int j = 0; j < numNode; j++)
+            {
+                weights[i, j] -= weightGradients[i, j] * learnRate;
+            }
+        }
+        for (int i = 0; i < numNode; i++)
+        {
+            biases[i] -= biasGradients[i] * learnRate;
+        }
+    }
+
+    private float ReLU(float value) 
+    {
+        return Math.Max(0, value);
+    }
+
+    public static float Sigmoid(float value) 
+    {
+        float k = (float) Math.Exp(Convert.ToDouble(value));
+        return k / (1.0f + k);
+    }
+
+    /// <summary>
+    /// Calculate output for this layer of the neural network
+    /// </summary>
+    /// <param name="prevLayerOutput"></param>
+    /// <returns></returns>
     public float[] CalculateLayer(float[] prevLayerOutput) //return list of value output for this layer
     {
         float[] curOutput = new float[numNode];
@@ -53,18 +88,17 @@ public class LayerNN
                 val += prevLayerOutput[i] * weights[i, idx];
             }
             val += biases[idx];
-            curOutput[idx] = Sigmoid(val);
+            curOutput[idx] = ReLU(val);
         }
         thisLayerOutput = curOutput;
         return curOutput;
     }
 
-    public float Sigmoid(float value) 
-    {
-        float k = (float) Math.Exp(Convert.ToDouble(value));
-        return k / (1.0f + k);
-    }
-
+    /// <summary>
+    /// Calculate this layer's cost, use for the LAST layer ONLY!!
+    /// </summary>
+    /// <param name="expectedOutput"></param>
+    /// <returns></returns>
     public float CalculateLayerCost(float[] expectedOutput)
     {
         float val = 0;
