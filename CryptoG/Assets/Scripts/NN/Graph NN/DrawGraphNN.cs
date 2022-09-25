@@ -18,9 +18,16 @@ public class DrawGraphNN : MonoBehaviour
     [SerializeField] private float lineWidth = 0.025f;
     [SerializeField] private Color lineColor = Color.black;
 
+    [Header("Line graph options")]
+    [SerializeField] private float xMultiplier;
+    [SerializeField] private float yMultiplier;
+    [SerializeField] private float graphLineWidth = 0.025f;
+    [SerializeField] private Color graphLineColor = Color.blue;
+
     [Header("References")]
     [SerializeField] private GameObject pointPref;
     [SerializeField] private GameObject tipPref;
+    [SerializeField] private LineRenderer lineRend;
 
     public List<GameObject> points;
 
@@ -33,11 +40,33 @@ public class DrawGraphNN : MonoBehaviour
     {
         points = new List<GameObject>();
         CreateGraph();
+        RefreshLineRend();
     }
 
+    #region lineGraphMod
+    private void RefreshLineRend()
+    {
+        lineRend.positionCount = 0;
+        lineRend.startColor = lineRend.endColor = graphLineColor;
+        lineRend.startWidth = lineRend.endWidth = graphLineWidth;
+    }
+
+    public void AddNewPoint(Vector2 pos)
+    {
+        if (pos.y * yMultiplier > yLen) {return;}
+        
+        Vector2 newPos = new Vector2(pos.x * xMultiplier, pos.y * yMultiplier);
+        newPos += shift;
+
+        lineRend.positionCount += 1;
+        lineRend.SetPosition(lineRend.positionCount - 1, newPos);
+    }
+    #endregion
+
+    #region graphCreation
     private void CreateGraph()
     {
-        DeleteAll();
+        DeleteAllPlottedPoints();
         CreateLineRend(new Vector2(0f, 0f), new Vector2(xLen * spaceLen + addLen, 0f)); //x
         CreateLineRend(new Vector2(0f, 0f), new Vector2(0f, yLen * spaceLen + addLen)); //y
 
@@ -79,8 +108,10 @@ public class DrawGraphNN : MonoBehaviour
 
         rend.material = new Material(Shader.Find("Legacy Shaders/Particles/Alpha Blended Premultiply"));
     }
+    #endregion
 
-    public void DeleteAll()
+    #region pointCreationAndDeletion
+    public void DeleteAllPlottedPoints()
     {
         foreach(Transform child in transform)
         {
@@ -100,4 +131,5 @@ public class DrawGraphNN : MonoBehaviour
 
         points.Add(po);
     }
+    #endregion
 }

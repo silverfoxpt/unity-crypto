@@ -8,6 +8,7 @@ public class GraphTestNN : MonoBehaviour
     [Header("References")]
     [SerializeField] private NNPointPlot pointPlot;
     [SerializeField] private DrawGraphNN refGraph;
+    [SerializeField] private DrawGraphNN costGraph;
     [SerializeField] private InfoController infoCon;
 
     [Header("Reference graph options")]
@@ -25,17 +26,20 @@ public class GraphTestNN : MonoBehaviour
     {
         CreateAllDataPoints();
 
-        var neuralNet = new NeuralNetwork(2, 3, 2, 2);
+        var neuralNet = new NeuralNetwork(1, 3, 2, 2);
         total = pointPlot.inPoints.Count + pointPlot.outPoints.Count;
 
+        int counter = 0;
         while(true)
         {
-            yield return new WaitForSeconds(0.05f);
+            //yield return new WaitForSeconds(0.05f);
+            yield return null;
 
             var cost = neuralNet.CalculateAverageTotalCost(datPoints);
 
             PlotReferencePointAccuracy(neuralNet);
             infoCon.UpdateNetGraphInfo(accuracy, total, cost, neuralNet);
+            costGraph.AddNewPoint(new Vector2(counter, cost)); counter++;
 
             neuralNet.Learn(datPoints, learnRate);
         }
@@ -43,7 +47,7 @@ public class GraphTestNN : MonoBehaviour
 
     private void PlotReferencePointAccuracy(NeuralNetwork nn)
     {
-        refGraph.DeleteAll();
+        refGraph.DeleteAllPlottedPoints();
         ReturnData[] networkAccuracy = nn.CheckNeuralNetAccuracy(datPoints);
 
         int idx = 0;

@@ -50,7 +50,7 @@ public class NNPointPlot : MonoBehaviour
 
     public bool PointCheck(Vector2 pos) //used to calculate costs, so be fking careful bruh
     {
-        float px = -0.2f * pos.x * pos.x + 6; //HARDCODE WARNING!!!
-        if (pos.y <= px) {return true;} return false;
+        //float px = -0.2f * pos.x * pos.x + 6; //HARDCODE WARNING!!!
+        if (pos.x <=4 && pos.y <= 4) {return true;} return false;
     }    
 }

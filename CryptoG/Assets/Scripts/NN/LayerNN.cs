@@ -88,7 +88,7 @@ public class LayerNN
                 val += prevLayerOutput[i] * weights[i, idx];
             }
             val += biases[idx];
-            curOutput[idx] = ReLU(val);
+            curOutput[idx] = Sigmoid(val);
         }
         thisLayerOutput = curOutput;
         return curOutput;

@@ -90,7 +90,7 @@ public class NeuralNetwork
     /// <returns></returns>
     public void Learn(DataPoint[] data, float learnRate)
     {
-        float h = 0.0001f;
+        float h = 0.001f;
         float originalCost = CalculateAverageTotalCost(data);
 
         foreach(var layer in layers)
