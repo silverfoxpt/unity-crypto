@@ -290,6 +290,7 @@ MonoBehaviour:
     color: {r: 0, g: 0.5943396, b: 0.100601904, a: 1}
     id: 4
   uncheckedCells: {r: 0.2924528, g: 0.2924528, b: 0.2924528, a: 1}
+  waitTime: 0
 --- !u!1 &1725685371
 GameObject:
   m_ObjectHideFlags: 0
