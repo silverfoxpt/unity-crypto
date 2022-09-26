@@ -119,6 +119,7 @@ public class FlowFreeSolver : MonoBehaviour
 
     IEnumerator SolveFromState(BoardState state)
     {
+        //debug
         string f = "";
         for (int i = 0; i < boardSize.y; i++)
         {
