@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class FlowFreeSolver : MonoBehaviour
 {
+    #region supporting structs and classes
     [System.Serializable]
     struct flowCell
     {
@@ -33,7 +34,23 @@ public class FlowFreeSolver : MonoBehaviour
             cellBoard = new List<List<flowCell>>();
             currentFlow = new List<flowCell>();
         }
+
+        public List<List<flowCell>> CopyCellBoard(Vector2Int boardSize) 
+        {
+            List<List<flowCell>> tmp = new List<List<flowCell>>();
+
+            for (int i = 0; i < boardSize.y; i++)
+            {
+                tmp.Add(new List<flowCell>());
+                for (int j = 0; j < boardSize.x; j++)
+                {
+                    tmp[i].Add(cellBoard[i][j]);
+                }
+            }
+            return tmp;
+        }
     }
+    #endregion
 
     [Header("References")]
     [SerializeField] private GeneralDisplayBoardESS board;
@@ -43,6 +60,8 @@ public class FlowFreeSolver : MonoBehaviour
     [SerializeField] List<flowCellPair> rootCells;
     [SerializeField] private Color uncheckedCells;
     [SerializeField] private float waitTime = 0.1f;
+    [SerializeField] private int coroutineLimit = 500;
+    [SerializeField] private bool atomicSolve = false;
 
     private Vector2Int boardSize;
     private Dictionary<int, Vector2Int> rootSearch;
@@ -50,17 +69,24 @@ public class FlowFreeSolver : MonoBehaviour
 
     private bool solved = false;
     private BoardState solvedState = null;
+    private int coroutineCounter = 0;
 
     private int[] dx = new int[4] {-1, 0, +1, 0};
     private int[] dy = new int[4] {0, +1, 0, -1};
 
     private void Start()
     {
-        solved = false;
+        InitializeSolver();
+    }
+
+    private void InitializeSolver()
+    {
+        solved = false; coroutineCounter = 0;
         var ini = GenerateInitialBoardState();
         DrawFromBoardState(ini);
 
-        StartCoroutine(SolveFromState(ini));
+        if (!atomicSolve) { StartCoroutine(SolveFromState(ini)); }
+        else {SolveFromStateQuick(ini); }
     }
 
     private void DrawFromBoardState(BoardState cur)
@@ -71,6 +97,17 @@ public class FlowFreeSolver : MonoBehaviour
             {
                 board.cells[i][j].ChangeToColorState(cur.cellBoard[i][j].color);
             }
+        }
+
+        foreach(var root in rootCells)
+        {
+            board.cells[root.positionFirst.x][root.positionFirst.y].ChangeToColorAndTextState(root.color, "S");
+            board.cells[root.positionSecond.x][root.positionSecond.y].ChangeToColorAndTextState(root.color, "E");
+        }
+
+        foreach(var cell in cur.currentFlow)
+        {
+            board.cells[cell.position.x][cell.position.y].ChangeToColorAndTextState(cell.color, "c");
         }
     }
 
@@ -119,24 +156,21 @@ public class FlowFreeSolver : MonoBehaviour
 
     IEnumerator SolveFromState(BoardState state)
     {
-        //debug
-        string f = "";
-        for (int i = 0; i < boardSize.y; i++)
+        //wait -> yield
+        if (coroutineCounter >= coroutineLimit)
         {
-            for (int j = 0; j < boardSize.x; j++)
-            {
-                f += state.cellBoard[i][j].id.ToString() + " ";
-            }
-            f += "\n";
+            yield return new WaitForSeconds(waitTime);
+            coroutineCounter = 0;
         }
-        Debug.LogWarning(f);
+        else {coroutineCounter++;}
 
-        yield return new WaitForSeconds(waitTime);
+        //check if solved
+        if (solved) {yield break;}
+
+        //draw board
         DrawFromBoardState(state);
 
-        if (!CheckBoardStateFind(state)) { yield return null; }
-        if (solved) { yield return null; }
-
+        //investigate paths
         foreach(var cell in state.currentFlow)
         {
             Vector2Int pos = cell.position;
@@ -145,6 +179,7 @@ public class FlowFreeSolver : MonoBehaviour
                 var newPos = new Vector2Int(pos.x + dx[i], pos.y + dy[i]);
 
                 if (newPos.x >= boardSize.y || newPos.y >= boardSize.x || newPos.x < 0 || newPos.y < 0) {continue;}
+
                 if (state.cellBoard[newPos.x][newPos.y].id != -1)  //not empty
                 {
                     if (state.cellBoard[newPos.x][newPos.y].position == rootSearch[state.cellBoard[newPos.x][newPos.y].id]) //found end node
@@ -155,7 +190,7 @@ public class FlowFreeSolver : MonoBehaviour
                         //create new shit
                         BoardState newState = new BoardState();
 
-                        newState.cellBoard = new List<List<flowCell>>(state.cellBoard);
+                        newState.cellBoard = state.CopyCellBoard(boardSize);
                         newState.currentFlow = new List<flowCell>();
 
                         foreach(var ce in state.currentFlow)
@@ -163,21 +198,24 @@ public class FlowFreeSolver : MonoBehaviour
                             if (ce.Equals(cell)) {continue;} //terminate
                             else {newState.currentFlow.Add(ce); } 
                         }
-                        
+
                         yield return StartCoroutine(SolveFromState(newState));
-                        if (!solved) 
+
+                        if (solved) {yield break;}
+                        else if (!solved) 
                         {
-                            DrawFromBoardState(state);
                             rootConnected = new Dictionary<int, bool>(tmp);
                         }
                     }
+                    else {continue;}
                 }
-                else
+
+                if (state.cellBoard[newPos.x][newPos.y].id == -1) //empty
                 {
                     //create new shit
                     BoardState newState = new BoardState();
 
-                    newState.cellBoard = new List<List<flowCell>>(state.cellBoard);
+                    newState.cellBoard = state.CopyCellBoard(boardSize);
                     newState.currentFlow = new List<flowCell>();
 
                     var newCell = new flowCell();
@@ -193,13 +231,21 @@ public class FlowFreeSolver : MonoBehaviour
                     }
 
                     yield return StartCoroutine(SolveFromState(newState));
-                    if (!solved) {DrawFromBoardState(state); }
+                    if (solved) {yield break; }
+                    else if (!solved) {DrawFromBoardState(state); }
                 }
             }
         }
+        solved = true;
+        foreach (var check in rootConnected)
+        {
+            if (!check.Value) { solved = false; break;}
+        }
+        if (solved && (!CheckEmptyCells(state))) { solvedState = state; } //no root not connected && no empty cells
+        else {solved = false; }
     }
 
-    private bool CheckBoardStateFind(BoardState state)
+    private bool CheckEmptyCells(BoardState state)
     {
         for (int i = 0; i < boardSize.y; i++)
         {
@@ -208,23 +254,97 @@ public class FlowFreeSolver : MonoBehaviour
                 if (state.cellBoard[i][j].id == -1) {return true;}
             }
         }
-
-        //check if all root connected
-        foreach (var p in rootConnected)
-        {
-            if (!p.Value) {return false;}
-        }
-
-        solved = true; solvedState = state;
-        return true;
+        return false;
     }
 
     private void Update()
     {
         if (solved)
         {
-            Debug.Log("yarr");
             DrawFromBoardState(solvedState);
         }
+    }
+
+    private void SolveFromStateQuick(BoardState state) //quicker
+    {
+        //check if solved
+        if (solved) {return;}
+
+        //draw board
+        DrawFromBoardState(state);
+
+        //investigate paths
+        foreach(var cell in state.currentFlow)
+        {
+            Vector2Int pos = cell.position;
+            for (int i = 0; i < 4; i++)
+            {
+                var newPos = new Vector2Int(pos.x + dx[i], pos.y + dy[i]);
+
+                if (newPos.x >= boardSize.y || newPos.y >= boardSize.x || newPos.x < 0 || newPos.y < 0) {continue;}
+
+                if (state.cellBoard[newPos.x][newPos.y].id != -1)  //not empty
+                {
+                    if (state.cellBoard[newPos.x][newPos.y].position == rootSearch[state.cellBoard[newPos.x][newPos.y].id]) //found end node
+                    {
+                        var tmp = new Dictionary<int, bool>(rootConnected); //tmp
+                        rootConnected[cell.id] = true;
+
+                        //create new shit
+                        BoardState newState = new BoardState();
+
+                        newState.cellBoard = state.CopyCellBoard(boardSize);
+                        newState.currentFlow = new List<flowCell>();
+
+                        foreach(var ce in state.currentFlow)
+                        {
+                            if (ce.Equals(cell)) {continue;} //terminate
+                            else {newState.currentFlow.Add(ce); } 
+                        }
+
+                        SolveFromState(newState);
+
+                        if (solved) {return;}
+                        else if (!solved) 
+                        {
+                            rootConnected = new Dictionary<int, bool>(tmp);
+                        }
+                    }
+                    else {continue;}
+                }
+
+                if (state.cellBoard[newPos.x][newPos.y].id == -1) //empty
+                {
+                    //create new shit
+                    BoardState newState = new BoardState();
+
+                    newState.cellBoard = state.CopyCellBoard(boardSize);
+                    newState.currentFlow = new List<flowCell>();
+
+                    var newCell = new flowCell();
+                    newCell.position = newPos;
+                    newCell.color = cell.color;
+                    newCell.id = cell.id;
+
+                    newState.cellBoard[newPos.x][newPos.y] = newCell;
+                    foreach(var ce in state.currentFlow)
+                    {
+                        if (ce.Equals(cell)) {newState.currentFlow.Add(newCell);}
+                        else {newState.currentFlow.Add(ce); }
+                    }
+
+                    SolveFromStateQuick(newState);
+                    if (solved) {return; }
+                    else if (!solved) {DrawFromBoardState(state); }
+                }
+            }
+        }
+        solved = true;
+        foreach (var check in rootConnected)
+        {
+            if (!check.Value) { solved = false; break;}
+        }
+        if (solved && (!CheckEmptyCells(state))) { solvedState = state; } //no root not connected && no empty cells
+        else {solved = false; }
     }
 }

@@ -47,6 +47,15 @@ public class GeneralDisplayCell : MonoBehaviour
         img.color = col;
     }
 
+    public void ChangeToColorAndTextState(Color col, string te)
+    {
+        tex.enabled = true;
+        img.enabled = true;
+
+        img.sprite = null; img.color = col;
+        tex.text = te;
+    }
+
     public void SetPosition(Vector2 pos)
     {
         rect.anchoredPosition = pos;
