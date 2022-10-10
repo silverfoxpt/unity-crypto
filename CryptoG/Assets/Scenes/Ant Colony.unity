@@ -892,6 +892,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f231c4fb786f3946a6b90b886c48677, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_SendPointerHoverToParent: 1
   m_HorizontalAxis: Horizontal
   m_VerticalAxis: Vertical
   m_SubmitButton: Submit
@@ -1362,17 +1363,17 @@ MonoBehaviour:
   foodColor: {r: 0, g: 1, b: 0, a: 1}
   numAnts: 500
   maxSpeed: 1
-  steerStrength: 10
+  steerStrength: 20
   wanderStrength: 0.03
   detectAngle: 40
   detectStrength: 10
-  turnAngle: 5
+  turnAngle: 10
   turnStrength: 2
   maxDistFromCenter: 0.1
   useInverseDist: 1
   toHomeColor: {r: 0, g: 0, b: 1, a: 1}
   toFoodColor: {r: 1, g: 0, b: 0, a: 1}
-  diffuseAmount: 0.025
+  diffuseAmount: 0.009
   tex1: {fileID: 0}
   tex2: {fileID: 0}
 --- !u!1 &1199720114

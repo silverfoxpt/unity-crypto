@@ -24,7 +24,7 @@ public class LayerNN
         weightGradients = new float[prevNumNode, numNode];
         biasGradients = new float[numNode];
 
-        CreateRandomWeightsAndBiases();
+        CreateRandomWeightsAndBiases(); 
     }
 
     private void CreateRandomWeightsAndBiases()
@@ -88,7 +88,7 @@ public class LayerNN
                 val += prevLayerOutput[i] * weights[i, idx];
             }
             val += biases[idx];
-            curOutput[idx] = Sigmoid(val);
+            curOutput[idx] = ReLU(val);
         }
         thisLayerOutput = curOutput;
         return curOutput;

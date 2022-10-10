@@ -60,7 +60,6 @@ public class FlowFreeSolver : MonoBehaviour
     [SerializeField] List<flowCellPair> rootCells;
     [SerializeField] private Color uncheckedCells;
     [SerializeField] private float waitTime = 0.1f;
-    [SerializeField] private int coroutineLimit = 500;
     [SerializeField] private bool atomicSolve = false;
 
     private Vector2Int boardSize;
@@ -69,7 +68,6 @@ public class FlowFreeSolver : MonoBehaviour
 
     private bool solved = false;
     private BoardState solvedState = null;
-    private int coroutineCounter = 0;
 
     private int[] dx = new int[4] {-1, 0, +1, 0};
     private int[] dy = new int[4] {0, +1, 0, -1};
@@ -81,34 +79,12 @@ public class FlowFreeSolver : MonoBehaviour
 
     private void InitializeSolver()
     {
-        solved = false; coroutineCounter = 0;
+        solved = false; 
         var ini = GenerateInitialBoardState();
         DrawFromBoardState(ini);
 
         if (!atomicSolve) { StartCoroutine(SolveFromState(ini)); }
         else {SolveFromStateQuick(ini); }
-    }
-
-    private void DrawFromBoardState(BoardState cur)
-    {
-        for (int i = 0; i < boardSize.y; i++)
-        {
-            for (int j = 0; j < boardSize.x; j++)
-            {
-                board.cells[i][j].ChangeToColorState(cur.cellBoard[i][j].color);
-            }
-        }
-
-        foreach(var root in rootCells)
-        {
-            board.cells[root.positionFirst.x][root.positionFirst.y].ChangeToColorAndTextState(root.color, "S");
-            board.cells[root.positionSecond.x][root.positionSecond.y].ChangeToColorAndTextState(root.color, "E");
-        }
-
-        foreach(var cell in cur.currentFlow)
-        {
-            board.cells[cell.position.x][cell.position.y].ChangeToColorAndTextState(cell.color, "c");
-        }
     }
 
     private BoardState GenerateInitialBoardState()
@@ -154,15 +130,45 @@ public class FlowFreeSolver : MonoBehaviour
         return iniBoard;
     }
 
+    private void DrawFromBoardState(BoardState cur)
+    {
+        for (int i = 0; i < boardSize.y; i++)
+        {
+            for (int j = 0; j < boardSize.x; j++)
+            {
+                board.cells[i][j].ChangeToColorState(cur.cellBoard[i][j].color);
+            }
+        }
+
+        foreach(var root in rootCells)
+        {
+            board.cells[root.positionFirst.x][root.positionFirst.y].ChangeToColorAndTextState(root.color, "S");
+            board.cells[root.positionSecond.x][root.positionSecond.y].ChangeToColorAndTextState(root.color, "E");
+        }
+
+        foreach(var cell in cur.currentFlow)
+        {
+            board.cells[cell.position.x][cell.position.y].ChangeToColorAndTextState(cell.color, "c");
+        }
+    }
+
     IEnumerator SolveFromState(BoardState state)
     {
-        //wait -> yield
-        if (coroutineCounter >= coroutineLimit)
+        yield return new WaitForSeconds(waitTime);
+
+        //debug
+        string f = "";
+        foreach (var root in rootConnected)
         {
-            yield return new WaitForSeconds(waitTime);
-            coroutineCounter = 0;
+            f += root.Key.ToString() + " " + root.Value.ToString() + " ; ";
         }
-        else {coroutineCounter++;}
+        Debug.LogWarning(f);
+
+        string g = "";
+        foreach(var cell in state.currentFlow)
+        {
+
+        }
 
         //check if solved
         if (solved) {yield break;}
@@ -302,7 +308,7 @@ public class FlowFreeSolver : MonoBehaviour
                             else {newState.currentFlow.Add(ce); } 
                         }
 
-                        SolveFromState(newState);
+                        SolveFromStateQuick(newState);
 
                         if (solved) {return;}
                         else if (!solved) 

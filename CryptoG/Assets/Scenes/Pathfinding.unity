@@ -180,7 +180,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pathMap: {fileID: 402830644}
   board: {fileID: 194392489}
-  delay: 0
+  delay: 0.02
   root: {r: 0, g: 1, b: 0, a: 1}
   neighbor: {r: 1, g: 0, b: 0, a: 1}
 --- !u!1 &402830642
@@ -228,7 +228,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   size: {x: 256, y: 256}
-  numBlock: 15000
+  numBlock: 25000
   multiplier: 3
   board: {fileID: 194392489}
 --- !u!1 &732435977

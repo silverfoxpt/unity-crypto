@@ -265,7 +265,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 6ffb82dc5f0f6094888759f9e5ddac3b, type: 2}
   - {fileID: 11400000, guid: ebb8669eb0f13b04eb1e0f420739bee2, type: 2}
   - {fileID: 11400000, guid: fc5b2b8f306bbf944a306e6143d784f6, type: 2}
-  size: {x: 32, y: 32}
+  size: {x: 30, y: 30}
   delay: 0
   board: {fileID: 1597002376}
 --- !u!1 &1597002374
