@@ -24,6 +24,12 @@ public class FlowFreeSolver : MonoBehaviour
         public int id;
     }
 
+    class cellMoveOptions
+    {
+        public flowCell cell;
+        public List<int> options;
+    }
+
     class BoardState
     {
         public List<List<flowCell>> cellBoard;
@@ -157,7 +163,7 @@ public class FlowFreeSolver : MonoBehaviour
         yield return new WaitForSeconds(waitTime);
 
         //debug
-        string f = "";
+        /*string f = "";
         foreach (var root in rootConnected)
         {
             f += root.Key.ToString() + " " + root.Value.ToString() + " ; ";
@@ -167,8 +173,9 @@ public class FlowFreeSolver : MonoBehaviour
         string g = "";
         foreach(var cell in state.currentFlow)
         {
-
+            g += cell.position.ToString() + " ";
         }
+        Debug.Log(g);*/
 
         //check if solved
         if (solved) {yield break;}
@@ -176,20 +183,21 @@ public class FlowFreeSolver : MonoBehaviour
         //draw board
         DrawFromBoardState(state);
 
-        //investigate paths
-        foreach(var cell in state.currentFlow)
+        List<cellMoveOptions> bestCellSort = GetBestMoveFromState(state);
+
+        foreach(var headCell in bestCellSort)
         {
+            //check the best possible current cell moves
+            var cell = headCell.cell;
             Vector2Int pos = cell.position;
-            for (int i = 0; i < 4; i++)
+            foreach (var i in headCell.options) //check available options
             {
                 var newPos = new Vector2Int(pos.x + dx[i], pos.y + dy[i]);
-
-                if (newPos.x >= boardSize.y || newPos.y >= boardSize.x || newPos.x < 0 || newPos.y < 0) {continue;}
-
                 if (state.cellBoard[newPos.x][newPos.y].id != -1)  //not empty
                 {
-                    if (state.cellBoard[newPos.x][newPos.y].position == rootSearch[state.cellBoard[newPos.x][newPos.y].id]) //found end node
+                    if (state.cellBoard[newPos.x][newPos.y].position == rootSearch[state.cellBoard[pos.x][pos.y].id]) //found end node
                     {
+                        //Debug.LogError("ROOT: " + state.cellBoard[newPos.x][newPos.y].id.ToString() + " " + rootSearch[state.cellBoard[newPos.x][newPos.y].id].ToString());
                         var tmp = new Dictionary<int, bool>(rootConnected); //tmp
                         rootConnected[cell.id] = true;
 
@@ -208,10 +216,7 @@ public class FlowFreeSolver : MonoBehaviour
                         yield return StartCoroutine(SolveFromState(newState));
 
                         if (solved) {yield break;}
-                        else if (!solved) 
-                        {
-                            rootConnected = new Dictionary<int, bool>(tmp);
-                        }
+                        rootConnected = new Dictionary<int, bool>(tmp);
                     }
                     else {continue;}
                 }
@@ -237,11 +242,14 @@ public class FlowFreeSolver : MonoBehaviour
                     }
 
                     yield return StartCoroutine(SolveFromState(newState));
+
                     if (solved) {yield break; }
-                    else if (!solved) {DrawFromBoardState(state); }
+                    DrawFromBoardState(state);
                 }
             }
         }
+
+        //check if solved
         solved = true;
         foreach (var check in rootConnected)
         {
@@ -249,6 +257,60 @@ public class FlowFreeSolver : MonoBehaviour
         }
         if (solved && (!CheckEmptyCells(state))) { solvedState = state; } //no root not connected && no empty cells
         else {solved = false; }
+    }
+
+    private List<cellMoveOptions> GetBestMoveFromState(BoardState state)
+    {
+        List<cellMoveOptions> cellOptions = new List<cellMoveOptions>();
+        foreach(var cell in state.currentFlow)
+        {
+            cellMoveOptions head = new cellMoveOptions();
+            head.cell = cell;
+            head.options = new List<int>() {0, 1, 2, 3};
+        }
+
+        //remove non-moveable options
+        foreach(var head in cellOptions)
+        {
+            var pos = head.cell.position;
+            List<int> newOptions = new List<int>();
+            foreach(var dir in head.options)
+            {
+                var newPos = new Vector2Int(pos.x + dx[dir], pos.y + dy[dir]);
+
+                if (newPos.x >= boardSize.y || newPos.y >= boardSize.x || newPos.x < 0 || newPos.y < 0) {continue;}
+                if (state.cellBoard[newPos.x][newPos.y].id != -1) 
+                {
+                    if (!(state.cellBoard[newPos.x][newPos.y].position == rootSearch[state.cellBoard[pos.x][pos.y].id])) //NOT root node
+                    {
+                        continue;
+                    }
+                }
+
+                //check for deadend
+                //create a temporary board and make a move in the direction
+                BoardState newState = new BoardState();
+                flowCell thisCell = head.cell;
+
+                newState.cellBoard = state.CopyCellBoard(boardSize);
+                newState.currentFlow = new List<flowCell>();
+
+                var newCell = new flowCell();
+                newCell.position = newPos;
+                newCell.color = thisCell.color;
+                newCell.id = thisCell.id;
+
+                newState.cellBoard[newPos.x][newPos.y]  = newCell;
+
+                //check for deadends with the new board
+                //conditions: cell with three COMPLETED neighbor (neighbor != current flow(head) of any color || incompleted goal of any color)
+
+                //all check completed
+                newOptions.Add(dir); //if direction moveable, add to (new) options list
+            }
+            head.options = newOptions; // set new options after removing unmoveable options
+        }
+        return cellOptions;
     }
 
     private bool CheckEmptyCells(BoardState state)
@@ -291,7 +353,7 @@ public class FlowFreeSolver : MonoBehaviour
 
                 if (state.cellBoard[newPos.x][newPos.y].id != -1)  //not empty
                 {
-                    if (state.cellBoard[newPos.x][newPos.y].position == rootSearch[state.cellBoard[newPos.x][newPos.y].id]) //found end node
+                    if (state.cellBoard[newPos.x][newPos.y].position == rootSearch[state.cellBoard[pos.x][pos.y].id]) //found end node
                     {
                         var tmp = new Dictionary<int, bool>(rootConnected); //tmp
                         rootConnected[cell.id] = true;
