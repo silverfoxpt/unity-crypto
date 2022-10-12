@@ -303,7 +303,8 @@ public class FlowFreeSolver : MonoBehaviour
                 newState.cellBoard[newPos.x][newPos.y]  = newCell;
 
                 //check for deadends with the new board
-                //conditions: cell with three COMPLETED neighbor (neighbor != current flow(head) of any color || incompleted goal of any color)
+                //conditions: empty cell with three COMPLETED neighbor (neighbor != current flow(head) of any color || incompleted goal of any color)
+                if (CheckIsolatedCell(newState, cellOptions)) {continue;}                
 
                 //all check completed
                 newOptions.Add(dir); //if direction moveable, add to (new) options list
@@ -311,6 +312,20 @@ public class FlowFreeSolver : MonoBehaviour
             head.options = newOptions; // set new options after removing unmoveable options
         }
         return cellOptions;
+    }
+
+    private bool CheckIsolatedCell(BoardState state, List<cellMoveOptions> cellOptions)
+    {
+        for (int i = 0; i < boardSize.y; i++)
+        {
+            for (int j = 0; j < boardSize.x; j++)
+            {
+                var cur = state.cellBoard[i][j];
+
+                             
+            }
+        }
+        return false;
     }
 
     private bool CheckEmptyCells(BoardState state)
