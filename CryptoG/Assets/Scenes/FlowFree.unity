@@ -153,19 +153,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   board: {fileID: 930275086}
-  rootCells:
-  - positionFirst: {x: 0, y: 0}
-    positionSecond: {x: 0, y: 3}
-    color: {r: 1, g: 0, b: 0, a: 1}
-    id: 0
-  - positionFirst: {x: 0, y: 4}
-    positionSecond: {x: 1, y: 3}
-    color: {r: 0.17895675, g: 1, b: 0, a: 1}
-    id: 1
-  - positionFirst: {x: 1, y: 2}
-    positionSecond: {x: 3, y: 4}
-    color: {r: 0.495283, g: 0.5130965, b: 1, a: 1}
-    id: 2
+  testcase: {fileID: 11400000, guid: 80d504088c89bba4694c3ae4a2887e64, type: 2}
   uncheckedCells: {r: 0.2924528, g: 0.2924528, b: 0.2924528, a: 1}
   waitTime: 0
   atomicSolve: 0
@@ -329,27 +317,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   board: {fileID: 930275086}
-  rootCells:
-  - positionFirst: {x: 0, y: 1}
-    positionSecond: {x: 3, y: 0}
-    color: {r: 1, g: 0.9197526, b: 0, a: 1}
-    id: 0
-  - positionFirst: {x: 0, y: 2}
-    positionSecond: {x: 4, y: 0}
-    color: {r: 0, g: 0.054581404, b: 1, a: 1}
-    id: 1
-  - positionFirst: {x: 1, y: 3}
-    positionSecond: {x: 2, y: 2}
-    color: {r: 1, g: 0, b: 0, a: 1}
-    id: 2
-  - positionFirst: {x: 3, y: 3}
-    positionSecond: {x: 4, y: 2}
-    color: {r: 1, g: 0.5231711, b: 0, a: 1}
-    id: 3
-  - positionFirst: {x: 0, y: 3}
-    positionSecond: {x: 4, y: 3}
-    color: {r: 0, g: 0.5943396, b: 0.100601904, a: 1}
-    id: 4
+  testcase: {fileID: 0}
   uncheckedCells: {r: 0.2924528, g: 0.2924528, b: 0.2924528, a: 1}
   waitTime: 0
   atomicSolve: 0

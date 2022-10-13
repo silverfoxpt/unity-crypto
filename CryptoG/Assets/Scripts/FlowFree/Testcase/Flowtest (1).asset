@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 736292dbf86624c47a3068a6229ed2e4, type: 3}
+  m_Name: Flowtest (1)
+  m_EditorClassIdentifier: 
+  initialCellList:
+  - positionFirst: {x: 0, y: 3}
+    positionSecond: {x: 4, y: 2}
+    color: {r: 1, g: 0, b: 0, a: 1}
+    id: 0
+  - positionFirst: {x: 0, y: 4}
+    positionSecond: {x: 1, y: 3}
+    color: {r: 0.19421315, g: 1, b: 0, a: 1}
+    id: 1
+  - positionFirst: {x: 1, y: 2}
+    positionSecond: {x: 3, y: 4}
+    color: {r: 0.41037738, g: 0.65309227, b: 1, a: 1}
+    id: 2
+  - positionFirst: {x: 1, y: 1}
+    positionSecond: {x: 4, y: 4}
+    color: {r: 0.8970159, g: 1, b: 0, a: 1}
+    id: 3

@@ -3,6 +3,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
+public struct flowCellPair
+{
+    public Vector2Int positionFirst, positionSecond;
+    public Color color;
+
+    public int id;
+}
+
 public class FlowFreeSolver : MonoBehaviour
 {
     #region supporting structs and classes
@@ -10,15 +19,6 @@ public class FlowFreeSolver : MonoBehaviour
     struct flowCell
     {
         public Vector2Int position;
-        public Color color;
-
-        public int id;
-    }
-
-    [System.Serializable]
-    struct flowCellPair
-    {
-        public Vector2Int positionFirst, positionSecond;
         public Color color;
 
         public int id;
@@ -63,11 +63,12 @@ public class FlowFreeSolver : MonoBehaviour
 
     
     [Header("Param")]
-    [SerializeField] List<flowCellPair> rootCells;
+    [SerializeField] TestcaseFlow testcase;
     [SerializeField] private Color uncheckedCells;
     [SerializeField] private float waitTime = 0.1f;
     [SerializeField] private bool atomicSolve = false;
 
+    private List<flowCellPair> rootCells;
     private Vector2Int boardSize;
     private Dictionary<int, Vector2Int> rootSearch;
     private Dictionary<int, bool> rootConnected;
@@ -85,7 +86,7 @@ public class FlowFreeSolver : MonoBehaviour
 
     private void InitializeSolver()
     {
-        solved = false; 
+        solved = false; rootCells = testcase.GetCellList();
         var ini = GenerateInitialBoardState();
         DrawFromBoardState(ini);
 
@@ -267,6 +268,8 @@ public class FlowFreeSolver : MonoBehaviour
             cellMoveOptions head = new cellMoveOptions();
             head.cell = cell;
             head.options = new List<int>() {0, 1, 2, 3};
+
+            cellOptions.Add(head);
         }
 
         //remove non-moveable options
@@ -279,7 +282,7 @@ public class FlowFreeSolver : MonoBehaviour
                 var newPos = new Vector2Int(pos.x + dx[dir], pos.y + dy[dir]);
 
                 if (newPos.x >= boardSize.y || newPos.y >= boardSize.x || newPos.x < 0 || newPos.y < 0) {continue;}
-                if (state.cellBoard[newPos.x][newPos.y].id != -1) 
+                if (state.cellBoard[newPos.x][newPos.y].id != -1) //not empty
                 {
                     if (!(state.cellBoard[newPos.x][newPos.y].position == rootSearch[state.cellBoard[pos.x][pos.y].id])) //NOT root node
                     {
@@ -304,25 +307,47 @@ public class FlowFreeSolver : MonoBehaviour
 
                 //check for deadends with the new board
                 //conditions: empty cell with three COMPLETED neighbor (neighbor != current flow(head) of any color || incompleted goal of any color)
-                if (CheckIsolatedCell(newState, cellOptions)) {continue;}                
+                if (CheckIsolatedCell(newState)) {continue;}                
 
                 //all check completed
                 newOptions.Add(dir); //if direction moveable, add to (new) options list
             }
+            //Debug.Log(newOptions.Count);
             head.options = newOptions; // set new options after removing unmoveable options
         }
         return cellOptions;
     }
 
-    private bool CheckIsolatedCell(BoardState state, List<cellMoveOptions> cellOptions)
+    private bool CheckIsolatedCell(BoardState state)
     {
         for (int i = 0; i < boardSize.y; i++)
         {
             for (int j = 0; j < boardSize.x; j++)
             {
                 var cur = state.cellBoard[i][j];
+                if (cur.id != -1) {continue;} //not empty
 
-                             
+                int completedNeighbors = 0;
+                for (int k = 0; k < 4; k++)
+                {
+                    var newPos = new Vector2Int(cur.position.x + dx[k], cur.position.y + dy[k]);
+                    if (newPos.x >= boardSize.y || newPos.y >= boardSize.x || newPos.x < 0 || newPos.y < 0) {continue;}
+
+                    if (state.cellBoard[newPos.x][newPos.y].id == -1) {continue;} //empty
+                    
+                    bool emptyRoot = false;
+                    foreach(var keyval in rootSearch)
+                    {
+                        var id = keyval.Key; var pos = keyval.Value;
+                        if (!rootConnected[id] && pos == newPos) //if this is an endpoint AND not connected
+                        {
+                            emptyRoot = true; break;
+                        }
+                    }
+                    if (emptyRoot) {continue;} //if root unused then it's not completed and passable!
+                    completedNeighbors++;
+                }
+                if (completedNeighbors >= 3) {return true;} //found isolated cell (dead-end or completely blocked)
             }
         }
         return false;
