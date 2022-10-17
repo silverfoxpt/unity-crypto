@@ -20,6 +20,8 @@ namespace Conveyor
     interface IMainSystem
     {
         public int blockSize {get; set;}
+        public int blockID {get;}
+        public Vector2Int topLeftPos {get; set;}
 
         public List<BlockInOutList> blockOutput {get; set;}
         public List<BlockInOutList> blockInput {get; set;}
@@ -31,7 +33,7 @@ namespace Conveyor
         public List<int> blackListID {get; set;}
 
         public void InitiateMainSystem();
-        public bool BlockPlaceable(Tilemap map, Vector2Int upLeftPos);
-        public void PlaceBlock(Tilemap map, Vector2Int upLeftPos);
+        public bool BlockPlaceable(Tilemap backgroundMap, Tilemap mainMap, Vector2Int upLeftPos);
+        public void PlaceBlock(Tilemap backgroundMap, Tilemap mainMap, Vector2Int upLeftPos);
     }
 }

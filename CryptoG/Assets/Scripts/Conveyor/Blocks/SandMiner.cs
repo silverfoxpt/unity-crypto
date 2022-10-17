@@ -11,6 +11,12 @@ public class SandMiner : MonoBehaviour, IMainSystem
     [SerializeField] private int _blockSize;
     public int blockSize {get {return _blockSize;} set{_blockSize = value;}}
 
+    [SerializeField] private int _blockID;
+    public int blockID {get {return _blockID;} }
+
+    private Vector2Int _topLeftPos;
+    public Vector2Int topLeftPos {get {return _topLeftPos;} set {_topLeftPos = value;}}
+
     [SerializeField] private List<BlockInOutList> _blockInput;
     public List<BlockInOutList> blockInput {get {return _blockInput;} set{_blockInput = value;}}
 
@@ -28,29 +34,40 @@ public class SandMiner : MonoBehaviour, IMainSystem
 
     [SerializeField] private List<int> _blackListID;
     public List<int> blackListID {get {return _blackListID;} set{_blackListID = value;}}
-    #endregion
 
-    private BlockPlaceDict blockDict;
+    private BlockPlaceBackgroundDict blockDict;
 
     private void Awake()
     {
-        blockDict = FindObjectOfType<BlockPlaceDict>();
+        blockDict = FindObjectOfType<BlockPlaceBackgroundDict>();
     }
 
-    public void InitiateMainSystem()
-    {
+    public void InitiateMainSystem() {}
 
-    }
-
-    public bool BlockPlaceable(Tilemap map, Vector2Int upLeftPos)
+    public bool BlockPlaceable(Tilemap backgroundMap, Tilemap mainMap, Vector2Int upLeftPos)
     {
         List<int> ids = new List<int>();
+
+        //check main map
         for (int i = 0; i < blockSize; i++)
         {
             for (int j = 0; j < blockSize; j++)
             {
-                Vector2Int pos = new Vector2Int(upLeftPos.x + i, upLeftPos.y - j);
-                int id = blockDict.GetTileID(map, pos);
+                Vector2Int pos = new Vector2Int(upLeftPos.x + j, upLeftPos.y - i);
+                TileBase tile = mainMap.GetTile((Vector3Int) pos);
+                
+                if (tile) //not empty
+                {return false;}
+            }
+        }
+
+        // check background map
+        for (int i = 0; i < blockSize; i++)
+        {
+            for (int j = 0; j < blockSize; j++)
+            {
+                Vector2Int pos = new Vector2Int(upLeftPos.x + j, upLeftPos.y - i);
+                int id = blockDict.GetTileID(backgroundMap, pos);
                 ids.Add(id);
             }
         }
@@ -75,11 +92,29 @@ public class SandMiner : MonoBehaviour, IMainSystem
             }
             return true;
         }
+
+        //rplaceable!
         return false;
     }
 
-    public void PlaceBlock(Tilemap map, Vector2Int upLeftPos)
+    public void PlaceBlock(Tilemap backgroundMap, Tilemap mainMap, Vector2Int upLeftPos)
     {
-        
+        if (!BlockPlaceable(backgroundMap, mainMap, upLeftPos))
+        {
+            Debug.LogError("Not placeable!"); 
+            Destroy(this.gameObject);
+            return;
+        }
+
+        topLeftPos = upLeftPos; //for later use
+        for (int i = 0; i < blockSize; i++)
+        {
+            for (int j = 0; j < blockSize; j++)
+            {
+                Vector2Int pos = new Vector2Int(upLeftPos.x + j, upLeftPos.y - i);
+                mainMap.SetTile((Vector3Int) pos, blockTile[i].row[j]);
+            }
+        }
     }
+    #endregion
 }
