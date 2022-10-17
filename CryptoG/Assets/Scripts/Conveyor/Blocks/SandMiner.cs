@@ -11,11 +11,14 @@ public class SandMiner : MonoBehaviour, IMainSystem
     [SerializeField] private int _blockSize;
     public int blockSize {get {return _blockSize;} set{_blockSize = value;}}
 
-    [SerializeField] private List<List<bool>> _blockInput;
-    public List<List<bool>> blockInput {get {return _blockInput;} set{_blockInput = value;}}
+    [SerializeField] private List<BlockInOutList> _blockInput;
+    public List<BlockInOutList> blockInput {get {return _blockInput;} set{_blockInput = value;}}
 
-    [SerializeField] private List<List<bool>> _blockOutput;
-    public List<List<bool>> blockOutput {get {return _blockOutput;} set{_blockOutput = value;}}
+    [SerializeField] private List<BlockInOutList> _blockOutput;
+    public List<BlockInOutList> blockOutput {get {return _blockOutput;} set{_blockOutput = value;}}
+
+    [SerializeField] private List<BlockTilebasesList> _blockTile;
+    public List<BlockTilebasesList> blockTile {get {return _blockTile;} set {_blockTile = value;}}
 
     [SerializeField] private bool _blockListToggle; 
     public bool blockListToggle {get {return _blockListToggle;} set{_blockListToggle = value;}}
