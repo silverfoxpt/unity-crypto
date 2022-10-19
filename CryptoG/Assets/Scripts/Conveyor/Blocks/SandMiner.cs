@@ -4,8 +4,26 @@ using UnityEngine;
 using Conveyor;
 using UnityEngine.Tilemaps;
 
-public class SandMiner : MonoBehaviour, IMainSystem
+public class SandMiner : MonoBehaviour, IMainSystem, IBlockStorage, IProduce
 {
+    private void Awake()
+    {
+        blockDict = FindObjectOfType<BlockPlaceBackgroundDict>();
+        reRefList = FindObjectOfType<ResourceList>();
+    }
+
+    private void Start()
+    {
+        InitiateMainSystem();
+        InitializeStorage();
+        InitializeProducer();
+    }
+
+    private void Update()
+    {
+        Produce();
+    }
+
     #region mainSys
     [Header("Main")]
     [SerializeField] private int _blockSize;
@@ -36,11 +54,6 @@ public class SandMiner : MonoBehaviour, IMainSystem
     public List<int> blackListID {get {return _blackListID;} set{_blackListID = value;}}
 
     private BlockPlaceBackgroundDict blockDict;
-
-    private void Awake()
-    {
-        blockDict = FindObjectOfType<BlockPlaceBackgroundDict>();
-    }
 
     public void InitiateMainSystem() {}
 
@@ -93,7 +106,7 @@ public class SandMiner : MonoBehaviour, IMainSystem
             return true;
         }
 
-        //rplaceable!
+        //replaceable!
         return false;
     }
 
@@ -115,6 +128,82 @@ public class SandMiner : MonoBehaviour, IMainSystem
                 mainMap.SetTile((Vector3Int) pos, blockTile[i].row[j]);
             }
         }
+    }
+    #endregion
+    [Space(10)]
+
+    #region storage
+    [Header("Storage")]
+    [SerializeField] private int _maxCapacity;
+    public int maxCapacity {get {return _maxCapacity;}}
+
+    [SerializeField] private List<bulkItem> _items;
+    public List<bulkItem> items {get {return _items;} set {_items = value;}}
+
+    private ResourceList reRefList;
+
+    public void AddToStorage(bulkItem item) 
+    {
+        foreach(var it in items)
+        {
+            if (it.id == item.id) //matched
+            {
+                it.itemCount += item.itemCount;
+                return;
+            }
+        }
+    }
+
+    public void RemoveFromStorage(bulkItem item) 
+    {
+        foreach(var it in items)
+        {
+            if (it.id == item.id) //matched
+            {
+                it.itemCount -= item.itemCount;
+                if (it.itemCount <= 0) {it.itemCount = 0;}
+                return;
+            }
+        }
+    }
+
+    public void InitializeStorage()
+    {
+        foreach(var re in reRefList.resourceReferences)
+        {
+            bulkItem emp = new bulkItem(0, re.id);
+            items.Add(emp);
+        }
+    }
+    #endregion
+    //[Space(10)]
+
+    #region producer
+    [Header("Producer")]
+    [SerializeField] private List<bulkItem> _requirements;
+    public List<bulkItem> requirements {get {return _requirements;}}
+
+    [SerializeField] private bulkItem _product;
+    public bulkItem product {get {return _product;}}
+
+    [SerializeField] private float _timeToProduce;
+    public float timeToProduce {get {return _timeToProduce;}}
+
+    [SerializeField] private float _produceTimer;
+    public float produceTimer {get {return _produceTimer;} set { _produceTimer = value;}}
+
+    public void Produce()
+    {
+        produceTimer += Time.deltaTime;
+        if (produceTimer >= timeToProduce)
+        {
+            
+        }
+    }
+
+    public void InitializeProducer()
+    {
+        produceTimer = 0f;
     }
     #endregion
 }
