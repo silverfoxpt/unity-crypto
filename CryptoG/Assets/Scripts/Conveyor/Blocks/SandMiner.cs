@@ -4,13 +4,22 @@ using UnityEngine;
 using Conveyor;
 using UnityEngine.Tilemaps;
 
-public class SandMiner : MonoBehaviour, IMainSystem, IBlockStorage, IProduce
-{
+public class SandMiner : MonoBehaviour, IMainSystem, IBlockStorage, IProduce, IOutputResource
+{ 
+    private BlockPlaceBackgroundDict blockDict;
+    private ResourceList reRefList;
+    private BlockUserInteraction blockUser;
+    private BlockLocationFinder blockLoc;
+    private BlockIOQuery blockIOQuery;
+
     private void Awake()
     {
-        blockDict = FindObjectOfType<BlockPlaceBackgroundDict>();
-        reRefList = FindObjectOfType<ResourceList>();
-    }
+        blockDict       = FindObjectOfType<BlockPlaceBackgroundDict>();
+        reRefList       = FindObjectOfType<ResourceList>();
+        blockUser       = FindObjectOfType<BlockUserInteraction>();
+        blockLoc        = FindObjectOfType<BlockLocationFinder>();
+        blockIOQuery    = FindObjectOfType<BlockIOQuery>();
+    }   
 
     private void Start()
     {
@@ -21,10 +30,16 @@ public class SandMiner : MonoBehaviour, IMainSystem, IBlockStorage, IProduce
 
     private void Update()
     {
-        Produce();
+        if (!isOriginal)
+        {
+            Produce();
+        }
     }
 
     #region mainSys
+    [SerializeField] private bool _isOriginal = false;
+    public bool isOriginal {get {return _isOriginal;} set {_isOriginal = value;}}
+
     [Header("Main")]
     [SerializeField] private int _blockSize;
     public int blockSize {get {return _blockSize;} set{_blockSize = value;}}
@@ -34,9 +49,6 @@ public class SandMiner : MonoBehaviour, IMainSystem, IBlockStorage, IProduce
 
     private Vector2Int _topLeftPos;
     public Vector2Int topLeftPos {get {return _topLeftPos;} set {_topLeftPos = value;}}
-
-    [SerializeField] private List<BlockInOutList> _blockInput;
-    public List<BlockInOutList> blockInput {get {return _blockInput;} set{_blockInput = value;}}
 
     [SerializeField] private List<BlockInOutList> _blockOutput;
     public List<BlockInOutList> blockOutput {get {return _blockOutput;} set{_blockOutput = value;}}
@@ -52,8 +64,6 @@ public class SandMiner : MonoBehaviour, IMainSystem, IBlockStorage, IProduce
 
     [SerializeField] private List<int> _blackListID;
     public List<int> blackListID {get {return _blackListID;} set{_blackListID = value;}}
-
-    private BlockPlaceBackgroundDict blockDict;
 
     public void InitiateMainSystem() {}
 
@@ -140,8 +150,6 @@ public class SandMiner : MonoBehaviour, IMainSystem, IBlockStorage, IProduce
     [SerializeField] private List<bulkItem> _items;
     public List<bulkItem> items {get {return _items;} set {_items = value;}}
 
-    private ResourceList reRefList;
-
     public void AddToStorage(bulkItem item) 
     {
         foreach(var it in items)
@@ -156,12 +164,12 @@ public class SandMiner : MonoBehaviour, IMainSystem, IBlockStorage, IProduce
 
     public void RemoveFromStorage(bulkItem item) 
     {
+        if (!ItemAvailable(item.id, item.itemCount)) {return;} //not enough
         foreach(var it in items)
         {
             if (it.id == item.id) //matched
             {
                 it.itemCount -= item.itemCount;
-                if (it.itemCount <= 0) {it.itemCount = 0;}
                 return;
             }
         }
@@ -175,8 +183,34 @@ public class SandMiner : MonoBehaviour, IMainSystem, IBlockStorage, IProduce
             items.Add(emp);
         }
     }
+
+    public bool ItemAvailable(int id, int numNeeded)
+    {
+        foreach(var it in items)
+        {
+            if (it.id == id) //matched
+            {
+                if (it.itemCount >= numNeeded) {return true;}
+                return false;
+            }
+        }
+        return false;
+    }
+
+    public bool StorageFull(int id) 
+    {
+        foreach(var it in items)
+        {
+            if (it.id == id) //matched
+            {
+                if (it.itemCount >= maxCapacity) {return true;}
+                break;
+            }
+        }
+        return false;
+    }
     #endregion
-    //[Space(10)]
+    [Space(10)]
 
     #region producer
     [Header("Producer")]
@@ -197,13 +231,51 @@ public class SandMiner : MonoBehaviour, IMainSystem, IBlockStorage, IProduce
         produceTimer += Time.deltaTime;
         if (produceTimer >= timeToProduce)
         {
-            
+            //check if able to produce
+            bool able = true;
+            foreach(bulkItem require in requirements)
+            {
+                if (!ItemAvailable(require.id, require.itemCount)) {able = false;}
+            }
+            if (StorageFull(product.id)) {able = false;}
+
+            //do it
+            if (able)
+            {
+                foreach(bulkItem require in requirements)
+                {
+                    RemoveFromStorage(require);
+                }
+                AddToStorage(product);
+                produceTimer = 0f;
+            }
         }
     }
 
     public void InitializeProducer()
     {
         produceTimer = 0f;
+    }
+    #endregion
+    [Space(10)]
+
+    #region outputResource
+    [Header("Output control")]
+    [SerializeField] private List<BlockInOutList> _blockInput;
+    public List<BlockInOutList> blockInput {get {return _blockInput;}}
+
+    [SerializeField] private bool _toggleOutputList;
+    public bool toggleOutputList {get {return _toggleOutputList;} set {_toggleOutputList = value;}}
+
+    [SerializeField] private List<bulkItem> _outputWhiteList;
+    public List<bulkItem> outputWhiteList {get {return _outputWhiteList;} }
+
+    [SerializeField] private List<bulkItem> _outputBlackList;
+    public List<bulkItem> outputBlackList {get {return _outputBlackList;} }
+
+    public void OutputToIOQuery()
+    {
+
     }
     #endregion
 }

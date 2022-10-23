@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Conveyor
 {
-    interface IProduce
+    public interface IProduce
     {
         public List<bulkItem> requirements {get; }
         public bulkItem product {get;}

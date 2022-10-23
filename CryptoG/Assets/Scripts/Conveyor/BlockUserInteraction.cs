@@ -18,11 +18,14 @@ public class BlockUserInteraction : MonoBehaviour
     [SerializeField] private Tilemap backgroundTilemap;
     [SerializeField] private Tilemap mainTilemap;
 
-    private List<GameObject> duplicates;
+    public List<GameObject> duplicates;
     private List<IMainSystem> originalBlockMainInterface;
+
+    private BlockLocationFinder blockLocate;
 
     private void Awake()
     {
+        blockLocate = FindObjectOfType<BlockLocationFinder>();
         duplicates = new List<GameObject>();
 
         //save those interfaces for later use
@@ -48,23 +51,30 @@ public class BlockUserInteraction : MonoBehaviour
             
             if (userActionID == 1) //create block
             {
-                int c = 0;
-                foreach(var originalBlock in originalBlocksScript)
-                {
-                    //check id
-                    if (originalBlockMainInterface[c].blockID != blockChosenID) {continue;}
-
-                    //duplicate original block
-                    var dup = Instantiate(originalBlock, Vector3.zero, Quaternion.identity, transform);
-                    duplicates.Add(dup);
-
-                    //start system
-                    var mainSysScript = dup.GetComponent<ScriptMediator>().thisBlockScript as IMainSystem;
-                    mainSysScript.PlaceBlock(backgroundTilemap, mainTilemap, (Vector2Int) mouseCellPos);
-
-                    c++;
-                }
+                CreateNewBlock(mouseCellPos);
             }
+        }
+    }
+
+    private void CreateNewBlock(Vector3Int mouseCellPos)
+    {
+        int c = 0;
+        foreach (var originalBlock in originalBlocksScript)
+        {
+            //check id
+            if (originalBlockMainInterface[c].blockID != blockChosenID) { continue; }
+            c++;
+
+            //duplicate original block
+            var dup = Instantiate(originalBlock, Vector3.zero, Quaternion.identity, transform);
+            duplicates.Add(dup);
+
+            //start system
+            var mainSysScript = dup.GetComponent<ScriptMediator>().GetMainSystemInterface();
+            mainSysScript.PlaceBlock(backgroundTilemap, mainTilemap, (Vector2Int)mouseCellPos);
+            mainSysScript.isOriginal = false;
+
+            blockLocate.AddNewBlock(dup);
         }
     }
 }

@@ -17,14 +17,15 @@ namespace Conveyor
         public List<int> sides;
     }
 
-    interface IMainSystem
+    public interface IMainSystem
     {
+        public bool isOriginal {get; set;}
+
         public int blockSize {get; set;}
         public int blockID {get;}
         public Vector2Int topLeftPos {get; set;}
 
         public List<BlockInOutList> blockOutput {get; set;}
-        public List<BlockInOutList> blockInput {get; set;}
 
         public List<BlockTilebasesList> blockTile {get; set;}
 

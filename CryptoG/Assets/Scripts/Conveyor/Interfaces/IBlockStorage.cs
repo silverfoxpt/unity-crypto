@@ -16,7 +16,7 @@ namespace Conveyor
         }
     }
 
-    interface IBlockStorage
+    public interface IBlockStorage
     {
         public int maxCapacity {get;}
         public List<bulkItem> items {get; set;}
@@ -24,5 +24,7 @@ namespace Conveyor
         public void InitializeStorage();
         public void AddToStorage(bulkItem item);
         public void RemoveFromStorage(bulkItem item);
+        public bool ItemAvailable(int id, int numNeeded);
+        public bool StorageFull(int id);
     }
 }
