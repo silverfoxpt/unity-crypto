@@ -62,8 +62,10 @@ public class BlockUserInteraction : MonoBehaviour
         foreach (var originalBlock in originalBlocksScript)
         {
             //check id
-            if (originalBlockMainInterface[c].blockID != blockChosenID) { continue; }
-            c++;
+            if (originalBlockMainInterface[c].blockID != blockChosenID) 
+            { 
+                c++; continue;
+            }
 
             //duplicate original block
             var dup = Instantiate(originalBlock, Vector3.zero, Quaternion.identity, transform);
@@ -75,6 +77,7 @@ public class BlockUserInteraction : MonoBehaviour
             mainSysScript.isOriginal = false;
 
             blockLocate.AddNewBlock(dup);
+            c++;
         }
     }
 }

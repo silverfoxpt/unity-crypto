@@ -687,8 +687,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   originalBlocksScript:
   - {fileID: 1531954012}
+  - {fileID: 1862177881}
   userActionID: 1
-  blockChosenID: 100
+  blockChosenID: 101
   backgroundTilemap: {fileID: 1823305675}
   mainTilemap: {fileID: 380633894}
   duplicates: []
@@ -1423,6 +1424,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1862177882}
+  - component: {fileID: 1862177884}
   - component: {fileID: 1862177883}
   m_Layer: 0
   m_Name: SMALLSTORAGE
@@ -1469,6 +1471,19 @@ MonoBehaviour:
   _blackListID: 
   _maxCapacity: 100
   _items: []
+--- !u!114 &1862177884
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1862177881}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea1b1c10bc9c0c546bbffa0e971a1983, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  thisBlockScript: {fileID: 1862177883}
 --- !u!1 &1973352337
 GameObject:
   m_ObjectHideFlags: 0
