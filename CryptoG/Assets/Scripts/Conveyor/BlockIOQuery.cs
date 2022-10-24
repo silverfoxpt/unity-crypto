@@ -5,7 +5,7 @@ using Conveyor;
 
 public class ResourceIOQuery
 {
-    public bulkItem ite;
+    public List<bulkItem> ite;
     public IBlockStorage originalOutputStorage;
 }
 
@@ -35,16 +35,18 @@ public class BlockIOQuery : MonoBehaviour
         return resourceQueryDict[pos].originalOutputStorage != null;
     }
 
+    //add 1 item to query of that cell
     public void AddQuery(Vector2Int dest, bulkItem item, IBlockStorage store)
     {
         //no need to check if there's an old query there, as everything will recirculate after a while
         ResourceIOQuery newQuery = new ResourceIOQuery();
-        newQuery.ite = item;
+        newQuery.ite.Add(item);
         newQuery.originalOutputStorage = store;
 
         resourceQueryDict[dest] = newQuery;
     }
 
+    //take reference to LIST of items from query of that cell
     public ResourceIOQuery RemoveQuery(Vector2Int dest)
     {
         var tmp = resourceQueryDict[dest];

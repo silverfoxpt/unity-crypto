@@ -4,7 +4,7 @@ using UnityEngine;
 using Conveyor;
 using UnityEngine.Tilemaps;
 
-public class SmallStorage : MonoBehaviour, IMainSystem, IBlockStorage
+public class SmallStorage : MonoBehaviour, IMainSystem, IBlockStorage, IInputResource
 {
     #region neccessary
     private BlockPlaceBackgroundDict blockDict;
@@ -202,6 +202,28 @@ public class SmallStorage : MonoBehaviour, IMainSystem, IBlockStorage
     #endregion
 
     #region inputResource
+    [SerializeField] private List<BlockInOutList> _blockInput;
+    public List<BlockInOutList> blockInput {get {return _blockInput;} }
+
+    [SerializeField] private bool _toggleInputList;
+    public bool toggleInputList {get {return _toggleInputList;} set {_toggleInputList = value;}}
+
+    [SerializeField] private List<bulkItem> _inputWhiteList;
+    public List<bulkItem> inputWhiteList {get {return _inputWhiteList;}}
+
+    [SerializeField] private List<bulkItem> _inputBlackList;
+    public List<bulkItem> inputBlackList {get {return _inputBlackList;}}
+
+    public void InputFromIOQuery() 
+    {
+        for (int i = 0; i < blockSize; i++)
+        {
+            for (int j = 0; j < blockSize; j++)
+            {
+                
+            }
+        }
+    }
     #endregion
 }
 

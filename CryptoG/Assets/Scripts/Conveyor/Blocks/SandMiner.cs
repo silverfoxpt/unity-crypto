@@ -281,31 +281,32 @@ public class SandMiner : MonoBehaviour, IMainSystem, IBlockStorage, IProduce, IO
         {
             foreach(var item in items)
             {
+                if (item.itemCount <= 0) {continue;} //no item
                 foreach (var allowedItem in outputWhiteList)
                 {
-                    if (allowedItem.id == item.id) //found
-                    {
-                        //check all available output 
-                        for (int i = 0; i < 4; i++) //4 sides
-                        {
-                            for (int j = 0; j < blockSize; j++)
-                            {
-                                if (blockOutput[i].sides[j]) //output available
-                                {
-                                    Vector2Int newPos = new Vector2Int(-100000, -100000);
-                                    switch(i)
-                                    {
-                                        case 0: newPos = new Vector2Int(0 + sideX[i],               j + sideY[i]); break; //up
-                                        case 1: newPos = new Vector2Int(j + sideX[i],               blockSize-1 + sideY[i]); break; //right
-                                        case 2: newPos = new Vector2Int(blockSize-1 + sideX[i],     j + sideY[i]); break; //down
-                                        case 3: newPos = new Vector2Int(j + sideX[i],               0 + sideY[i]); break; //left
-                                    }
+                    if (allowedItem.id != item.id) {continue;} // item not in whitelist, continue
 
-                                    blockIOQuery.AddQuery(newPos, new bulkItem(1, item.id), this as IBlockStorage);
+                    //check all available output 
+                    for (int i = 0; i < 4; i++) //4 sides
+                    {
+                        for (int j = 0; j < blockSize; j++)
+                        {
+                            if (blockOutput[i].sides[j]) //output available
+                            {
+                                Vector2Int newPos = new Vector2Int(-100000, -100000);
+                                switch(i)
+                                {
+                                    case 0: newPos = new Vector2Int(0 + sideX[i],               j + sideY[i]); break; //up
+                                    case 1: newPos = new Vector2Int(j + sideX[i],               blockSize-1 + sideY[i]); break; //right
+                                    case 2: newPos = new Vector2Int(blockSize-1 + sideX[i],     j + sideY[i]); break; //down
+                                    case 3: newPos = new Vector2Int(j + sideX[i],               0 + sideY[i]); break; //left
                                 }
+
+                                blockIOQuery.AddQuery(newPos, new bulkItem(1, item.id), this as IBlockStorage);
                             }
                         }
                     }
+                    break; //found item in whitelist, no need to search the whitelist further
                 }
             }
         }
