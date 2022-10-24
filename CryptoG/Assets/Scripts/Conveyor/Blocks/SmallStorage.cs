@@ -24,8 +24,19 @@ public class SmallStorage : MonoBehaviour, IMainSystem, IBlockStorage, IInputRes
 
     private void Start()
     {
-        InitiateMainSystem();
-        InitializeStorage();
+        if (isOriginal)
+        {
+            InitiateMainSystem();
+            InitializeStorage();
+        }
+    }
+
+    private void Update()
+    {
+        if (!isOriginal)
+        {
+            InputFromIOQuery(); //scan for inputs
+        }
     }
     #endregion
 
@@ -200,8 +211,10 @@ public class SmallStorage : MonoBehaviour, IMainSystem, IBlockStorage, IInputRes
         return false;
     }
     #endregion
+    [Space(10)]
 
     #region inputResource
+    [Header("Input Resource Control")]
     [SerializeField] private List<BlockInOutList> _blockInput;
     public List<BlockInOutList> blockInput {get {return _blockInput;} }
 
@@ -216,11 +229,50 @@ public class SmallStorage : MonoBehaviour, IMainSystem, IBlockStorage, IInputRes
 
     public void InputFromIOQuery() 
     {
-        for (int i = 0; i < blockSize; i++)
+        int[] sideX = new int[4] {-1, 0, +1, 0};
+        int[] sideY = new int[4] {0, +1, 0, -1};
+        
+        
+        if (!toggleInputList) //blacklist
         {
-            for (int j = 0; j < blockSize; j++)
+            //check all available input points 
+            for (int i = 0; i < 4; i++) //4 sides
             {
-                
+                for (int j = 0; j < blockSize; j++)
+                {
+                    //get pos of current cell (of block, as it can has multiple cells)
+                    Vector2Int pos = new Vector2Int(-100000, -100000);
+                    switch(i)
+                    {
+                        case 0: pos = new Vector2Int(0,               j); break; 
+                        case 1: pos = new Vector2Int(j,               blockSize-1); break;
+                        case 2: pos = new Vector2Int(blockSize-1,     j); break; 
+                        case 3: pos = new Vector2Int(j,               0); break; 
+                    }
+
+                    ResourceIOQuery queryList = blockIOQuery.RequestQuery(pos);
+                    List<SingleResourceQuery> unusedItem = new List<SingleResourceQuery>();
+
+                    foreach (SingleResourceQuery queryItem in queryList.itemList)
+                    {
+                        bool takeItem = false;
+                        foreach(var disallowedItem in inputBlackList)
+                        {
+                            bulkItem curItem = queryItem.item;
+                            if (curItem.id == disallowedItem.id) {continue;} //disallowed item
+                            if (queryItem.connectedStorage.ItemAvailable(curItem.id, curItem.itemCount)) {continue;} //not enough item in storage of origin block
+
+                            //take it!
+                            takeItem = true;
+                            items.Add(curItem); //add to destionation (my) storage
+                            queryItem.connectedStorage.RemoveFromStorage(curItem); //remove from origin storage
+                            break;
+                        }
+
+                        if (!takeItem) {unusedItem.Add(queryItem); }
+                    }
+                    queryList.itemList = unusedItem; //assign unused queries back to manager
+                }
             }
         }
     }

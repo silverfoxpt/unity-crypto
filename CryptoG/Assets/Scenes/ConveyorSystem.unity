@@ -689,7 +689,7 @@ MonoBehaviour:
   - {fileID: 1531954012}
   - {fileID: 1862177881}
   userActionID: 1
-  blockChosenID: 101
+  blockChosenID: 100
   backgroundTilemap: {fileID: 1823305675}
   mainTilemap: {fileID: 380633894}
   duplicates: []
@@ -1471,6 +1471,14 @@ MonoBehaviour:
   _blackListID: 
   _maxCapacity: 100
   _items: []
+  _blockInput:
+  - sides: 01
+  - sides: 01
+  - sides: 01
+  - sides: 01
+  _toggleInputList: 0
+  _inputWhiteList: []
+  _inputBlackList: []
 --- !u!114 &1862177884
 MonoBehaviour:
   m_ObjectHideFlags: 0

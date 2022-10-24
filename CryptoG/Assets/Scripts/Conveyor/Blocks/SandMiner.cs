@@ -24,9 +24,12 @@ public class SandMiner : MonoBehaviour, IMainSystem, IBlockStorage, IProduce, IO
 
     private void Start()
     {
-        InitiateMainSystem();
-        InitializeStorage();
-        InitializeProducer();
+        if (isOriginal)
+        {
+            InitiateMainSystem();
+            InitializeStorage();
+            InitializeProducer();
+        }
     }
 
     private void Update()
@@ -34,6 +37,7 @@ public class SandMiner : MonoBehaviour, IMainSystem, IBlockStorage, IProduce, IO
         if (!isOriginal)
         {
             Produce();
+            OutputToIOQuery(); // check if output-able
         }
     }
     #endregion
@@ -259,7 +263,7 @@ public class SandMiner : MonoBehaviour, IMainSystem, IBlockStorage, IProduce, IO
     [Space(10)]
 
     #region outputResource
-    [Header("Output control")]
+    [Header("Output Resource Control")]
     [SerializeField] private List<BlockInOutList> _blockOutput;
     public List<BlockInOutList> blockOutput {get {return _blockOutput;}}
 
@@ -281,7 +285,7 @@ public class SandMiner : MonoBehaviour, IMainSystem, IBlockStorage, IProduce, IO
         {
             foreach(var item in items)
             {
-                if (item.itemCount <= 0) {continue;} //no item
+                if (item.itemCount <= 0) {continue;} //no item, continue
                 foreach (var allowedItem in outputWhiteList)
                 {
                     if (allowedItem.id != item.id) {continue;} // item not in whitelist, continue
@@ -293,16 +297,20 @@ public class SandMiner : MonoBehaviour, IMainSystem, IBlockStorage, IProduce, IO
                         {
                             if (blockOutput[i].sides[j]) //output available
                             {
-                                Vector2Int newPos = new Vector2Int(-100000, -100000);
+                                Vector2Int pos = new Vector2Int(-100000, -100000);
                                 switch(i)
                                 {
-                                    case 0: newPos = new Vector2Int(0 + sideX[i],               j + sideY[i]); break; //up
-                                    case 1: newPos = new Vector2Int(j + sideX[i],               blockSize-1 + sideY[i]); break; //right
-                                    case 2: newPos = new Vector2Int(blockSize-1 + sideX[i],     j + sideY[i]); break; //down
-                                    case 3: newPos = new Vector2Int(j + sideX[i],               0 + sideY[i]); break; //left
+                                    case 0: pos = new Vector2Int(0,               j); break; 
+                                    case 1: pos = new Vector2Int(j,               blockSize-1); break; 
+                                    case 2: pos = new Vector2Int(blockSize-1,     j); break;
+                                    case 3: pos = new Vector2Int(j,               0); break;
                                 }
 
-                                blockIOQuery.AddQuery(newPos, new bulkItem(1, item.id), this as IBlockStorage);
+                                blockIOQuery.AddQuery(pos + new Vector2Int(sideX[i], sideY[i]), 
+                                                        pos, 
+                                                        new bulkItem(1, item.id), 
+                                                        this as IBlockStorage
+                                );
                             }
                         }
                     }
