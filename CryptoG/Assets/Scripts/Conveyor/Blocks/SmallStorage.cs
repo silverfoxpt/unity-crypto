@@ -4,8 +4,8 @@ using UnityEngine;
 using Conveyor;
 using UnityEngine.Tilemaps;
 
-public class SandMiner : MonoBehaviour, IMainSystem, IBlockStorage, IProduce, IOutputResource
-{ 
+public class SmallStorage : MonoBehaviour, IMainSystem, IBlockStorage
+{
     #region neccessary
     private BlockPlaceBackgroundDict blockDict;
     private ResourceList reRefList;
@@ -26,15 +26,6 @@ public class SandMiner : MonoBehaviour, IMainSystem, IBlockStorage, IProduce, IO
     {
         InitiateMainSystem();
         InitializeStorage();
-        InitializeProducer();
-    }
-
-    private void Update()
-    {
-        if (!isOriginal)
-        {
-            Produce();
-        }
     }
     #endregion
 
@@ -209,110 +200,8 @@ public class SandMiner : MonoBehaviour, IMainSystem, IBlockStorage, IProduce, IO
         return false;
     }
     #endregion
-    [Space(10)]
 
-    #region producer
-    [Header("Producer")]
-    [SerializeField] private List<bulkItem> _requirements;
-    public List<bulkItem> requirements {get {return _requirements;}}
-
-    [SerializeField] private bulkItem _product;
-    public bulkItem product {get {return _product;}}
-
-    [SerializeField] private float _timeToProduce;
-    public float timeToProduce {get {return _timeToProduce;}}
-
-    [SerializeField] private float _produceTimer;
-    public float produceTimer {get {return _produceTimer;} set { _produceTimer = value;}}
-
-    public void Produce()
-    {
-        produceTimer += Time.deltaTime;
-        if (produceTimer >= timeToProduce)
-        {
-            //check if able to produce
-            bool able = true;
-            foreach(bulkItem require in requirements)
-            {
-                if (!ItemAvailable(require.id, require.itemCount)) {able = false;}
-            }
-            if (StorageFull(product.id)) {able = false;}
-
-            //do it
-            if (able)
-            {
-                foreach(bulkItem require in requirements)
-                {
-                    RemoveFromStorage(require);
-                }
-                AddToStorage(product);
-                produceTimer = 0f;
-            }
-        }
-    }
-
-    public void InitializeProducer()
-    {
-        produceTimer = 0f;
-    }
-    #endregion
-    [Space(10)]
-
-    #region outputResource
-    [Header("Output control")]
-    [SerializeField] private List<BlockInOutList> _blockOutput;
-    public List<BlockInOutList> blockOutput {get {return _blockOutput;}}
-
-    [SerializeField] private bool _toggleOutputList;
-    public bool toggleOutputList {get {return _toggleOutputList;} set {_toggleOutputList = value;}}
-
-    [SerializeField] private List<bulkItem> _outputWhiteList;
-    public List<bulkItem> outputWhiteList {get {return _outputWhiteList;} }
-
-    [SerializeField] private List<bulkItem> _outputBlackList;
-    public List<bulkItem> outputBlackList {get {return _outputBlackList;} }
-
-    public void OutputToIOQuery()
-    {
-        int[] sideX = new int[4] {-1, 0, +1, 0};
-        int[] sideY = new int[4] {0, +1, 0, -1};
-
-        if (toggleOutputList) //use whitelist
-        {
-            foreach(var item in items)
-            {
-                foreach (var allowedItem in outputWhiteList)
-                {
-                    if (allowedItem.id == item.id) //found
-                    {
-                        //check all available output 
-                        for (int i = 0; i < 4; i++) //4 sides
-                        {
-                            for (int j = 0; j < blockSize; j++)
-                            {
-                                if (blockOutput[i].sides[j]) //output available
-                                {
-                                    Vector2Int newPos = new Vector2Int(-100000, -100000);
-                                    switch(i)
-                                    {
-                                        case 0: newPos = new Vector2Int(0 + sideX[i],               j + sideY[i]); break; //up
-                                        case 1: newPos = new Vector2Int(j + sideX[i],               blockSize-1 + sideY[i]); break; //right
-                                        case 2: newPos = new Vector2Int(blockSize-1 + sideX[i],     j + sideY[i]); break; //down
-                                        case 3: newPos = new Vector2Int(j + sideX[i],               0 + sideY[i]); break; //left
-                                    }
-
-                                    blockIOQuery.AddQuery(newPos, new bulkItem(1, item.id), this as IBlockStorage);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        else //use blacklist
-        {
-
-        }
-    }
+    #region inputResource
     #endregion
 }
+

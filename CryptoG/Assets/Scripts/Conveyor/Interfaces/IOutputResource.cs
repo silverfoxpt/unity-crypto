@@ -6,7 +6,7 @@ namespace Conveyor
 {
     public interface IOutputResource
     {
-        public List<BlockInOutList> blockInput {get;}
+        public List<BlockInOutList> blockOutput {get;}
         
         public bool toggleOutputList {get; set;} //true use whitelist, vice versa
         public List<bulkItem> outputWhiteList {get;}

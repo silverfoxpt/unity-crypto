@@ -6,11 +6,12 @@ using Conveyor;
 
 public class BlockLocationFinder : MonoBehaviour
 {
-    [SerializeField] private int mapRange = 100;
+    private int mapRange;
     public Dictionary<Vector2Int, ScriptMediator> blockLocDict;
 
     private void Awake()
     {
+        mapRange = UniversalInfo.mapSize;
         blockLocDict = new Dictionary<Vector2Int, ScriptMediator>();
         for (int i = -mapRange; i <= mapRange; i++)
         {

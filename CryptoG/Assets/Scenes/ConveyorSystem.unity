@@ -434,7 +434,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1198055455}
   m_Layer: 0
-  m_Name: Blocks
+  m_Name: Original Blocks
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -453,6 +453,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1531954013}
+  - {fileID: 1862177882}
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -580,14 +581,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b20476ec6522f3c49820cdf92d491d0d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _isOriginal: 0
+  _isOriginal: 1
   _blockSize: 2
   _blockID: 100
-  _blockOutput:
-  - sides: 0100000001000000
-  - sides: 0100000001000000
-  - sides: 0100000001000000
-  - sides: 0100000001000000
   _blockTile:
   - row:
     - {fileID: 11400000, guid: 3382d5e4365bee54090daca65c936a84, type: 2}
@@ -606,9 +602,15 @@ MonoBehaviour:
     id: 1
   _timeToProduce: 2
   _produceTimer: 0
-  _blockInput: []
-  _toggleOutputList: 0
-  _outputWhiteList: []
+  _blockOutput:
+  - sides: 0101
+  - sides: 0101
+  - sides: 0101
+  - sides: 0101
+  _toggleOutputList: 1
+  _outputWhiteList:
+  - itemCount: 1
+    id: 1
   _outputBlackList: []
 --- !u!114 &1531954015
 MonoBehaviour:
@@ -1412,6 +1414,61 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
+--- !u!1 &1862177881
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1862177882}
+  - component: {fileID: 1862177883}
+  m_Layer: 0
+  m_Name: SMALLSTORAGE
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1862177882
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1862177881}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1198055455}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1862177883
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1862177881}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15b874a997b3f0943a356c3bf5f92095, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _isOriginal: 1
+  _blockSize: 1
+  _blockID: 101
+  _blockTile:
+  - row:
+    - {fileID: 11400000, guid: e9af3e90b65666345926d0b10e7a7e59, type: 2}
+  _blockListToggle: 0
+  _whiteListID: 
+  _blackListID: 
+  _maxCapacity: 100
+  _items: []
 --- !u!1 &1973352337
 GameObject:
   m_ObjectHideFlags: 0
@@ -1500,4 +1557,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20eb65638a5e6734d854fcb1d10b4443, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mapRange: 100

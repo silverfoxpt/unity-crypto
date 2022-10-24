@@ -14,7 +14,7 @@ namespace Conveyor
     [System.Serializable]
     public struct BlockInOutList
     {
-        public List<int> sides;
+        public List<bool> sides;
     }
 
     public interface IMainSystem
@@ -24,8 +24,6 @@ namespace Conveyor
         public int blockSize {get; set;}
         public int blockID {get;}
         public Vector2Int topLeftPos {get; set;}
-
-        public List<BlockInOutList> blockOutput {get; set;}
 
         public List<BlockTilebasesList> blockTile {get; set;}
 
