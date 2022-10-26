@@ -212,6 +212,19 @@ public class SandMiner : MonoBehaviour, IMainSystem, IBlockStorage, IProduce, IO
         }
         return false;
     }
+
+    public bool ItemAddable(int id, int numAdd)
+    {
+        foreach(var it in items)
+        {
+            if (it.id == id) //matched
+            {
+                if (it.itemCount + numAdd > maxCapacity) {return false;}
+                else {return true;}
+            }
+        }
+        return false; //not needed anyway
+    }
     #endregion
     [Space(10)]
 
@@ -314,7 +327,7 @@ public class SandMiner : MonoBehaviour, IMainSystem, IBlockStorage, IProduce, IO
                             }
                         }
                     }
-                    break; //found item in whitelist, no need to search the whitelist further
+                    break; //found item in whitelist, no need to search the whitelist further - use for optimization, doesn't effect code flow
                 }
             }
         }

@@ -26,5 +26,6 @@ namespace Conveyor
         public void RemoveFromStorage(bulkItem item);
         public bool ItemAvailable(int id, int numNeeded);
         public bool StorageFull(int id);
+        public bool ItemAddable(int id, int numAdd);
     }
 }

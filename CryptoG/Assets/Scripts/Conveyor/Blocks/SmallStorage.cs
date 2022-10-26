@@ -210,6 +210,19 @@ public class SmallStorage : MonoBehaviour, IMainSystem, IBlockStorage, IInputRes
         }
         return false;
     }
+
+    public bool ItemAddable(int id, int numAdd)
+    {
+        foreach(var it in items)
+        {
+            if (it.id == id) //matched
+            {
+                if (it.itemCount + numAdd > maxCapacity) {return false;}
+                else {return true;}
+            }
+        }
+        return false; //not needed anyway
+    }
     #endregion
     [Space(10)]
 
@@ -240,9 +253,9 @@ public class SmallStorage : MonoBehaviour, IMainSystem, IBlockStorage, IInputRes
                     Vector2Int pos = new Vector2Int(j, -i) + topLeftPos;
 
                     ResourceIOQuery queryList = blockIOQuery.RequestQuery(pos); 
-                    List<SingleResourceQuery> unusedItem = new List<SingleResourceQuery>();
+                    List<SingleResourceQuery> takableItem = new List<SingleResourceQuery>();
 
-                    foreach (SingleResourceQuery queryItem in queryList.itemList)
+                    foreach (SingleResourceQuery queryItem in queryList.itemInfoList)
                     {
                         bool disallowed = false;
                         bulkItem curItem = queryItem.item;
@@ -252,14 +265,13 @@ public class SmallStorage : MonoBehaviour, IMainSystem, IBlockStorage, IInputRes
                         {
                             if (curItem.id == disallowedItem.id) {disallowed = true; break;} //disallowed item
                         }
-                        if (disallowed) { unusedItem.Add(queryItem); continue;}
-                        if (!queryItem.connectedStorage.ItemAvailable(curItem.id, curItem.itemCount)) {unusedItem.Add(queryItem); continue;} //not enough item in storage of origin block
+                        if (disallowed) { continue;} //is item allowed?
+                        if (!ItemAddable(curItem.id, curItem.itemCount)) { continue;} //can item be added without storage full?
                         
-                        //take it!
-                        AddToStorage(curItem); //add to destionation (my) storage
-                        queryItem.connectedStorage.RemoveFromStorage(curItem); //remove from origin storage
+                        //query to take it
+                        takableItem.Add(queryItem);
                     }
-                    queryList.itemList = unusedItem; //assign unused queries back to manager
+                    blockIOQuery.TakeQueryAndTransferAccept(takableItem, this as IBlockStorage, queryList, pos);
                 }
             }
         }

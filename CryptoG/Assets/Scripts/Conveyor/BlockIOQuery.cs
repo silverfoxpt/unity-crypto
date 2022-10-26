@@ -5,11 +5,11 @@ using Conveyor;
 
 public class ResourceIOQuery
 {
-    public List<SingleResourceQuery> itemList;
+    public List<SingleResourceQuery> itemInfoList;
 
     public ResourceIOQuery() 
     {
-        itemList = new List<SingleResourceQuery>();
+        itemInfoList = new List<SingleResourceQuery>();
     }
 }
 
@@ -17,11 +17,13 @@ public struct SingleResourceQuery
 {
     public bulkItem item;
     public IBlockStorage connectedStorage;
+    public Vector2Int origin;
 
-    public SingleResourceQuery(bulkItem it, IBlockStorage sto)
+    public SingleResourceQuery(bulkItem it, IBlockStorage sto, Vector2Int ori)
     {
         item = it;
         connectedStorage = sto;
+        origin = ori;
     }
 }
 
@@ -102,10 +104,7 @@ public class BlockIOQuery : MonoBehaviour
         if (queryPlaced[new positionPair(origin, dest)]) {return;}
         else {queryPlaced[new positionPair(origin, dest)] = true;}
 
-        ResourceIOQuery newQuery = new ResourceIOQuery();
-        newQuery.itemList.Add(new SingleResourceQuery(item, store));
-
-        resourceQueryDict[dest] = newQuery;
+        resourceQueryDict[dest].itemInfoList.Add(new SingleResourceQuery(item, store, origin));
     }
 
     //take reference to LIST of items from query of that cell
@@ -113,5 +112,25 @@ public class BlockIOQuery : MonoBehaviour
     {
         var tmp = resourceQueryDict[dest];
         return tmp;
+    }
+
+    //check if input and output block are transferable, then make the transfer
+    public void TakeQueryAndTransferAccept(List<SingleResourceQuery> itemsToTake, IBlockStorage destinationStorage, ResourceIOQuery queryList, Vector2Int destPos)
+    {
+        foreach(var itemInfo in itemsToTake)
+        {
+            var item = itemInfo.item;
+            var originStorage = itemInfo.connectedStorage;
+
+            if (originStorage.ItemAvailable(item.id, item.itemCount)) //item takable from origin storage
+            {
+                originStorage.RemoveFromStorage(item); //remove from origin storage
+                destinationStorage.AddToStorage(item); //add to destination storage
+
+                //cleanup
+                queryList.itemInfoList.Remove(itemInfo); //remove that query to avoid clutter in itemList
+                queryPlaced[new positionPair(itemInfo.origin, destPos)] = false; //query space available again!
+            }
+        }
     }
 }
