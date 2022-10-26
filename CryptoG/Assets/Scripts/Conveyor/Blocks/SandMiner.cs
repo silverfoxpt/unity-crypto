@@ -278,8 +278,8 @@ public class SandMiner : MonoBehaviour, IMainSystem, IBlockStorage, IProduce, IO
 
     public void OutputToIOQuery()
     {
-        int[] sideX = new int[4] {-1, 0, +1, 0};
-        int[] sideY = new int[4] {0, +1, 0, -1};
+        int[] sideX = new int[4] {0, +1, 0, -1};
+        int[] sideY = new int[4] {+1, 0, -1, 0};
 
         if (toggleOutputList) //use whitelist
         {
@@ -300,10 +300,10 @@ public class SandMiner : MonoBehaviour, IMainSystem, IBlockStorage, IProduce, IO
                                 Vector2Int pos = new Vector2Int(-100000, -100000);
                                 switch(i)
                                 {
-                                    case 0: pos = new Vector2Int(0,               j); break; 
-                                    case 1: pos = new Vector2Int(j,               blockSize-1); break; 
-                                    case 2: pos = new Vector2Int(blockSize-1,     j); break;
-                                    case 3: pos = new Vector2Int(j,               0); break;
+                                    case 0: pos = new Vector2Int(j,                 0) + topLeftPos; break; 
+                                    case 1: pos = new Vector2Int(blockSize-1,       -j) + topLeftPos; break; 
+                                    case 2: pos = new Vector2Int(j,                 -(blockSize-1)) + topLeftPos; break;
+                                    case 3: pos = new Vector2Int(0,               -j) + topLeftPos; break;
                                 }
 
                                 blockIOQuery.AddQuery(pos + new Vector2Int(sideX[i], sideY[i]), 
