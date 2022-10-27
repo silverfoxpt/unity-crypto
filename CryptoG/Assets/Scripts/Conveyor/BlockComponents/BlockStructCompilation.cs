@@ -18,7 +18,7 @@ namespace Conveyor
     }
 
     [System.Serializable]
-    public struct BlockTilebasesList
+    public class BlockTilebasesList
     {
         public List<TileBase> row;
     }

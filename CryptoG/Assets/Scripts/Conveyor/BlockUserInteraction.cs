@@ -13,10 +13,11 @@ public class BlockUserInteraction : MonoBehaviour
     [Header("User test options")]
     [SerializeField] private int userActionID = 1;
     [SerializeField] private int blockChosenID = 100; //sand miner
+    [SerializeField] public int blockMainOrientation = 0;
 
     [Header("References")]
-    [SerializeField] private Tilemap backgroundTilemap;
-    [SerializeField] private Tilemap mainTilemap;
+    [SerializeField] public Tilemap backgroundTilemap;
+    [SerializeField] public Tilemap mainTilemap;
 
     public List<GameObject> duplicates;
     private List<BlockMainSystem> originalBlockMainInterface;
@@ -76,7 +77,7 @@ public class BlockUserInteraction : MonoBehaviour
             mainSysScript.PlaceBlock(backgroundTilemap, mainTilemap, (Vector2Int)mouseCellPos);
             mainSysScript.isOriginal = false;
 
-            blockLocate.AddNewBlock(dup); Debug.Log(mouseCellPos);
+            blockLocate.AddNewBlock(dup); 
             c++;
         }
     }

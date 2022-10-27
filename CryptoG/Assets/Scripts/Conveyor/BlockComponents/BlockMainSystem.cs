@@ -32,6 +32,9 @@ public class BlockMainSystem : MonoBehaviour
     [SerializeField] private int _blockID;
     public int blockID {get {return _blockID;} }
 
+    [SerializeField] private int _blockOrientation;
+    public int blockOrientation {get {return _blockOrientation;} set {_blockOrientation = value;}}
+
     private Vector2Int _topLeftPos;
     public Vector2Int topLeftPos {get {return _topLeftPos;} set {_topLeftPos = value;}}
 
@@ -112,12 +115,49 @@ public class BlockMainSystem : MonoBehaviour
         }
 
         topLeftPos = upLeftPos; //for later use
+        SetBlockOrientation(blockUser.blockMainOrientation); //rotate tiles
+
         for (int i = 0; i < blockSize; i++)
         {
             for (int j = 0; j < blockSize; j++)
             {
                 Vector2Int pos = new Vector2Int(upLeftPos.x + j, upLeftPos.y - i);
                 mainMap.SetTile((Vector3Int) pos, blockTile[i].row[j]);
+
+                //rotate
+                Matrix4x4 matrix = Matrix4x4.TRS(Vector3.zero, Quaternion.Euler(0f, 0f, -90f * blockOrientation), Vector3.one);
+                mainMap.SetTransformMatrix((Vector3Int) (new Vector2Int(j, -i) + topLeftPos), matrix);
+            }
+        }
+    }
+
+    private void SetBlockOrientation(int ori)
+    {
+        blockOrientation = ori;
+        for (int turns = 0; turns < ori; turns++)
+        {
+            //transpose
+            for (int i = 0; i < blockSize; i++)
+            {
+                for (int j = 0; j < blockSize; j++)
+                {
+                    if (j > i) {continue;}
+
+                    var tmp = blockTile[i].row[j];
+                    blockTile[i].row[j] = blockTile[j].row[i];
+                    blockTile[j].row[i] = tmp;
+                }
+            }
+
+            //reverse
+            for (int i = 0; i < blockSize; i++)
+            {
+                for (int j = 0; j < blockSize; j++)
+                {
+                    var tmp = blockTile[i].row[j];
+                    blockTile[i].row[j] = blockTile[i].row[blockSize-i-1];
+                    blockTile[i].row[blockSize-i-1] = tmp;
+                }
             }
         }
     }
