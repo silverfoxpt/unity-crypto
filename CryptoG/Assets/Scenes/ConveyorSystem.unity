@@ -547,6 +547,10 @@ GameObject:
   - component: {fileID: 1531954013}
   - component: {fileID: 1531954015}
   - component: {fileID: 1531954014}
+  - component: {fileID: 1531954019}
+  - component: {fileID: 1531954018}
+  - component: {fileID: 1531954017}
+  - component: {fileID: 1531954016}
   m_Layer: 0
   m_Name: SANDMINER
   m_TagString: Untagged
@@ -581,6 +585,84 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b20476ec6522f3c49820cdf92d491d0d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1531954015
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1531954012}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea1b1c10bc9c0c546bbffa0e971a1983, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1531954016
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1531954012}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7dd3d148c7e0a624bbedc5419d2081a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _blockOutput:
+  - sides: 0101
+  - sides: 0101
+  - sides: 0101
+  - sides: 0101
+  _toggleOutputList: 1
+  _outputWhiteList:
+  - itemCount: 1
+    id: 1
+  _outputBlackList: []
+--- !u!114 &1531954017
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1531954012}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 469cc93559f80a740b64cc7a8f75b60a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _requirements: []
+  _product:
+    itemCount: 1
+    id: 1
+  _timeToProduce: 2
+  _produceTimer: 0
+--- !u!114 &1531954018
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1531954012}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a63a01ea39e34884ea1cfb3ac72af9f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _maxCapacity: 10
+  _items: []
+--- !u!114 &1531954019
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1531954012}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f1ef7030bb4bba4487c66d9747627e1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   _isOriginal: 1
   _blockSize: 2
   _blockID: 100
@@ -594,37 +676,6 @@ MonoBehaviour:
   _blockListToggle: 1
   _whiteListID: 01000000
   _blackListID: 
-  _maxCapacity: 10
-  _items: []
-  _requirements: []
-  _product:
-    itemCount: 1
-    id: 1
-  _timeToProduce: 2
-  _produceTimer: 0
-  _blockOutput:
-  - sides: 0101
-  - sides: 0101
-  - sides: 0101
-  - sides: 0101
-  _toggleOutputList: 1
-  _outputWhiteList:
-  - itemCount: 1
-    id: 1
-  _outputBlackList: []
---- !u!114 &1531954015
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1531954012}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ea1b1c10bc9c0c546bbffa0e971a1983, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  thisBlockScript: {fileID: 1531954014}
 --- !u!1 &1716571277
 GameObject:
   m_ObjectHideFlags: 0
@@ -1626,6 +1677,9 @@ GameObject:
   - component: {fileID: 1862177882}
   - component: {fileID: 1862177884}
   - component: {fileID: 1862177883}
+  - component: {fileID: 1862177887}
+  - component: {fileID: 1862177886}
+  - component: {fileID: 1862177885}
   m_Layer: 0
   m_Name: SMALLSTORAGE
   m_TagString: Untagged
@@ -1660,25 +1714,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 15b874a997b3f0943a356c3bf5f92095, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _isOriginal: 1
-  _blockSize: 1
-  _blockID: 101
-  _blockTile:
-  - row:
-    - {fileID: 11400000, guid: e9af3e90b65666345926d0b10e7a7e59, type: 2}
-  _blockListToggle: 0
-  _whiteListID: 
-  _blackListID: 
-  _maxCapacity: 100
-  _items: []
-  _blockInput:
-  - sides: 01
-  - sides: 01
-  - sides: 01
-  - sides: 01
-  _toggleInputList: 0
-  _inputWhiteList: []
-  _inputBlackList: []
 --- !u!114 &1862177884
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1691,7 +1726,61 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea1b1c10bc9c0c546bbffa0e971a1983, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  thisBlockScript: {fileID: 1862177883}
+--- !u!114 &1862177885
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1862177881}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 027b71d4e5b6ae2498950d93d1be76fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _blockInput:
+  - sides: 01
+  - sides: 01
+  - sides: 01
+  - sides: 01
+  _toggleInputList: 0
+  _inputWhiteList: []
+  _inputBlackList: []
+--- !u!114 &1862177886
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1862177881}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a63a01ea39e34884ea1cfb3ac72af9f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _maxCapacity: 100
+  _items: []
+--- !u!114 &1862177887
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1862177881}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f1ef7030bb4bba4487c66d9747627e1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _isOriginal: 1
+  _blockSize: 1
+  _blockID: 101
+  _blockTile:
+  - row:
+    - {fileID: 11400000, guid: e9af3e90b65666345926d0b10e7a7e59, type: 2}
+  _blockListToggle: 0
+  _whiteListID: 
+  _blackListID: 
 --- !u!1 &1976658792
 GameObject:
   m_ObjectHideFlags: 0

@@ -16,10 +16,10 @@ public class ResourceIOQuery
 public struct SingleResourceQuery
 {
     public bulkItem item;
-    public IBlockStorage connectedStorage;
+    public BlockNormalStorage connectedStorage;
     public Vector2Int origin;
 
-    public SingleResourceQuery(bulkItem it, IBlockStorage sto, Vector2Int ori)
+    public SingleResourceQuery(bulkItem it, BlockNormalStorage sto, Vector2Int ori)
     {
         item = it;
         connectedStorage = sto;
@@ -97,7 +97,7 @@ public class BlockIOQuery : MonoBehaviour
     }
 
     //add 1 item to query of that cell
-    public void AddQuery(Vector2Int dest, Vector2Int origin, bulkItem item, IBlockStorage store)
+    public void AddQuery(Vector2Int dest, Vector2Int origin, bulkItem item, BlockNormalStorage store)
     {
         //already a query for that origin - destination pair -> block that query
         //else marked that query
@@ -115,7 +115,7 @@ public class BlockIOQuery : MonoBehaviour
     }
 
     //check if input and output block are transferable, then make the transfer
-    public void TakeQueryAndTransferAccept(List<SingleResourceQuery> itemsToTake, IBlockStorage destinationStorage, ResourceIOQuery queryList, Vector2Int destPos)
+    public void TakeQueryAndTransferAccept(List<SingleResourceQuery> itemsToTake, BlockNormalStorage destinationStorage, ResourceIOQuery queryList, Vector2Int destPos)
     {
         foreach(var itemInfo in itemsToTake)
         {

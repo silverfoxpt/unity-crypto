@@ -5,25 +5,28 @@ using Conveyor;
 
 public class ScriptMediator : MonoBehaviour
 {
-    public MonoBehaviour thisBlockScript;
-
-    public IMainSystem GetMainSystemInterface()
+    public BlockMainSystem GetMainSystem()
     {
-        return thisBlockScript as IMainSystem;
+        return gameObject.GetComponent<BlockMainSystem>();
     }
 
-    public IBlockStorage GetBlockStorage()
+    public BlockNormalStorage GetBlockStorage()
     {
-        return thisBlockScript as IBlockStorage;
+        return gameObject.GetComponent<BlockNormalStorage>();
     }
 
-    public IProduce GetProducer()
+    public BlockProducer GetProducer()
     {
-        return thisBlockScript as IProduce;
+        return gameObject.GetComponent<BlockProducer>();
     }
 
-    public IInputResource GetInput()
+    public BlockNormalInputResource GetNormalInput()
     {
-        return thisBlockScript as IInputResource;
+        return gameObject.GetComponent<BlockNormalInputResource>();
+    }
+
+    public BlockNormalOutputResource GetNormalOutput()
+    {
+        return gameObject.GetComponent<BlockNormalOutputResource>();
     }
 }

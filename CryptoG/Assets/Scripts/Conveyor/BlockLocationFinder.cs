@@ -24,7 +24,7 @@ public class BlockLocationFinder : MonoBehaviour
 
     public void AddNewBlock(GameObject block)
     {
-        IMainSystem main = block.GetComponent<ScriptMediator>().GetMainSystemInterface();
+        BlockMainSystem main = block.GetComponent<ScriptMediator>().GetMainSystem();
         for (int i = 0; i < main.blockSize; i++)
         {
             for (int j = 0; j < main.blockSize; j++)
@@ -37,7 +37,7 @@ public class BlockLocationFinder : MonoBehaviour
 
     public void RemoveBlock(GameObject block)
     {
-        IMainSystem main = block.GetComponent<ScriptMediator>().GetMainSystemInterface();
+        BlockMainSystem main = block.GetComponent<ScriptMediator>().GetMainSystem();
         for (int i = 0; i < main.blockSize; i++)
         {
             for (int j = 0; j < main.blockSize; j++)

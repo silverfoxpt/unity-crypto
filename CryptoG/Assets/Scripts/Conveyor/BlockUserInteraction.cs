@@ -19,7 +19,7 @@ public class BlockUserInteraction : MonoBehaviour
     [SerializeField] private Tilemap mainTilemap;
 
     public List<GameObject> duplicates;
-    private List<IMainSystem> originalBlockMainInterface;
+    private List<BlockMainSystem> originalBlockMainInterface;
 
     private BlockLocationFinder blockLocate;
 
@@ -29,10 +29,10 @@ public class BlockUserInteraction : MonoBehaviour
         duplicates = new List<GameObject>();
 
         //save those interfaces for later use
-        originalBlockMainInterface = new List<IMainSystem>();
+        originalBlockMainInterface = new List<BlockMainSystem>();
         foreach(var originalBlock in originalBlocksScript)
         {
-            var mainSysScript = originalBlock.GetComponent<ScriptMediator>().thisBlockScript as IMainSystem;
+            BlockMainSystem mainSysScript = originalBlock.GetComponent<ScriptMediator>().GetMainSystem();
             originalBlockMainInterface.Add(mainSysScript);
         }
     }
@@ -72,7 +72,7 @@ public class BlockUserInteraction : MonoBehaviour
             duplicates.Add(dup);
 
             //start system
-            var mainSysScript = dup.GetComponent<ScriptMediator>().GetMainSystemInterface();
+            BlockMainSystem mainSysScript = dup.GetComponent<ScriptMediator>().GetMainSystem();
             mainSysScript.PlaceBlock(backgroundTilemap, mainTilemap, (Vector2Int)mouseCellPos);
             mainSysScript.isOriginal = false;
 
