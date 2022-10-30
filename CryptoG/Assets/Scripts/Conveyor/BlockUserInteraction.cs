@@ -77,7 +77,7 @@ public class BlockUserInteraction : MonoBehaviour
             mainSysScript.PlaceBlock(backgroundTilemap, mainTilemap, (Vector2Int)mouseCellPos);
             mainSysScript.isOriginal = false;
 
-            blockLocate.AddNewBlock(dup); 
+            blockLocate.AddNewBlock(dup); //need check if placeable
             c++;
         }
     }

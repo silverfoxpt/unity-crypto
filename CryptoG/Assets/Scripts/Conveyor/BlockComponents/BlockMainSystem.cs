@@ -50,7 +50,7 @@ public class BlockMainSystem : MonoBehaviour
     [SerializeField] private List<int> _blackListID;
     public List<int> blackListID {get {return _blackListID;} set{_blackListID = value;}}
 
-    public void InitiateMainSystem() { }
+    public void InitiateMainSystem() {}
 
     public bool BlockPlaceable(Tilemap backgroundMap, Tilemap mainMap, Vector2Int upLeftPos)
     {
