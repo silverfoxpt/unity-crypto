@@ -42,9 +42,7 @@ public class NormalConveyor : MonoBehaviour
 
         if (!mainSystem.isOriginal)
         {
-            //if (debug) { conveyorStorage.ForceAddObjectToPosition(testObj, 0); } //debug
             conveyorP2PTransfer.InitiateConveyorP2PTransfer();
-            conveyorP2PTransfer.CheckAndPushFromMainOutput();
         }
     }
 
@@ -53,6 +51,7 @@ public class NormalConveyor : MonoBehaviour
         if (!mainSystem.isOriginal)
         {
             conveyorStorage.PushResourceForward();
+            conveyorP2PTransfer.CheckAndPushFromMainOutput();
         }
     }
     #endregion

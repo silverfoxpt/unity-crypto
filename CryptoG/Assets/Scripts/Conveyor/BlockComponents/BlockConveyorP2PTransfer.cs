@@ -69,7 +69,7 @@ public class BlockConveyorP2PTransfer : MonoBehaviour
     //used on CheckAndPushFromMainOutput()
     private bool InputableToMainInputSide(int neededInput)
     {
-        return conveyorStorage.conveyorCheckpointsMarked[0] && inMainSide == neededInput;
+        return (!conveyorStorage.conveyorCheckpointsMarked[0]) && (inMainSide == neededInput); //empty && input correspond to output
     }
 
     //used on CheckAndPushFromMainOutput()
@@ -83,24 +83,25 @@ public class BlockConveyorP2PTransfer : MonoBehaviour
     public void CheckAndPushFromMainOutput()
     {
         //get next block sciprt
-        Vector2Int nextPos = blockMainSystem.topLeftPos + new Vector2Int(dx[outSide], dy[outSide]);
-        ScriptMediator sc = blockLoc.blockLocDict[nextPos];
-        Debug.Log(sc);
+        Vector2Int nextPos = blockMainSystem.topLeftPos + new Vector2Int(dx[outSide], dy[outSide]); 
+        ScriptMediator otherScript = blockLoc.blockLocDict[nextPos];
+
+        if (!otherScript) {return;} //nothing there yet
 
         //check if next block is a conveyor
-        if (sc.GetMainSystem().blockID != blockMainSystem.blockID) {return; }
+        if (otherScript.GetMainSystem().blockID != blockMainSystem.blockID) {return; }
 
         //check if NEXT conveyor can be inputed into the MAIN input -> Emphasized on MAIN
-        if (!sc.GetBlockConveyorP2PTransfer().InputableToMainInputSide(inMainSide)) {return;} //because our inMainside would be equal to the other inMainSide
+        if (!otherScript.GetBlockConveyorP2PTransfer().InputableToMainInputSide(inMainSide)) {return;} //because our inMainside would be equal to the other inMainSide
 
         //check if THIS conveyor have an item THAT HAD FINISHED MOVING INTO THE LAST SLOT
         if (!OutputableFromMainOutputSide()) {return;}
 
         //let's move it shall we!
-        StartCoroutine(MoveFromThisConveyorToNextConveyor(sc.GetBlockConveyorStorage()));
+        StartCoroutine(MoveFromThisConveyorToNextConveyor(otherScript.GetBlockConveyorStorage()));
     }
 
-    //THIS IS A VERY INCONVIENT METHOD OF MOVING, which ONLY MOVES BECAUSE THE timeToMove is small enough
+    //THIS IS A VERY INCONVIENT METHOD OF MOVING, which ONLY MOVES BECAUSE THE timeToMove is small enough AND we FORCE UPDATE the next conveyor to resolve the delay
     IEnumerator MoveFromThisConveyorToNextConveyor(BlockConveyorStorage nextConveyorStorage)
     {
         float timeToMove = conveyorStorage.timeToTravelBetweenCheckpoints;
@@ -130,5 +131,6 @@ public class BlockConveyorP2PTransfer : MonoBehaviour
         
         //object move complete, ONLY checks when move complete, else ConveyorStorage move function will be confused very badly
         nextConveyorStorage.conveyorCheckpointsMarked[0] = true; 
+        nextConveyorStorage.ForceUpdatePosition(0); //force update first position to not cause delay
     }
 }

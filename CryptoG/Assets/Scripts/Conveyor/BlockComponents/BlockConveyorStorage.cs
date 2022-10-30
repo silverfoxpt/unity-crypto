@@ -35,15 +35,6 @@ public class BlockConveyorStorage : MonoBehaviour
     public List<Vector2> conveyorCheckpointsPosition;
     public List<bool> conveyorResourceIsMoving;
 
-    /*[SerializeField] private GameObject testObj;
-    [SerializeField] private GameObject testObj2;
-    private void Start() //test ONLY
-    { 
-        InitiateConveyorStorage();
-        if (!blockMainSystem.isOriginal) {ForceAddObjectToPosition(testObj, 0); ForceAddObjectToPosition(testObj2, 2); }
-    }
-    private void Update() {if (!blockMainSystem.isOriginal) {PushResourceForward();}}*/
-
     private float distBetweenCheckpoints;
     private float movementTimer = 0f;
 
@@ -65,10 +56,9 @@ public class BlockConveyorStorage : MonoBehaviour
 
             //detect where this tile is - HARDCODE WARNING!!!!!!!!!!!
             Vector2Int pos = blockMainSystem.topLeftPos; 
-            Vector2 posWorld = (Vector2) blockUser.mainTilemap.CellToWorld((Vector3Int) pos) + new Vector2(UniversalInfo.tileSize/2f, UniversalInfo.tileSize/2f); 
+            Vector2 posWorld = (Vector2) blockUser.mainTilemap.CellToWorld((Vector3Int) pos) + new Vector2(UniversalInfo.tileSize/2f, UniversalInfo.tileSize/2f); //middle of cell
 
             Vector2 cur = new Vector2(posWorld.x - UniversalInfo.tileSize/2f, posWorld.y) + new Vector2(distBetweenCheckpoints * (i+1), 0f);
-            Debug.Log(cur);
             conveyorCheckpointsPosition.Add(cur);
         }
     }
@@ -92,13 +82,6 @@ public class BlockConveyorStorage : MonoBehaviour
         //reached destination! -> check if they can be moved again and let the loop repeat
         if (movementTimer >= timeToTravelBetweenCheckpoints)
         {
-            //oh, before that, reset resource position to avoid any discrepancies
-            for (int i = 0; i < capacityCheckpoints; i++) 
-            {
-                if (!conveyorObjects[i]) {continue;}
-                conveyorObjects[i].transform.position = conveyorCheckpointsPosition[i];
-            }
-
             //first off, reset everything
             movementTimer = 0f;
             for (int i = 0; i < capacityCheckpoints; i++) {conveyorResourceIsMoving[i] = false;}
@@ -106,16 +89,7 @@ public class BlockConveyorStorage : MonoBehaviour
             //then, check if items continues to be movable - GO FROM END TO START!
             for (int i = capacityCheckpoints-2; i >= 0; i--) //skip last
             {
-                if (!conveyorCheckpointsMarked[i+1] && conveyorCheckpointsMarked[i]) //next is empty, this is filled
-                {
-                    conveyorCheckpointsMarked[i+1] = true;
-                    conveyorCheckpointsMarked[i] = false;
-
-                    conveyorObjects[i+1] = conveyorObjects[i];
-                    conveyorObjects[i] = null;
-
-                    conveyorResourceIsMoving[i] = true;
-                }
+                ForceUpdatePosition(i);
             }
         }
     }
@@ -125,6 +99,7 @@ public class BlockConveyorStorage : MonoBehaviour
         return !conveyorCheckpointsMarked[pos];
     }
 
+    //debug only
     public void ForceAddObjectToPosition(GameObject obj, int pos)
     {
         if (PositionCleared(pos))
@@ -133,6 +108,21 @@ public class BlockConveyorStorage : MonoBehaviour
             conveyorCheckpointsMarked[pos] = true;
 
             obj.transform.position = conveyorCheckpointsPosition[pos];
+        }
+    }
+
+    //if first position don't have anything moving (to the second position), update it! Use for P2P transportation
+    public void ForceUpdatePosition(int i)
+    {
+        if (!conveyorCheckpointsMarked[i+1] && conveyorCheckpointsMarked[i]) //next is empty, this is filled
+        {
+            conveyorCheckpointsMarked[i+1] = true;
+            conveyorCheckpointsMarked[i] = false;
+
+            conveyorObjects[i+1] = conveyorObjects[i];
+            conveyorObjects[i] = null;
+
+            conveyorResourceIsMoving[i] = true;
         }
     }
     #endregion
