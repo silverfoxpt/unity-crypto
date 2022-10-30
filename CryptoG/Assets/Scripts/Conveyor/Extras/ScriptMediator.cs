@@ -29,4 +29,15 @@ public class ScriptMediator : MonoBehaviour
     {
         return gameObject.GetComponent<BlockNormalOutputResource>();
     }
+
+    //for conveyors
+    public BlockConveyorP2PTransfer GetBlockConveyorP2PTransfer()
+    {
+        return gameObject.GetComponent<BlockConveyorP2PTransfer>();
+    }
+
+    public BlockConveyorStorage GetBlockConveyorStorage()
+    {
+        return gameObject.GetComponent<BlockConveyorStorage>();
+    }
 }

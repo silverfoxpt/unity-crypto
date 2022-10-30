@@ -43,7 +43,8 @@ public class NormalConveyor : MonoBehaviour
         if (!mainSystem.isOriginal)
         {
             //if (debug) { conveyorStorage.ForceAddObjectToPosition(testObj, 0); } //debug
-            conveyorP2PTransfer.InitiateConveyorP2PInput();
+            conveyorP2PTransfer.InitiateConveyorP2PTransfer();
+            conveyorP2PTransfer.CheckAndPushFromMainOutput();
         }
     }
 

@@ -47,4 +47,9 @@ public class BlockLocationFinder : MonoBehaviour
             }
         }
     }
+
+    public void DebugBlock()
+    {
+        
+    }
 }
