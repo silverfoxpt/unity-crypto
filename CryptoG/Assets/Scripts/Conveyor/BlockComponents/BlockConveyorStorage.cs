@@ -56,9 +56,27 @@ public class BlockConveyorStorage : MonoBehaviour
 
             //detect where this tile is - HARDCODE WARNING!!!!!!!!!!!
             Vector2Int pos = blockMainSystem.topLeftPos; 
-            Vector2 posWorld = (Vector2) blockUser.mainTilemap.CellToWorld((Vector3Int) pos) + new Vector2(UniversalInfo.tileSize/2f, UniversalInfo.tileSize/2f); //middle of cell
+            Vector2 posWorld = (Vector2) blockUser.mainTilemap.CellToWorld((Vector3Int) pos) + 
+                new Vector2(UniversalInfo.tileSize/2f, UniversalInfo.tileSize/2f); //change to middle of cell
 
-            Vector2 cur = new Vector2(posWorld.x - UniversalInfo.tileSize/2f, posWorld.y) + new Vector2(distBetweenCheckpoints * (i+1), 0f);
+            Vector2 cur = Vector2.zero;
+            if (blockMainSystem.blockOrientation == 0) //left to right
+            {
+                cur = new Vector2(posWorld.x - UniversalInfo.tileSize/2f, posWorld.y) + new Vector2(distBetweenCheckpoints * (i+1), 0f);
+            }
+            else if (blockMainSystem.blockOrientation == 2) //right to left
+            {
+                cur = new Vector2(posWorld.x + UniversalInfo.tileSize/2f, posWorld.y) - new Vector2(distBetweenCheckpoints * (i+1), 0f);
+            }
+            else if (blockMainSystem.blockOrientation == 1) //up to down
+            {
+                cur = new Vector2(posWorld.x, posWorld.y + UniversalInfo.tileSize/2f) - new Vector2(0f, distBetweenCheckpoints * (i+1));
+            }
+            else if (blockMainSystem.blockOrientation == 3) //down to up
+            {
+                cur = new Vector2(posWorld.x, posWorld.y - UniversalInfo.tileSize/2f) + new Vector2(0f, distBetweenCheckpoints * (i+1));
+            }
+            
             conveyorCheckpointsPosition.Add(cur);
         }
     }

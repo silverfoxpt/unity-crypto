@@ -52,6 +52,8 @@ public class NormalConveyor : MonoBehaviour
         {
             conveyorStorage.PushResourceForward();
             conveyorP2PTransfer.CheckAndPushFromMainOutput();
+            conveyorP2PTransfer.CheckAndPushToExtra1();
+            conveyorP2PTransfer.CheckAndPushToExtra2();
         }
     }
     #endregion
