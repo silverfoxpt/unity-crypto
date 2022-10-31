@@ -167,12 +167,13 @@ public class BlockConveyorP2PTransfer : MonoBehaviour
         int lastIdx = conveyorStorage.capacityCheckpoints-1;
 
         //approve the move
-        GameObject res = conveyorStorage.conveyorObjects[lastIdx];
+        GameObject res = conveyorStorage.conveyorObjects[lastIdx]; 
 
         conveyorStorage.conveyorObjects[lastIdx] = null; //no objects here anymore!
         conveyorStorage.conveyorCheckpointsMarked[lastIdx] = false; //no objects here anymore!
 
         nextConveyorStorage.conveyorObjects[posToMoveTo] = res; //objects here!
+        nextConveyorStorage.conveyorCheckpointsMarked[posToMoveTo] = true;  //-------------> notice!
 
         //MOVE -> careful here, don't mess with storage movement
         while(curTime <= timeToMove)
@@ -185,9 +186,6 @@ public class BlockConveyorP2PTransfer : MonoBehaviour
                 curTime/timeToMove
             );
         }
-        
-        //object move complete, ONLY checks when move complete, else ConveyorStorage move function will be confused very badly
-        nextConveyorStorage.conveyorCheckpointsMarked[posToMoveTo] = true; 
-        nextConveyorStorage.ForceUpdatePosition(posToMoveTo); //force update first position to not cause delay
+        nextConveyorStorage.ForceUpdatePosition(posToMoveTo, true); //force update first position to not cause delay
     }
 }

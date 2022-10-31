@@ -133,4 +133,22 @@ public class BlockIOQuery : MonoBehaviour
             }
         }
     }
+
+    public void TakeQueryAndRemoveFromOrigin(List<SingleResourceQuery> itemsToTake, ResourceIOQuery queryList, Vector2Int destPos)
+    {
+        foreach(var itemInfo in itemsToTake)
+        {
+            var item = itemInfo.item;
+            var originStorage = itemInfo.connectedStorage;
+
+            if (originStorage.ItemAvailable(item.id, item.itemCount)) //item takable from origin storage
+            {
+                originStorage.RemoveFromStorage(item); //remove from origin storage
+
+                //cleanup
+                queryList.itemInfoList.Remove(itemInfo); //remove that query to avoid clutter in itemList
+                queryPlaced[new positionPair(itemInfo.origin, destPos)] = false; //query space available again!
+            }
+        }
+    }
 }

@@ -114,7 +114,7 @@ public class BlockConveyorStorage : MonoBehaviour
 
     public bool PositionCleared(int pos)
     {
-        return !conveyorCheckpointsMarked[pos];
+        return (!conveyorCheckpointsMarked[pos]) && (!conveyorResourceIsMoving[pos]);
     }
 
     //debug only
@@ -130,10 +130,12 @@ public class BlockConveyorStorage : MonoBehaviour
     }
 
     //if first position don't have anything moving (to the second position), update it! Use for P2P transportation
-    public void ForceUpdatePosition(int i)
+    public void ForceUpdatePosition(int i, bool P2P = false)
     {
-        if (!conveyorCheckpointsMarked[i+1] && conveyorCheckpointsMarked[i]) //next is empty, this is filled
+        if ((!conveyorCheckpointsMarked[i+1]) && (conveyorCheckpointsMarked[i])) //next is empty, this is filled
         {
+            if (P2P) {Debug.Log(movementTimer); }
+            
             conveyorCheckpointsMarked[i+1] = true;
             conveyorCheckpointsMarked[i] = false;
 

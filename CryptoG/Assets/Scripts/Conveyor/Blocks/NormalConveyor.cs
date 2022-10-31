@@ -15,6 +15,8 @@ public class NormalConveyor : MonoBehaviour
     private BlockConveyorStorage conveyorStorage;
     private BlockConveyorP2PTransfer conveyorP2PTransfer;
 
+    private BlockConveyorNormalInput normalInput;
+
     [Header("Debug")]
     [SerializeField] private bool debug = false;
     [SerializeField] private GameObject testObj;
@@ -30,6 +32,8 @@ public class NormalConveyor : MonoBehaviour
         mainSystem = GetComponent<BlockMainSystem>();
         conveyorStorage = GetComponent<BlockConveyorStorage>();
         conveyorP2PTransfer = GetComponent<BlockConveyorP2PTransfer>();
+
+        normalInput = GetComponent<BlockConveyorNormalInput>();
     }   
 
     private void Start()
@@ -43,6 +47,7 @@ public class NormalConveyor : MonoBehaviour
         if (!mainSystem.isOriginal)
         {
             conveyorP2PTransfer.InitiateConveyorP2PTransfer();
+            normalInput.InitiateConveyorNormalInput();
         }
     }
 
@@ -51,9 +56,12 @@ public class NormalConveyor : MonoBehaviour
         if (!mainSystem.isOriginal)
         {
             conveyorStorage.PushResourceForward();
+
             conveyorP2PTransfer.CheckAndPushFromMainOutput();
             conveyorP2PTransfer.CheckAndPushToExtra1();
             conveyorP2PTransfer.CheckAndPushToExtra2();
+
+            normalInput.InputFromNormalBlock();
         }
     }
     #endregion
