@@ -8,6 +8,8 @@ namespace Conveyor
     {
         public static int mapSize = 100;
         public static float tileSize = 1f;
+
+        public static float conveyorUniversalTimer = 0f;
     }
 }
 

@@ -34,6 +34,7 @@ public class BlockConveyorStorage : MonoBehaviour
     public List<bool> conveyorCheckpointsMarked;
     public List<Vector2> conveyorCheckpointsPosition;
     public List<bool> conveyorResourceIsMoving;
+    public List<bool> positionLockedForP2PTransfer;
 
     private float distBetweenCheckpoints;
     private float movementTimer = 0f;
@@ -53,6 +54,7 @@ public class BlockConveyorStorage : MonoBehaviour
             conveyorCheckpointsMarked.Add(false);
             conveyorResourceIsMoving.Add(false);
             conveyorObjects.Add(null);
+            positionLockedForP2PTransfer.Add(false);
 
             //detect where this tile is - HARDCODE WARNING!!!!!!!!!!!
             Vector2Int pos = blockMainSystem.topLeftPos; 
@@ -89,7 +91,7 @@ public class BlockConveyorStorage : MonoBehaviour
         //update position if needed
         for (int i = 0; i < capacityCheckpoints-1; i++) //skip last
         {
-            if (conveyorResourceIsMoving[i] && conveyorObjects[i+1])
+            if (conveyorResourceIsMoving[i] && conveyorObjects[i+1] && (!positionLockedForP2PTransfer[i]))
             {
                 //push!
                 conveyorObjects[i+1].transform.position = Vector2.Lerp(conveyorCheckpointsPosition[i], conveyorCheckpointsPosition[i+1], 
@@ -132,10 +134,10 @@ public class BlockConveyorStorage : MonoBehaviour
     //if first position don't have anything moving (to the second position), update it! Use for P2P transportation
     public void ForceUpdatePosition(int i, bool P2P = false)
     {
-        if ((!conveyorCheckpointsMarked[i+1]) && (conveyorCheckpointsMarked[i])) //next is empty, this is filled
+        if ((!conveyorCheckpointsMarked[i+1]) && (conveyorCheckpointsMarked[i]) && (!positionLockedForP2PTransfer[i])) //next is empty, this is filled, position not locked
         {
             if (P2P) {Debug.Log(movementTimer); }
-            
+
             conveyorCheckpointsMarked[i+1] = true;
             conveyorCheckpointsMarked[i] = false;
 

@@ -174,6 +174,7 @@ public class BlockConveyorP2PTransfer : MonoBehaviour
 
         nextConveyorStorage.conveyorObjects[posToMoveTo] = res; //objects here!
         nextConveyorStorage.conveyorCheckpointsMarked[posToMoveTo] = true;  //-------------> notice!
+        nextConveyorStorage.positionLockedForP2PTransfer[posToMoveTo] = true;
 
         //MOVE -> careful here, don't mess with storage movement
         while(curTime <= timeToMove)
@@ -186,6 +187,8 @@ public class BlockConveyorP2PTransfer : MonoBehaviour
                 curTime/timeToMove
             );
         }
+
+        nextConveyorStorage.positionLockedForP2PTransfer[posToMoveTo] = false;
         nextConveyorStorage.ForceUpdatePosition(posToMoveTo, true); //force update first position to not cause delay
     }
 }

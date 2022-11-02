@@ -62,7 +62,7 @@ public class BlockConveyorNormalInput : MonoBehaviour
     private bool InputMainFromNormalBlock(SingleResourceQuery itemInfo)
     {
         Vector2Int hypoInput = blockMainSystem.topLeftPos + new Vector2Int(dx[inMainSide], dy[inMainSide]);
-        
+
         if (hypoInput != itemInfo.origin) {return false;} //not correct position
         if (!conveyorStorage.PositionCleared(0)) {return false;} //not empty
 
@@ -80,8 +80,9 @@ public class BlockConveyorNormalInput : MonoBehaviour
 
         var rend = newResource.AddComponent<SpriteRenderer>();
         rend.sprite = reference.img;
-        rend.sortingOrder = 2;
-
+        rend.sortingOrder = reRefList.sortingOrderForResource;
+        
+        newResource.transform.localScale = new Vector3(reRefList.imgScale, reRefList.imgScale, 1f);
         return newResource;
     }
 }

@@ -13,6 +13,8 @@ public struct resourceCon
 public class ResourceList : MonoBehaviour
 {
     public List<resourceCon> resourceReferences;
+    public int sortingOrderForResource;
+    public float imgScale;
 
     public resourceCon GetResource(int id)
     {
